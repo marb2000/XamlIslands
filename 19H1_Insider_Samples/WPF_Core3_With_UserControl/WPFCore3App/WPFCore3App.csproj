@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Platforms>AnyCPU;x64</Platforms>
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <UseWPF>true</UseWPF>
+    <AssetTargetFallback>uap10.0.17763</AssetTargetFallback>
+    <ApplicationManifest>MyApp.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+ <ItemGroup>
+     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="5.1.0-build.17.g89cf623d12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ManagedWinRT\ManagedWinRT.csproj">
+      <Private>true</Private>
+    </ProjectReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Reference Include="Windows">
+      <HintPath>$(MSBuildProgramFiles32)\Windows Kits\10\UnionMetadata\Facade\Windows.WinMD</HintPath>
+      <IsWinMDFile>true</IsWinMDFile>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+
+
+</Project>
