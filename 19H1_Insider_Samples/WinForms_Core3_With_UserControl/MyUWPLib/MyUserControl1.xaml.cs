@@ -13,13 +13,21 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-namespace ManagedWinRT
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+
+namespace MyUWPLib
 {
     public sealed partial class MyUserControl1 : UserControl
     {
         public MyUserControl1()
         {
             this.InitializeComponent();
+            MyTextBox.Text = "Type in a UWP text box";
+        }
+
+        private void MyTextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            MyTextBox.Text = "";
         }
     }
 }

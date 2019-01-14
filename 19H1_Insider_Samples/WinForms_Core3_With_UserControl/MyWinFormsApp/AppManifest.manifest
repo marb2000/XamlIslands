@@ -41,10 +41,9 @@
 
       <!-- Windows 10 -->
       <!--<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />-->
-      
-      <!-- Allow runs UWP Xaml Controls -->
-      <maxversiontested Id="10.0.18295.0"/>
 
+      <!-- Xaml Islands -->
+      <maxversiontested Id="10.0.18295.0"/>
     </application>
   </compatibility>
 

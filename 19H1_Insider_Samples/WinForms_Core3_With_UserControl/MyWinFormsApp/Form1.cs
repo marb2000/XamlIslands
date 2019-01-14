@@ -8,18 +8,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WinFormsCore3
+namespace MyWinFormsApp
 {
     public partial class Form1 : Form
     {
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void buttonExit_Click(object sender, EventArgs e)
-        {
-            Application.Exit();
+            //this.windowsXamlHost1.InitialTypeName = "Windows.UI.Xaml.Controls.TextBox";
+            //this.windowsXamlHost1.InitialTypeName = "MyUWPLib.MyColorPicker";
+            this.windowsXamlHost1.InitialTypeName = "MyUWPLib.MyUserControl1";
         }
     }
 }
