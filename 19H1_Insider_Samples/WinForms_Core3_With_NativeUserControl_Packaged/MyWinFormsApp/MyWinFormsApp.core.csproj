@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssetTargetFallback>uap10.0.17763</AssetTargetFallback>
+    <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationManifest>AppManifest.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CPPWinRTLib\CPPWinRTLib.vcxproj" />
+    <ProjectReference Include="..\MyUWPLib\MyUWPLib.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\MyUWPLib\bin\$(configuration)\*.xbf" LinkBase="MyUWPLib">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="MyUWPLib\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="5.1.0-build.25.ga8750e77fb" />
+  </ItemGroup>
+
+</Project>

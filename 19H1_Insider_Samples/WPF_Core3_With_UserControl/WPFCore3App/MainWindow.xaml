@@ -13,33 +13,38 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
-            <Grid Margin="20">
-                <Grid.Resources>
-                    <Style TargetType="Rectangle">
-                        <Setter Value="20" Property="Width" />
-                        <Setter Value="20" Property="Height" />
-                    </Style>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="VerticalAlignment" Value="Center" />
-                        <Setter Property="HorizontalAlignment" Value="Left" />
-                        <Setter Property="Margin" Value="10" />
-                    </Style>
-                </Grid.Resources>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
 
-                </Grid.ColumnDefinitions>
-                <Rectangle StrokeThickness="1" Stroke="Black" Fill="LightGray" />
-                <TextBlock Grid.Column="1" Text="WPF" />
-                <Rectangle StrokeThickness="1" Grid.Column="2" Stroke="Black" Fill="White" />
-                <TextBlock Grid.Column="3" Text="UWP" />
-            </Grid>
-            <Button Content="WPF button" HorizontalAlignment="Center" Click="Button_Click" Margin="20" Padding="20"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" >
+            <TextBlock VerticalAlignment="Center"  HorizontalAlignment="Center" Text="Core 3 WPF App" FontSize="30" Margin="20"/>
+            <Border BorderThickness="1" BorderBrush="Black" Margin="5" Visibility="Hidden">
+                <StackPanel>
+                   
+                    <Grid Margin="5" >
+                        <Grid.Resources>
+                            <Style TargetType="Rectangle">
+                                <Setter Value="20" Property="Width" />
+                                <Setter Value="20" Property="Height" />
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center" />
+                                <Setter Property="HorizontalAlignment" Value="Left" />
+                                <Setter Property="Margin" Value="10" />
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle StrokeThickness="1" Stroke="Black" Fill="LightGray" />
+                        <TextBlock Grid.Column="1" Text="WPF" />
+                        <Rectangle StrokeThickness="1" Grid.Column="2" Stroke="Black" Fill="White" />
+                        <TextBlock Grid.Column="3" Text="UWP" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+            <Button Content="WPF button" HorizontalAlignment="Center" Click="Button_Click" Margin="10" Padding="10" />
         </StackPanel>
         <xamlhost:WindowsXamlHost Grid.Row="1" InitialTypeName="ManagedWinRT.MyUserControl1" />
     </Grid>

@@ -1,0 +1,9 @@
+namespace CPPWinRTLib
+{
+    [default_interface]
+    runtimeclass NativeXamlControl : Windows.UI.Xaml.Controls.UserControl
+    {
+        NativeXamlControl();
+        Int32 MyProperty;
+    }
+}
