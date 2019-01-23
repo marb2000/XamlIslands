@@ -19,6 +19,6 @@
                 </MenuFlyout>
             </Button.ContextFlyout>
         </Button>
-        <Button Margin="10" Content="Do Nothing" />
+        <TextBox  Margin="10" PlaceholderText="Write something..." />
     </StackPanel>
 </UserControl>
