@@ -8,17 +8,21 @@
 #include <winrt/windows.ui.xaml.controls.h>
 #include <winrt/Windows.ui.xaml.media.h>
 
+
+
 using namespace winrt;
 using namespace Windows::UI;
 using namespace Windows::UI::Composition;
 using namespace Windows::UI::Xaml::Hosting;
 using namespace Windows::Foundation::Numerics;
 
+
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
 
 HWND _hWnd;
 HWND _childhWnd;
 HINSTANCE _hInstance;
+
 
 int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
@@ -63,10 +67,10 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 	// The call to winrt::init_apartment initializes COM; by default, in a multithreaded apartment.
 	winrt::init_apartment(apartment_type::single_threaded);
-		
+
 	// Initialize the Xaml Framework's corewindow for current thread
 	WindowsXamlManager winxamlmanager = WindowsXamlManager::InitializeForCurrentThread();
-	
+
 	// This DesktopWindowXamlSource is the object that enables a non-UWP desktop application 
 	// to host UWP controls in any UI element that is associated with a window handle (HWND).
 	DesktopWindowXamlSource desktopSource;
@@ -95,7 +99,7 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	xamlContainer.Children().Append(tb);
 	xamlContainer.UpdateLayout();
 	desktopSource.Content(xamlContainer);
-	
+
 	//End XAML Island section
 
 	ShowWindow(_hWnd, nCmdShow);
