@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{C51A581C-C31B-4B38-AC46-391DF9678FF4}</ProjectGuid>
+    <ProjectGuid>{4DFD9918-248E-4065-89E0-215E156B54A8}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DummyProjectForPackaging</RootNamespace>
-    <AssemblyName>DummyProjectForPackaging</AssemblyName>
+    <RootNamespace>DummyUWPTestApp</RootNamespace>
+    <AssemblyName>DummyUWPTestApp</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.18334.0</TargetPlatformVersion>
@@ -17,7 +17,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
-    <PackageCertificateKeyFile>DummyProjectForPackaging_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>DummyUWPTestApp_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -128,7 +128,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="DummyProjectForPackaging_TemporaryKey.pfx" />
+    <None Include="DummyUWPTestApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
@@ -156,9 +156,9 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ManagedWinRT\ManagedWinRT.csproj">
-      <Project>{fda28cae-7487-4f66-abe5-30eaf14f6e98}</Project>
-      <Name>ManagedWinRT</Name>
+    <ProjectReference Include="..\CppWinRTComponent\CppWinRTComponent.vcxproj">
+      <Project>{ef1a412f-2ff1-4154-824b-b0ccb0b68825}</Project>
+      <Name>CppWinRTComponent</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

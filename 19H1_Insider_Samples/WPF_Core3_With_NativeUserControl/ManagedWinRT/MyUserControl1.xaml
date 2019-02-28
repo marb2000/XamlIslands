@@ -1,0 +1,24 @@
+﻿<UserControl
+    x:Class="ManagedWinRT.MyUserControl1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ManagedWinRT"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="White">
+        <TextBlock Text="Xaml Islands in .Net Core 3!" FontSize="30" />
+        <Button Margin="10" Content="Righ Click">
+            <Button.ContextFlyout>
+                <MenuFlyout>
+                    <MenuFlyoutItem Text="Option 1"/>
+                    <MenuFlyoutItem Text="Option 2"/>
+                </MenuFlyout>
+            </Button.ContextFlyout>
+        </Button>
+        <TextBox  Margin="10" PlaceholderText="Write something..." />
+    </StackPanel>
+</UserControl>

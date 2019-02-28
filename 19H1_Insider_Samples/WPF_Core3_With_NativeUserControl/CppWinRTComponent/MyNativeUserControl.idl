@@ -1,0 +1,8 @@
+namespace CppWinRTComponent
+{
+    [default_interface]
+    runtimeclass MyNativeUserControl : Windows.UI.Xaml.Controls.UserControl
+    {
+        MyNativeUserControl();
+    }
+}

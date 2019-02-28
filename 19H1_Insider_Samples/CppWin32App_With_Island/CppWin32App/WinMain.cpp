@@ -109,12 +109,25 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	MSG msg = { };
 	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
+		BOOL result = FALSE;
+		// When multiple child windows are present it is needed to pre dispatch messages to all 
+		// DesktopWindowXamlSource instances so keyboard accelerators and 
+		// keyboard focus work correctly.
+		auto native2 = desktopSource.as<IDesktopWindowXamlSourceNative2>();
+		native2->PreTranslateMessage(&msg, &result);
+
+		if (!result)
+		{
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
+		}
+
 	}
 
 	return 0;
 }
+
+
 
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT messageCode, WPARAM wParam, LPARAM lParam)
 {
