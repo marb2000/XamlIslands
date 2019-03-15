@@ -23,7 +23,7 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <ProjectGuid>{516D9A0E-5604-4925-9DFA-D9C0CA33F848}</ProjectGuid>
     <RootNamespace>CppWin32App</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.18334.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18337.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -129,6 +129,9 @@
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="CppWin32App.exe.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

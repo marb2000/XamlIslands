@@ -22,4 +22,7 @@
   <ItemGroup>
     <Manifest Include="CppWin32App.exe.manifest" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
