@@ -27,13 +27,40 @@ namespace winrt::SampleUserControl::implementation
         void UnloadObject(::winrt::Windows::UI::Xaml::DependencyObject const& dependencyObject);
         void DisconnectUnloadedObject(int32_t connectionId);
 
-        ::winrt::Windows::UI::Xaml::Controls::Button Button()
+        ::winrt::Windows::UI::Xaml::Controls::TextBox Text1()
         {
-            return _Button;
+            return _Text1;
         }
-        void Button(::winrt::Windows::UI::Xaml::Controls::Button value)
+        void Text1(::winrt::Windows::UI::Xaml::Controls::TextBox value)
         {
-            _Button = value;
+            _Text1 = value;
+        }
+
+        ::winrt::Windows::UI::Xaml::Controls::Button Button1()
+        {
+            return _Button1;
+        }
+        void Button1(::winrt::Windows::UI::Xaml::Controls::Button value)
+        {
+            _Button1 = value;
+        }
+
+        ::winrt::Windows::UI::Xaml::Controls::Button Button2()
+        {
+            return _Button2;
+        }
+        void Button2(::winrt::Windows::UI::Xaml::Controls::Button value)
+        {
+            _Button2 = value;
+        }
+
+        ::winrt::Windows::UI::Xaml::Controls::Button Button3()
+        {
+            return _Button3;
+        }
+        void Button3(::winrt::Windows::UI::Xaml::Controls::Button value)
+        {
+            _Button3 = value;
         }
         
     protected:
@@ -42,7 +69,10 @@ namespace winrt::SampleUserControl::implementation
     private:
         struct MyUserControl_obj1_Bindings;
 
-        ::winrt::Windows::UI::Xaml::Controls::Button _Button{nullptr};
+        ::winrt::Windows::UI::Xaml::Controls::TextBox _Text1{nullptr};
+        ::winrt::Windows::UI::Xaml::Controls::Button _Button1{nullptr};
+        ::winrt::Windows::UI::Xaml::Controls::Button _Button2{nullptr};
+        ::winrt::Windows::UI::Xaml::Controls::Button _Button3{nullptr};
     };
 }
 

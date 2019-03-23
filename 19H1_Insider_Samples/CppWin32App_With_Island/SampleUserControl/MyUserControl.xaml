@@ -7,7 +7,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="Button">Click Me</Button>
+    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBox x:Name="Text1" Text="Text"></TextBox>
+        <Button x:Name="Button1" Click="Button_Click">Button 1</Button>
+        <Button x:Name="Button2" Click="Button_Click">Button 2</Button>
+        <Button x:Name="Button3" Click="Button_Click">Button 3</Button>
     </StackPanel>
 </UserControl>

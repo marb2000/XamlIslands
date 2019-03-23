@@ -5,6 +5,7 @@
 #include "framework.h"
 #include "SampleApp.h"
 #include "XamlBridge.h"
+#include "..\Microsoft.UI.Xaml.Markup\Generated Files\Microsoft.UI.Xaml.Markup.XamlApplication.g.h"
 
 #define MAX_LOADSTRING 100
 
@@ -22,34 +23,44 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
+    winrt::Microsoft::UI::Xaml::Markup::XamlApplication app;
+    app.RequestedTheme(winrt::Windows::UI::Xaml::ApplicationTheme::Light);
 
-    // Initialize global strings
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_SAMPLECPPAPP, szWindowClass, MAX_LOADSTRING);
-    MyRegisterClass(hInstance);
-
-    // Perform application initialization:
-    auto desktopSource = InitInstance(hInstance, nCmdShow);
-    auto desktopSourceNative2 = desktopSource.as<IDesktopWindowXamlSourceNative2>();
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
-    MSG msg = {};
-
-    // Main message loop:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    int retValue = 0;
     {
-        BOOL result = FALSE;
-        // When multiple child windows are present it is needed to pre dispatch messages to all 
-        // DesktopWindowXamlSource instances so keyboard accelerators and 
-        // keyboard focus work correctly.
-        desktopSourceNative2->PreTranslateMessage(&msg, &result);
-        if (!result && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }
-    }
+        // Initialize global strings
+        LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+        LoadStringW(hInstance, IDC_SAMPLECPPAPP, szWindowClass, MAX_LOADSTRING);
+        MyRegisterClass(hInstance);
 
-    return (int)msg.wParam;
+        // Perform application initialization:
+        auto desktopSource = InitInstance(hInstance, nCmdShow);
+        auto desktopSourceNative2 = desktopSource.as<IDesktopWindowXamlSourceNative2>();
+        HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
+        MSG msg = {};
+        HRESULT hr = S_OK;
+
+        // Main message loop:
+        while (GetMessage(&msg, nullptr, 0, 0))
+        {
+            BOOL processMessage = FALSE;
+            // When multiple child windows are present it is needed to pre dispatch messages to all 
+            // DesktopWindowXamlSource instances so keyboard accelerators and 
+            // keyboard focus work correctly.
+            hr = desktopSourceNative2->PreTranslateMessage(&msg, &processMessage);
+            winrt::check_hresult(hr);
+            if (!processMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+        retValue = (int)msg.wParam;
+        desktopSource.Close();
+    }
+    app.Close();
+
+    return retValue;
 }
 
 //
@@ -102,6 +113,7 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANC
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
+    SetFocus(hWnd);
 
     auto desktopXamlSource = CreateDesktopWindowsXamlSource(hWnd);
 

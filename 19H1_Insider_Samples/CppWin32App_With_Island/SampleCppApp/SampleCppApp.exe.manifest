@@ -24,5 +24,9 @@
             name="SampleUserControl.MyUserControl"
             threadingModel="both"
             xmlns="urn:schemas-microsoft-com:winrt.v1" />
+        <activatableClass
+            name="SampleUserControl.XamlMetaDataProvider"
+            threadingModel="both"
+            xmlns="urn:schemas-microsoft-com:winrt.v1" />
     </asmv3:file>
 </assembly>

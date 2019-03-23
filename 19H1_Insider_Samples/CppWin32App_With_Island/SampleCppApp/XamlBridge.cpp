@@ -3,14 +3,17 @@
 #include "XamlBridge.h"
 
 #include <roapi.h>
+#include "..\Microsoft.UI.Xaml.Markup\Generated Files\Microsoft.UI.Xaml.Markup.XamlApplication.g.h"
+#include "..\SampleUserControl\Generated Files\MyUserControl.g.h"
 
 winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsXamlSource(HWND parentWindow)
 {
     HRESULT hr = S_OK;
 
-    winrt::Windows::Foundation::IInspectable app;
-    hr = ::RoActivateInstance(reinterpret_cast<::HSTRING>(winrt::get_abi(winrt::hstring(L"Microsoft.UI.Xaml.Markup.XamlApplication"))), reinterpret_cast<::IInspectable * *>(winrt::put_abi(app)));
-    winrt::check_hresult(hr);
+    auto app = winrt::Windows::UI::Xaml::Application::Current();
+    auto metadataContainer = app.as<winrt::Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer>();
+    winrt::SampleUserControl::XamlMetaDataProvider metadataProvider;
+    metadataContainer.Providers().Append(metadataProvider);
 
     // This DesktopWindowXamlSource is the object that enables a non-UWP desktop application 
     // to host UWP controls in any UI element that is associated with a window handle (HWND).
@@ -19,24 +22,22 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     // Get handle to corewindow
     auto interop = desktopSource.as<IDesktopWindowXamlSourceNative>();
     // Parent the DesktopWindowXamlSource object to current window
-    winrt::check_hresult(interop->AttachToWindow(parentWindow));
+    hr = interop->AttachToWindow(parentWindow);
+    winrt::check_hresult(hr);
 
     // This Hwnd will be the window handler for the Xaml Island: A child window that contains Xaml.  
     HWND hWndXamlIsland = nullptr;
     // Get the new child window's hwnd 
-    interop->get_WindowHandle(&hWndXamlIsland);
+    hr = interop->get_WindowHandle(&hWndXamlIsland);
+    winrt::check_hresult(hr);
     // Update the xaml island window size becuase initially is 0,0
     SetWindowPos(hWndXamlIsland, 0, 200, 100, 800, 400, SWP_SHOWWINDOW);
-
-    winrt::Windows::Foundation::IInspectable control;
-    hr = ::RoActivateInstance(reinterpret_cast<::HSTRING>(winrt::get_abi(winrt::hstring(L"SampleUserControl.MyUserControl"))), reinterpret_cast<::IInspectable * *>(winrt::put_abi(control)));
-    winrt::check_hresult(hr);
-    auto uiElement = control.as<winrt::Windows::UI::Xaml::UIElement>();
+    SetFocus(hWndXamlIsland);
 
     //Creating the Xaml content
+    winrt::SampleUserControl::MyUserControl control;
     winrt::Windows::UI::Xaml::Controls::StackPanel xamlContainer;
-
-    xamlContainer.Children().Append(uiElement);
+    xamlContainer.Children().Append(control);
     xamlContainer.UpdateLayout();
     desktopSource.Content(xamlContainer);
 

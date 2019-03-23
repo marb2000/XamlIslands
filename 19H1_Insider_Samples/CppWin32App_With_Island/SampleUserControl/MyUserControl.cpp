@@ -23,7 +23,7 @@ namespace winrt::SampleUserControl::implementation
 }
 
 
-void winrt::SampleUserControl::implementation::MyUserControl::Button_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e)
+void winrt::SampleUserControl::implementation::MyUserControl::Button_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& )
 {
-
+    Text1().Text(sender.as<winrt::Windows::UI::Xaml::Controls::Button>().Name());
 }
