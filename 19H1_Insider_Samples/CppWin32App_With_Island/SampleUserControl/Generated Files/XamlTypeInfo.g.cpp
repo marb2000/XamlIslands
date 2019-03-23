@@ -7,34 +7,69 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 #include "pch.h"
-#include "XamlTypeInfo.g.h"
+#include <memory>
 
-#include "MyUserControl.xaml.h"
-#include "XamlBindingInfo.g.hpp"
-#include "MyUserControl.g.hpp"
+#include "XamlTypeInfo.xaml.g.h"
 
-template<typename T>
-::Platform::Object^ ActivateType()
+#include "MyUserControl.h"
+#include "XamlBindingInfo.xaml.g.hpp"
+#include "MyUserControl.xaml.g.hpp"
+
+namespace winrt::SampleUserControl::implementation
 {
-    return ref new T;
+using IXamlMember = ::winrt::Windows::UI::Xaml::Markup::IXamlMember;
+using IXamlType = ::winrt::Windows::UI::Xaml::Markup::IXamlType;
+using TypeKind = ::winrt::Windows::UI::Xaml::Interop::TypeKind;
+
+template <typename T>
+::winrt::Windows::Foundation::IInspectable ActivateType()
+{
+    return T();
+}
+
+template <typename T>
+::winrt::Windows::Foundation::IInspectable ActivateLocalType()
+{
+    return ::winrt::make<T>();
 }
 
 template<typename TInstance, typename TItem>
-void CollectionAdd(::Platform::Object^ instance, ::Platform::Object^ item)
+void CollectionAdd(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& item)
 {
-    safe_cast<TInstance^>(instance)->Append((TItem)item);
+    instance.as<TInstance>().Append(::winrt::unbox_value<TItem>(item));
 }
 
 template<typename TInstance, typename TKey, typename TItem>
-void DictionaryAdd(::Platform::Object^ instance, ::Platform::Object^ key, ::Platform::Object^ item)
+void DictionaryAdd(
+    ::winrt::Windows::Foundation::IInspectable const& instance,
+    ::winrt::Windows::Foundation::IInspectable const& key,
+    ::winrt::Windows::Foundation::IInspectable const& item)
 {
-    safe_cast<TInstance^>(instance)->Insert((TKey)key, (TItem)item);
+    instance.as<TInstance>().Insert(::winrt::unbox_value<TKey>(key), ::winrt::unbox_value<TItem>(item));
 }
 
 template<typename T>
-::Platform::Object^ FromStringConverter(::XamlTypeInfo::InfoProvider::XamlUserType^ userType, ::Platform::String^ input)
+::winrt::Windows::Foundation::IInspectable FromStringConverter(
+    XamlUserType const& userType, 
+    ::winrt::hstring const& input)
 {
-    return ref new ::Platform::Box<T>((T)userType->CreateEnumUIntFromString(input));
+    return ::winrt::box_value(static_cast<T>(userType.CreateEnumUIntFromString(input)));
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MyProperty(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MyProperty());
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MyProperty(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MyProperty(::winrt::unbox_value<TValue>(value));
 }
 
 enum TypeInfo_Flags
@@ -49,141 +84,221 @@ enum TypeInfo_Flags
 
 struct TypeInfo
 {
-    PCWSTR  typeName;
-    PCWSTR contentPropertyName;
-    ::Platform::Object^ (*activator)();
-    void (*collectionAdd)(::Platform::Object^, ::Platform::Object^);
-    void (*dictionaryAdd)(::Platform::Object^, ::Platform::Object^, ::Platform::Object^);
-    ::Platform::Object^ (*fromStringConverter)(::XamlTypeInfo::InfoProvider::XamlUserType^, ::Platform::String^);
+    const wchar_t* typeName{nullptr};
+    const wchar_t* contentPropertyName{nullptr};
+    ::winrt::Windows::Foundation::IInspectable (*activator)();
+    void (*collectionAdd)(::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&);
+    void (*dictionaryAdd)(::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&);
+    ::winrt::Windows::Foundation::IInspectable (*fromStringConverter)(XamlUserType const&, ::winrt::hstring const& );
     int     baseTypeIndex;
     int     firstMemberIndex;
     int     firstEnumValueIndex;
     int     createFromStringIndex;
-    ::Windows::UI::Xaml::Interop::TypeKind kindofType;
+    TypeKind kindOfType;
     unsigned int flags;
-    int boxedTypeIndex;
 };
+
 
 const TypeInfo TypeInfos[] = 
 {
     //   0
-    L"SampleUserControl.MyUserControl", L"",
-    &ActivateType<::SampleUserControl::MyUserControl>, nullptr, nullptr, nullptr,
-    1, // Windows.UI.Xaml.Controls.UserControl
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
-    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    L"Int32", L"",
+    nullptr, nullptr, nullptr, nullptr,
     -1,
+    0, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   1
+    L"SampleUserControl.MyUserControl", L"",
+    &ActivateLocalType<::winrt::SampleUserControl::implementation::MyUserControl>, nullptr, nullptr, nullptr,
+    2, // Windows.UI.Xaml.Controls.UserControl
+    0, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
+    //   2
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Metadata,
+    1, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    -1,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    0, 0, -1, ::Windows::UI::Xaml::Interop::TypeKind::Custom,
+    1, 0, -1, TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
-const UINT TypeInfoLookup[] = { 
+constexpr uint32_t TypeInfoLookup[] = { 
       0,   //   0
       0,   //   1
       0,   //   2
       0,   //   3
       0,   //   4
       0,   //   5
-      0,   //   6
-      0,   //   7
-      0,   //   8
-      0,   //   9
-      0,   //  10
-      0,   //  11
-      0,   //  12
-      0,   //  13
-      0,   //  14
-      0,   //  15
-      0,   //  16
-      0,   //  17
-      0,   //  18
-      0,   //  19
-      0,   //  20
-      0,   //  21
-      0,   //  22
-      0,   //  23
-      0,   //  24
-      0,   //  25
-      0,   //  26
-      0,   //  27
-      0,   //  28
-      0,   //  29
-      0,   //  30
-      0,   //  31
-      1,   //  32
-      1,   //  33
-      1,   //  34
-      1,   //  35
-      1,   //  36
-      2,   //  37
+      1,   //   6
+      1,   //   7
+      1,   //   8
+      1,   //   9
+      1,   //  10
+      1,   //  11
+      1,   //  12
+      1,   //  13
+      1,   //  14
+      1,   //  15
+      1,   //  16
+      1,   //  17
+      1,   //  18
+      1,   //  19
+      1,   //  20
+      1,   //  21
+      1,   //  22
+      1,   //  23
+      1,   //  24
+      1,   //  25
+      1,   //  26
+      1,   //  27
+      1,   //  28
+      1,   //  29
+      1,   //  30
+      1,   //  31
+      2,   //  32
+      2,   //  33
+      2,   //  34
+      2,   //  35
+      2,   //  36
+      3,   //  37
 };
 
-const TypeInfo* GetTypeInfo(::Platform::String^ typeName)
+struct MemberInfo 
 {
-    auto typeNameLength = typeName->Length();
+    const wchar_t* shortName{nullptr};
+    ::winrt::Windows::Foundation::IInspectable (*getter)(::winrt::Windows::Foundation::IInspectable const&);
+    void (*setter)(::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&);
+    int typeIndex;
+    int targetTypeIndex;
+    bool isReadOnly;
+    bool isDependencyProperty;
+    bool isAttachable;
+};
+
+const MemberInfo MemberInfos[] = 
+{
+    //   0 - SampleUserControl.MyUserControl.MyProperty
+    L"MyProperty",
+    &GetValueTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, int32_t>,
+    &SetValueTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, int32_t>,
+    0, // Int32
+    -1,
+    false, false, false,
+};
+
+const wchar_t* GetShortName(const wchar_t* longName)
+{
+    const auto separator = wcsrchr(longName, '.');
+    return separator ? separator + 1: longName;
+}
+
+const TypeInfo* GetTypeInfo(::winrt::hstring const& typeName)
+{
+    size_t typeNameLength = typeName.size();
     if (typeNameLength < _countof(TypeInfoLookup) - 1)
     {
-        for (UINT i = TypeInfoLookup[typeNameLength]; i < TypeInfoLookup[typeNameLength+1]; i++)
+        const auto begin = TypeInfos + TypeInfoLookup[typeNameLength];
+        const auto end = TypeInfos + TypeInfoLookup[typeNameLength + 1];
+        auto pos = std::find_if(begin, end, [&typeName](TypeInfo const& elem)
         {
-            if (typeName == ::Platform::StringReference(TypeInfos[i].typeName))
+            return wcscmp(typeName.data(), elem.typeName) == 0;
+        });
+        if (pos != end)
+        {
+            return pos;
+        }
+    }
+    return nullptr;
+}
+
+const MemberInfo* GetMemberInfo(::winrt::hstring const& longMemberName)
+{
+    const auto dotPosition = std::find(longMemberName.crbegin(), longMemberName.crend(), L'.').base();
+    if (dotPosition != longMemberName.end())
+    {
+        const auto sizeBeforeDot = static_cast<::winrt::hstring::size_type>(dotPosition - longMemberName.begin()) - 1;
+        const TypeInfo* pTypeInfo = GetTypeInfo(::winrt::hstring{longMemberName.data(), sizeBeforeDot});
+        if (pTypeInfo)
+        {
+            const TypeInfo* pNextTypeInfo = pTypeInfo + 1;
+            const auto shortMemberName = GetShortName(longMemberName.data());
+            const auto begin = MemberInfos + pTypeInfo->firstMemberIndex;
+            const auto end = MemberInfos + pNextTypeInfo->firstMemberIndex;
+            auto info = std::find_if(begin, end,
+                [shortMemberName](const MemberInfo& elem)
             {
-                return &TypeInfos[i];
+                return wcscmp(shortMemberName, elem.shortName) == 0;
+            });
+            if (info != end)
+            {
+                return info;
             }
         }
     }
     return nullptr;
 }
 
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::CreateXamlType(::Platform::String^ typeName)
+std::vector<::winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> const& XamlTypeInfoProvider::OtherProviders()
+{
+    return _otherProviders;
+}
+
+IXamlType XamlTypeInfoProvider::CreateXamlType(::winrt::hstring const& typeName)
 {
     const TypeInfo* pTypeInfo = GetTypeInfo(typeName);
     const TypeInfo* pNextTypeInfo = pTypeInfo + 1;
-    if (pTypeInfo == nullptr || pNextTypeInfo == nullptr)
+    if (!pTypeInfo || !pNextTypeInfo)
     {
         return nullptr;
     }
     else if (pTypeInfo->flags & TypeInfo_Flags_IsSystemType)
     {
-        return ref new ::XamlTypeInfo::InfoProvider::XamlSystemBaseType(typeName);
+        return ::winrt::make<XamlSystemBaseType>(typeName);
     }
     else
     {
-        ::XamlTypeInfo::InfoProvider::XamlUserType^ userType = ref new ::XamlTypeInfo::InfoProvider::XamlUserType(
-            this, 
-            ::Platform::StringReference(pTypeInfo->typeName), 
-            this->GetXamlTypeByName(::Platform::StringReference(pTypeInfo->baseTypeIndex >= 0 ? TypeInfos[pTypeInfo->baseTypeIndex].typeName : L"")));
-        userType->KindOfType = pTypeInfo->kindofType;
-        userType->Activator = pTypeInfo->activator;
-        userType->CollectionAdd = pTypeInfo->collectionAdd;
-        userType->DictionaryAdd = pTypeInfo->dictionaryAdd;
-        userType->FromStringConverter = pTypeInfo->fromStringConverter;
-        userType->ContentPropertyName = ::Platform::StringReference(pTypeInfo->contentPropertyName);
-        userType->IsLocalType = pTypeInfo->flags & TypeInfo_Flags_IsLocalType;
-        userType->IsReturnTypeStub = pTypeInfo->flags & TypeInfo_Flags_IsReturnTypeStub;
-        userType->IsBindable = pTypeInfo->flags & TypeInfo_Flags_IsBindable;
-        userType->IsMarkupExtension = pTypeInfo->flags & TypeInfo_Flags_IsMarkupExtension;
-        userType->CreateFromStringMethod = nullptr;
-        userType->SetBoxedType(this->GetXamlTypeByName(::Platform::StringReference(pTypeInfo->boxedTypeIndex >= 0 ? TypeInfos[pTypeInfo->boxedTypeIndex].typeName : L"")));
-        return userType;
+        ::winrt::hstring baseName { pTypeInfo->baseTypeIndex >= 0 ? TypeInfos[pTypeInfo->baseTypeIndex].typeName : L""};
+        auto userType = ::winrt::make_self<XamlUserType>(shared_from_this(), pTypeInfo->typeName, GetXamlTypeByName(baseName));
+        userType->_kindOfType = pTypeInfo->kindOfType;
+        userType->_activator = pTypeInfo->activator;
+        userType->_collectionAdd = pTypeInfo->collectionAdd;
+        userType->_dictionaryAdd = pTypeInfo->dictionaryAdd;
+        userType->_fromStringConverter = pTypeInfo->fromStringConverter;
+        userType->ContentPropertyName(pTypeInfo->contentPropertyName);
+        userType->IsLocalType(pTypeInfo->flags & TypeInfo_Flags_IsLocalType);
+        userType->IsReturnTypeStub(pTypeInfo->flags & TypeInfo_Flags_IsReturnTypeStub);
+        userType->IsBindable(pTypeInfo->flags & TypeInfo_Flags_IsBindable);
+        userType->IsMarkupExtension(pTypeInfo->flags & TypeInfo_Flags_IsMarkupExtension);
+        userType->_createFromStringMethod = nullptr;
+        for (int i = pTypeInfo->firstMemberIndex; i < pNextTypeInfo->firstMemberIndex; ++i)
+        {
+            userType->AddMemberName(MemberInfos[i].shortName);
+        }
+        return userType.as<IXamlType>();
     }
 }
 
-::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::CreateXamlMember(::Platform::String^ longMemberName)
+IXamlMember XamlTypeInfoProvider::CreateXamlMember(::winrt::hstring const& longMemberName)
 {
-    ::XamlTypeInfo::InfoProvider::XamlMember^ xamlMember = nullptr;
-    // No Local Properties
-    (void)longMemberName; // Unused parameter
-    return xamlMember;
-}
+    const MemberInfo* pMemberInfo = GetMemberInfo(longMemberName);
+    if (!pMemberInfo)
+    {
+        return nullptr;
+    }
+    auto xamlMember = ::winrt::make_self<XamlMember>(shared_from_this(),
+        pMemberInfo->shortName, TypeInfos[pMemberInfo->typeIndex].typeName);
+    xamlMember->_getter = pMemberInfo->getter;
+    xamlMember->_setter = pMemberInfo->setter;
+    xamlMember->TargetTypeName(pMemberInfo->targetTypeIndex >= 0 ? TypeInfos[pMemberInfo->targetTypeIndex].typeName : L"");
+    xamlMember->IsReadOnly(pMemberInfo->isReadOnly);
+    xamlMember->IsDependencyProperty(pMemberInfo->isDependencyProperty);
+    xamlMember->IsAttachable(pMemberInfo->isAttachable);
 
+    return xamlMember.as<IXamlMember>();
+}
+} // namespace

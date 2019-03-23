@@ -7,582 +7,599 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 #include "pch.h"
+
+#include <memory>
+#include <string>
 #include <regex>
-#include "XamlTypeInfo.g.h"
+#include "XamlTypeInfo.xaml.g.h"
+#include "XamlMetaDataProvider.h"
 
-
-// XamlMetaDataProvider
-namespace SampleUserControl
+namespace winrt::SampleUserControl::implementation
 {
-    namespace SampleUserControl_XamlTypeInfo
+    using namespace ::winrt::Windows::UI::Xaml::Markup;
+    using namespace ::winrt::Windows::UI::Xaml::Interop;
+
+    // XamlMetaDataProvider
+
+
+    IXamlType XamlMetaDataProvider::GetXamlType(TypeName const& type)
     {
-        [Windows::Foundation::Metadata::WebHostHidden]
-        public ref class XamlMetaDataProvider sealed : public ::Windows::UI::Xaml::Markup::IXamlMetadataProvider
+        return Provider()->GetXamlTypeByType(type);
+    }
+
+    IXamlType XamlMetaDataProvider::GetXamlType(::winrt::hstring const& fullName)
+    {
+        return Provider()->GetXamlTypeByName(fullName);
+    }
+
+    ::winrt::com_array<XmlnsDefinition> XamlMetaDataProvider::GetXmlnsDefinitions()
+    {
+        return ::winrt::com_array<XmlnsDefinition>(0);
+    }
+
+    std::shared_ptr<XamlTypeInfoProvider> XamlMetaDataProvider::Provider()
+    {
+        if (!_provider)
         {
-        public:
-            [::Windows::Foundation::Metadata::DefaultOverload]
-            virtual ::Windows::UI::Xaml::Markup::IXamlType^ GetXamlType(::Windows::UI::Xaml::Interop::TypeName type);
-            virtual ::Windows::UI::Xaml::Markup::IXamlType^ GetXamlType(::Platform::String^ fullName);
-            virtual ::Platform::Array<::Windows::UI::Xaml::Markup::XmlnsDefinition>^ GetXmlnsDefinitions();
-            
-        private:
-            ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ _provider;
-            property ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ Provider
-            {
-                ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ get();
-            }
-        };
-    }
-}
-
-[::Windows::Foundation::Metadata::DefaultOverload]
-::Windows::UI::Xaml::Markup::IXamlType^ ::SampleUserControl::SampleUserControl_XamlTypeInfo::XamlMetaDataProvider::GetXamlType(::Windows::UI::Xaml::Interop::TypeName type)
-{
-    return Provider->GetXamlTypeByType(type);
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::SampleUserControl::SampleUserControl_XamlTypeInfo::XamlMetaDataProvider::GetXamlType(Platform::String^ fullName)
-{
-    return Provider->GetXamlTypeByName(fullName);
-}
-
-Platform::Array<::Windows::UI::Xaml::Markup::XmlnsDefinition>^ ::SampleUserControl::SampleUserControl_XamlTypeInfo::XamlMetaDataProvider::GetXmlnsDefinitions()
-{
-    return ref new Platform::Array<::Windows::UI::Xaml::Markup::XmlnsDefinition>(0);
-}
-
-::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ ::SampleUserControl::SampleUserControl_XamlTypeInfo::XamlMetaDataProvider::Provider::get()
-{
-    if (_provider == nullptr)
-    {
-        _provider = ref new XamlTypeInfo::InfoProvider::XamlTypeInfoProvider();
-    }
-    return _provider;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::GetXamlTypeByType(::Windows::UI::Xaml::Interop::TypeName type)
-{
-    auto xamlType = GetXamlTypeByName(type.Name);
-    return xamlType;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::GetXamlTypeByName(::Platform::String^ typeName)
-{
-    if (typeName == nullptr || typeName->IsEmpty())
-    {
-        return nullptr;
-    }
-
-    auto lock = _xamlTypesCriticalSection.Lock();
-    auto val = _xamlTypes.find(typeName);
-    ::Windows::UI::Xaml::Markup::IXamlType^ xamlType = nullptr;
-    if (val != _xamlTypes.end())
-    {
-        xamlType = (val->second).Resolve<::Windows::UI::Xaml::Markup::IXamlType>();
-        if(xamlType != nullptr)
-        {
-            return xamlType;
+            _provider = std::make_shared<XamlTypeInfoProvider>();
         }
+        return _provider;
     }
 
-    xamlType = CreateXamlType(typeName);
-    if (xamlType != nullptr)
+    // XamlTypeInfoProvider
+
+    IXamlType XamlTypeInfoProvider::GetXamlTypeByType(TypeName const& type)
     {
-        Platform::WeakReference wr(xamlType);
-        _xamlTypes[xamlType->FullName] =  wr;
+        auto xamlType = GetXamlTypeByName(type.Name);
+        auto userXamlType = xamlType ? xamlType.try_as<XamlUserType>() : nullptr;
+        if (!xamlType || (userXamlType && userXamlType->IsReturnTypeStub() && !userXamlType->IsLocalType()))
+        {
+            auto libXamlType = CheckOtherMetadataProvidersForType(type);
+            if (libXamlType)
+            {
+                if (libXamlType.IsConstructible() || !xamlType)
+                {
+                    xamlType = libXamlType;
+                }
+            }
+        }
+        return xamlType;
     }
-    return xamlType;
-}
 
-::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider::GetMemberByLongName(::Platform::String^ longMemberName)
-{
-    if (longMemberName == nullptr || longMemberName->IsEmpty())
+    IXamlType XamlTypeInfoProvider::GetXamlTypeByName(::winrt::hstring const& typeName)
     {
-        return nullptr;
+        if (typeName.empty())
+        {
+            return nullptr;
+        }
+
+        auto val = _xamlTypes.find(typeName.data());
+        if (val != _xamlTypes.end())
+        {
+            auto xamlType = (val->second).get();
+            if (xamlType)
+            {
+                return xamlType;
+            }
+        }
+
+        auto xamlType = CreateXamlType(typeName);
+        auto userXamlType = xamlType ? xamlType.try_as<XamlUserType>() : nullptr;
+        if (!xamlType || (userXamlType && userXamlType->IsReturnTypeStub() && !userXamlType->IsLocalType()))
+        {
+            IXamlType libXamlType = CheckOtherMetadataProvidersForName(typeName);
+            if (libXamlType)
+            {
+                if (libXamlType.IsConstructible() || !xamlType)
+                {
+                    xamlType = libXamlType;
+                }
+            }
+        }
+
+        if (xamlType)
+        {
+            _xamlTypes.insert_or_assign(xamlType.FullName().data(), xamlType);
+        }
+        return xamlType;
     }
 
-    auto lock = _xamlMembersCriticalSection.Lock();
-    auto val = _xamlMembers.find(longMemberName);
-    if (val != _xamlMembers.end())
+    IXamlMember XamlTypeInfoProvider::GetMemberByLongName(::winrt::hstring const& longMemberName)
     {
-        return val->second;
+        if (longMemberName.empty())
+        {
+            return nullptr;
+        }
+
+        auto val = _xamlMembers.find(longMemberName.data());
+        if (val != _xamlMembers.end())
+        {
+            return val->second;
+        }
+
+        auto xamlMember = CreateXamlMember(longMemberName);
+
+        if (xamlMember)
+        {
+            _xamlMembers.insert_or_assign(longMemberName.data(), xamlMember);
+        }
+        return xamlMember;
     }
 
-    auto xamlMember = CreateXamlMember(longMemberName);
-    if (xamlMember != nullptr)
+    IXamlType XamlTypeInfoProvider::CheckOtherMetadataProvidersForName(::winrt::hstring const& typeName)
     {
-        _xamlMembers[longMemberName] = xamlMember;
+        IXamlType foundXamlType;
+        for (auto const& provider : OtherProviders())
+        {
+            auto xamlType = provider.GetXamlType(typeName);
+            if (xamlType)
+            {
+                if (xamlType.IsConstructible())
+                {
+                    return xamlType;
+                }
+                foundXamlType = xamlType;
+            }
+        }
+        return foundXamlType;
     }
-    return xamlMember;
-}
 
+    IXamlType XamlTypeInfoProvider::CheckOtherMetadataProvidersForType(TypeName const& t)
+    {
+        IXamlType foundXamlType;
+        for (auto const& provider : OtherProviders())
+        {
+            auto xamlType = provider.GetXamlType(t);
+            if (xamlType)
+            {
+                if (xamlType.IsConstructible())
+                {
+                    return xamlType;
+                }
+                foundXamlType = xamlType;
+            }
+        }
+        return foundXamlType;
+    }
 
-// XamlSystemBaseType
-::XamlTypeInfo::InfoProvider::XamlSystemBaseType::XamlSystemBaseType(::Platform::String^ name) :
-    _fullName(name)
-{
-}
+    // XamlSystemBaseType
 
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::BaseType::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    XamlSystemBaseType::XamlSystemBaseType(::winrt::hstring const& name)
+        : _fullName(name)
+    {
+    }
 
-::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::ContentProperty::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    IXamlType XamlSystemBaseType::BaseType() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Platform::String^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::FullName::get()
-{
-    return _fullName;
-}
+    IXamlMember XamlSystemBaseType::ContentProperty() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Platform::String^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::Name::get()
-{
-    const wchar_t* seperator = wcsrchr(_fullName->Data(), '.');
-    if (seperator == nullptr)
+    ::winrt::hstring XamlSystemBaseType::FullName() const
     {
         return _fullName;
     }
-    return ref new ::Platform::String(seperator);
-}
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsArray::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    ::winrt::hstring XamlSystemBaseType::Name() const
+    {
+        const wchar_t* separator = wcsrchr(_fullName.c_str(), '.');
+        if (!separator)
+        {
+            return _fullName;
+        }
+        return ::winrt::hstring { separator };
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsCollection::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsArray() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsConstructible::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsCollection() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsDictionary::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsConstructible() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsMarkupExtension::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsDictionary() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsEnum::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsMarkupExtension() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsSystemType::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsEnum() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-bool ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::IsBindable::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsSystemType() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::ItemType::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    bool XamlSystemBaseType::IsBindable() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::KeyType::get()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    IXamlType XamlSystemBaseType::ItemType() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Windows::UI::Xaml::Interop::TypeName (::XamlTypeInfo::InfoProvider::XamlSystemBaseType::UnderlyingType::get)()
-{
-    ::Windows::UI::Xaml::Interop::TypeName typeName;
+    IXamlType XamlSystemBaseType::KeyType() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-    typeName.Name = _fullName;
-    typeName.Kind = ::Windows::UI::Xaml::Interop::TypeKind::Primitive;
+    TypeName XamlSystemBaseType::UnderlyingType() const
+    {
+        return { _fullName, TypeKind::Primitive };
+    }
 
-    return typeName;
-}
+    ::winrt::Windows::Foundation::IInspectable XamlSystemBaseType::ActivateInstance() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Platform::Object^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::ActivateInstance()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    IXamlMember XamlSystemBaseType::GetMember(::winrt::hstring const& ) const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::GetMember(::Platform::String^)
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    void XamlSystemBaseType::AddToVector(::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&) const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-void ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::AddToVector(::Platform::Object^, ::Platform::Object^)
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    void XamlSystemBaseType::AddToMap(::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&, ::winrt::Windows::Foundation::IInspectable const&) const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-void ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::AddToMap(::Platform::Object^, ::Platform::Object^, ::Platform::Object^)
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    void XamlSystemBaseType::RunInitializer() const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-void ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::RunInitializer()
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    ::winrt::Windows::Foundation::IInspectable XamlSystemBaseType::CreateFromString(::winrt::hstring const& ) const
+    {
+        throw ::winrt::hresult_not_implemented {};
+    }
 
-::Platform::Object^ ::XamlTypeInfo::InfoProvider::XamlSystemBaseType::CreateFromString(::Platform::String^)
-{
-    throw ref new ::Platform::NotImplementedException;
-}
+    // XamlUserType
 
-//XamlUserType
-::XamlTypeInfo::InfoProvider::XamlUserType::XamlUserType(::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ provider, ::Platform::String^ fullName, ::Windows::UI::Xaml::Markup::IXamlType^ baseType) :
-    _isArray(false),
-    _isMarkupExtension(false),
-    _isEnum(false),
-    _isBindable(false),
-    _isReturnTypeStub(false),
-    _isLocalType(false),
-    _fullName(fullName),
-    _provider(provider),
-    _baseType(baseType)
-{
-}
+    XamlUserType::XamlUserType(
+        std::shared_ptr<XamlTypeInfoProvider> const& provider, 
+        ::winrt::hstring const& fullName, 
+        IXamlType baseType)
+            : _provider(provider)
+            , _fullName(fullName)
+            , _baseType(baseType)
+    {
+    }
 
-::Platform::String^ ::XamlTypeInfo::InfoProvider::XamlUserType::FullName::get()
-{
-    return _fullName;
-}
+    ::winrt::hstring XamlUserType::GetRuntimeClassName() const
+    {
+        static ::winrt::hstring name{ ::winrt::name_of<::winrt::Windows::UI::Xaml::Markup::IXamlType>() };
+        return name;
+    }
 
-::Platform::String^ ::XamlTypeInfo::InfoProvider::XamlUserType::Name::get()
-{
-    const wchar_t *seperator = wcsrchr(_fullName->Data(), '.');
-    if (seperator == nullptr)
+    ::winrt::hstring XamlUserType::FullName() const
     {
         return _fullName;
     }
-    return ref new ::Platform::String(seperator);
-}
 
-::Windows::UI::Xaml::Interop::TypeName (::XamlTypeInfo::InfoProvider::XamlUserType::UnderlyingType::get)()
-{
-    ::Windows::UI::Xaml::Interop::TypeName typeName;
-
-    typeName.Name = _fullName;
-    typeName.Kind = KindOfType;
-
-    return typeName;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsSystemType::get()
-{
-    return true;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlUserType::BaseType::get()
-{
-    return _baseType;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsArray::get()
-{
-    return _isArray;
-}
-void ::XamlTypeInfo::InfoProvider::XamlUserType::IsArray::set(bool value)
-{
-    _isArray = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsCollection::get()
-{
-    return CollectionAdd != nullptr;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsConstructible::get()
-{
-    return Activator != nullptr;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsDictionary::get()
-{
-    return DictionaryAdd != nullptr;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsMarkupExtension::get()
-{
-    return _isMarkupExtension;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::IsMarkupExtension::set(bool value)
-{
-    _isMarkupExtension = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsEnum::get()
-{
-    return _isEnum;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::IsEnum::set(bool value)
-{
-    _isEnum = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsBindable::get()
-{
-    return _isBindable;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::IsBindable::set(bool value)
-{
-    _isBindable = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsReturnTypeStub::get()
-{
-    return _isReturnTypeStub;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::IsReturnTypeStub::set(bool value)
-{
-    _isReturnTypeStub = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlUserType::IsLocalType::get()
-{
-    return _isLocalType;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::IsLocalType::set(bool value)
-{
-    _isLocalType = value;
-}
-
-::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlUserType::ContentProperty::get()
-{
-    return _provider->GetMemberByLongName(_contentPropertyName);
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::ContentPropertyName::set(::Platform::String^ value)
-{
-    _contentPropertyName = value;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlUserType::ItemType::get()
-{
-    return _provider->GetXamlTypeByName(_itemTypeName);
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::ItemTypeName::set(::Platform::String^ value)
-{
-    _itemTypeName = value;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlUserType::KeyType::get()
-{
-    return _provider->GetXamlTypeByName(_keyTypeName);
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::KeyTypeName::set(::Platform::String^ value)
-{
-    _keyTypeName = value;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlUserType::BoxedType::get()
-{
-    return _boxedType;
-}
-
-::Windows::UI::Xaml::Markup::IXamlMember^ ::XamlTypeInfo::InfoProvider::XamlUserType::GetMember(::Platform::String^ name)
-{
-    auto val = _memberNames.find(name);
-    if (val != _memberNames.end())
+    ::winrt::hstring XamlUserType::Name() const
     {
-        return _provider->GetMemberByLongName(val->second);
-    }
-    return nullptr;
-}
-
-::Platform::Object^ ::XamlTypeInfo::InfoProvider::XamlUserType::ActivateInstance()
-{
-    return Activator();
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::AddToMap(::Platform::Object^ instance, ::Platform::Object^ key, ::Platform::Object^ item)
-{
-    DictionaryAdd(instance, key, item);
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::AddToVector(::Platform::Object^ instance, ::Platform::Object^ item)
-{
-    CollectionAdd(instance, item);
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::RunInitializer()
-{
-    // The C++ runtime will have already run all the Static Initializers at start up.
-}
-
-::Platform::Object^ ::XamlTypeInfo::InfoProvider::XamlUserType::CreateFromString(::Platform::String^ input)
-{
-    // For boxed types, run the boxed type's CreateFromString method and boxing
-    if (BoxedType != nullptr)
-    {
-        return BoxedType->CreateFromString(input);
-    }
-
-    if (CreateFromStringMethod != nullptr)
-    {
-        return (*CreateFromStringMethod)(input);
-    }
-    else
-    {
-        return FromStringConverter(this, input);
-    }
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::SetBoxedType(::Windows::UI::Xaml::Markup::IXamlType^ boxedType)
-{
-    _boxedType = boxedType;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::AddMemberName(::Platform::String^ shortName)
-{
-    _memberNames[shortName] = FullName + "." + shortName;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlUserType::AddEnumValue(::Platform::String^ name, ::Platform::Object^ value)
-{
-    _enumValues[name->Data()] = value;
-}
-
-::default::uint32 (::XamlTypeInfo::InfoProvider::XamlUserType::CreateEnumUIntFromString)(::Platform::String^ input)
-{
-    bool found = false;
-
-    const std::wregex regularExpression(L"^\\s+|\\s*,\\s*|\\s+$");
-    uint32 val = 0;
-
-    for (std::wcregex_token_iterator it(input->Begin(), input->End(), regularExpression, -1), end; it != end; ++it)
-    {
-        const std::wcsub_match& subMatch = *it;
-
-        if (subMatch.length() == 0 )
+        const wchar_t* separator = wcsrchr(_fullName.c_str(), '.');
+        if (!separator)
         {
-            continue;
+            return _fullName;
         }
+        return separator;
+    }
 
-        std::wstring lookup(subMatch.first, (unsigned int)subMatch.length());
+    TypeName XamlUserType::UnderlyingType() const
+    {
+        return { _fullName, _kindOfType };
+    }
 
-        try
+    bool XamlUserType::IsSystemType() const
+    {
+        return true;
+    }
+
+    IXamlType XamlUserType::BaseType() const
+    {
+        return _baseType;
+    }
+
+    bool XamlUserType::IsArray() const
+    {
+        return _isArray;
+    }
+
+    void XamlUserType::IsArray(bool value)
+    {
+        _isArray = value;
+    }
+
+    bool XamlUserType::IsCollection() const
+    {
+        return _collectionAdd;
+    }
+
+    bool XamlUserType::IsConstructible() const
+    {
+        return _activator;
+    }
+
+    bool XamlUserType::IsDictionary() const
+    {
+        return _dictionaryAdd;
+    }
+
+    bool XamlUserType::IsMarkupExtension() const
+    {
+        return _isMarkupExtension;
+    }
+
+    void XamlUserType::IsMarkupExtension(bool value)
+    {
+        _isMarkupExtension = value;
+    }
+
+    bool XamlUserType::IsEnum() const
+    {
+        return _isEnum;
+    }
+
+    void XamlUserType::IsEnum(bool value)
+    {
+        _isEnum = value;
+    }
+
+    bool XamlUserType::IsBindable() const
+    {
+        return _isBindable;
+    }
+
+    void XamlUserType::IsBindable(bool value)
+    {
+        _isBindable = value;
+    }
+
+    bool XamlUserType::IsReturnTypeStub() const
+    {
+        return _isReturnTypeStub;
+    }
+
+    void XamlUserType::IsReturnTypeStub(bool value)
+    {
+        _isReturnTypeStub = value;
+    }
+
+    bool XamlUserType::IsLocalType() const
+    {
+        return _isLocalType;
+    }
+
+    void XamlUserType::IsLocalType(bool value)
+    {
+        _isLocalType = value;
+    }
+
+    IXamlMember XamlUserType::ContentProperty() const
+    {
+        return _provider->GetMemberByLongName(_contentPropertyName);
+    }
+
+    IXamlType XamlUserType::ItemType() const
+    {
+        return _provider->GetXamlTypeByName(_itemTypeName);
+    }
+
+    IXamlType XamlUserType::KeyType() const
+    {
+        return _provider->GetXamlTypeByName(_keyTypeName);
+    }
+
+
+    IXamlMember XamlUserType::GetMember(::winrt::hstring const& name) const
+    {
+        auto val = _memberNames.find(name.data());
+        if (val != _memberNames.end())
         {
-            auto entry = _enumValues.find(lookup);
-            if (entry != _enumValues.end())
+            return _provider->GetMemberByLongName(val->second);
+        }
+        return nullptr;
+    }
+
+    ::winrt::Windows::Foundation::IInspectable XamlUserType::ActivateInstance() const
+    {
+        return _activator();
+    }
+
+    void XamlUserType::AddToMap(::winrt::Windows::Foundation::IInspectable const& instance, ::winrt::Windows::Foundation::IInspectable const& key, ::winrt::Windows::Foundation::IInspectable const& item) const
+    {
+        _dictionaryAdd(instance, key, item);
+    }
+
+    void XamlUserType::AddToVector(::winrt::Windows::Foundation::IInspectable const& instance, ::winrt::Windows::Foundation::IInspectable const& item) const
+    {
+        _collectionAdd(instance, item);
+    }
+
+    void XamlUserType::RunInitializer() const
+    {
+        // The C++ runtime will have already run all the Static Initializers at start up.
+    }
+
+    ::winrt::Windows::Foundation::IInspectable XamlUserType::CreateFromString(::winrt::hstring const& input) const
+    {
+        if (_createFromStringMethod)
+        {
+            return (*_createFromStringMethod)(input);
+        }
+        else
+        {
+            return _fromStringConverter(*this, input);
+        }
+    }
+
+    void XamlUserType::ContentPropertyName(::winrt::hstring const& value) 
+    { 
+        _contentPropertyName = value; 
+    }
+
+    void XamlUserType::ItemTypeName(::winrt::hstring const& value)
+    { 
+        _itemTypeName = value; 
+    }
+
+    void XamlUserType::KeyTypeName(::winrt::hstring const& value)
+    {
+        _keyTypeName = value; 
+    }
+
+    void XamlUserType::AddMemberName(::winrt::hstring const& shortName)
+    {
+        std::wstring longName = FullName().data();
+        longName += L".";
+        longName += shortName;
+            _memberNames.insert_or_assign(shortName.data(), longName);
+    }
+
+    void XamlUserType::AddEnumValue(::winrt::hstring const& name, ::winrt::Windows::Foundation::IInspectable value)
+    {
+        _enumValues.insert_or_assign(name.data(), value);
+    }
+
+    uint32_t XamlUserType::CreateEnumUIntFromString(::winrt::hstring const& input) const
+    {
+        bool found = false;
+
+        const std::wregex regularExpression(L"^\\s+|\\s*,\\s*|\\s+$");
+        uint32_t val = 0;
+
+        for (std::wcregex_token_iterator it{ input.begin(), input.end(), regularExpression, -1 }, end; it != end; ++it)
+        {
+            std::wcsub_match const& subMatch = *it;
+            if (subMatch.length() == 0)
             {
-                const auto f = entry->second;
-                val |= safe_cast<int>(f);
+                continue;
             }
-            else
+
+            auto lookup{ subMatch.str() };
+
+            try
             {
-                val |= std::stoi(subMatch);
+                auto entry = _enumValues.find(lookup);
+                if (entry != _enumValues.end())
+                {
+                    val = winrt::unbox_value<int>(entry->second);
+                }
+                else
+                {
+                    val |= std::stoi(subMatch);
+                }
+                found = true;
             }
-            found=true;
+            catch (std::invalid_argument const&)
+            {
+                found = false;
+                break;
+            }
         }
-        catch (const std::invalid_argument& )
+
+        if (found)
         {
-            found = false;
-            break;
+            return val;
         }
+        throw ::winrt::hresult_invalid_argument {};
     }
 
-    if(found)
+ 
+    XamlMember::XamlMember(
+        std::shared_ptr<XamlTypeInfoProvider> const& provider, 
+        ::winrt::hstring const& name, 
+        ::winrt::hstring const& typeName)
+            : _provider(provider)
+            , _name(name)
+            , _typeName(typeName)
     {
-        return val;
     }
-    throw ref new ::Platform::InvalidArgumentException();
-}
 
-// XamlMember
-::XamlTypeInfo::InfoProvider::XamlMember::XamlMember(::XamlTypeInfo::InfoProvider::XamlTypeInfoProvider^ provider, ::Platform::String^ name, ::Platform::String^ typeName) :
-    _isAttachable(false),
-    _isDependencyProperty(false),
-    _isReadOnly(false),
-    _name(name),
-    _typeName(typeName),
-    _provider(provider)
-{
-}
+    void XamlMember::TargetTypeName(::winrt::hstring const& value)
+    { 
+        _targetTypeName = value; 
+    }
 
-
-bool ::XamlTypeInfo::InfoProvider::XamlMember::IsAttachable::get()
-{
-    return _isAttachable;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlMember::IsAttachable::set(bool value)
-{
-    _isAttachable = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlMember::IsDependencyProperty::get()
-{
-    return _isDependencyProperty;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlMember::IsDependencyProperty::set(bool value)
-{
-    _isDependencyProperty = value;
-}
-
-bool ::XamlTypeInfo::InfoProvider::XamlMember::IsReadOnly::get()
-{
-    return _isReadOnly;
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlMember::IsReadOnly::set(bool value)
-{
-    _isReadOnly = value;
-}
-
-::Platform::String^ ::XamlTypeInfo::InfoProvider::XamlMember::Name::get()
-{
-    return _name;
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlMember::Type::get()
-{
-    return _provider->GetXamlTypeByName(_typeName);
-}
-
-::Windows::UI::Xaml::Markup::IXamlType^ ::XamlTypeInfo::InfoProvider::XamlMember::TargetType::get()
-{
-    return _provider->GetXamlTypeByName(_targetTypeName);
-}
-
-void ::XamlTypeInfo::InfoProvider::XamlMember::TargetTypeName::set(::Platform::String^ value)
-{
-    _targetTypeName = value;
-}
-
-::Platform::Object^ ::XamlTypeInfo::InfoProvider::XamlMember::GetValue(::Platform::Object^ instance)
-{
-    if (Getter != nullptr)
+    bool XamlMember::IsAttachable() const
     {
-        return Getter(instance);
+        return _isAttachable;
     }
-    throw ref new ::Platform::NullReferenceException();
-}
 
-void ::XamlTypeInfo::InfoProvider::XamlMember::SetValue(::Platform::Object^ instance, ::Platform::Object^ value)
-{
-    if (Setter != nullptr)
+    void XamlMember::IsAttachable(bool value)
     {
-        Setter(instance, value);
-        return;
+        _isAttachable = value;
     }
-    throw ref new ::Platform::NullReferenceException();
-}
 
+    bool XamlMember::IsDependencyProperty() const
+    {
+        return _isDependencyProperty;
+    }
+
+    void XamlMember::IsDependencyProperty(bool value)
+    {
+        _isDependencyProperty = value;
+    }
+
+    bool XamlMember::IsReadOnly() const
+    {
+        return _isReadOnly;
+    }
+
+    void XamlMember::IsReadOnly(bool value)
+    {
+        _isReadOnly = value;
+    }
+
+    ::winrt::hstring XamlMember::Name() const
+    {
+        return _name;
+    }
+
+    IXamlType XamlMember::Type() const
+    {
+        return _provider->GetXamlTypeByName(_typeName);
+    }
+
+    IXamlType XamlMember::TargetType() const
+    {
+        return _provider->GetXamlTypeByName(_targetTypeName);
+    }
+
+    ::winrt::Windows::Foundation::IInspectable XamlMember::GetValue(::winrt::Windows::Foundation::IInspectable const& instance) const
+    {
+        return _getter(instance);
+    }
+
+    void XamlMember::SetValue(::winrt::Windows::Foundation::IInspectable const& instance, ::winrt::Windows::Foundation::IInspectable const& value)
+    {
+        _setter(instance, value);
+    }
+}

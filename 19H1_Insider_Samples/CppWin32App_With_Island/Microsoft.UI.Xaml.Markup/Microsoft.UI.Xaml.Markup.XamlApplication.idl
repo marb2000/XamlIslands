@@ -1,0 +1,14 @@
+
+namespace Microsoft.UI.Xaml.Markup
+{
+    interface IXamlMetadataProviderContainer
+    {
+        Windows.Foundation.Collections.IVector<Windows.UI.Xaml.Markup.IXamlMetadataProvider> Providers { get; };
+    };
+
+    [default_interface]
+    runtimeclass XamlApplication : Windows.UI.Xaml.Application, Windows.UI.Xaml.Markup.IXamlMetadataProvider, IXamlMetadataProviderContainer, Windows.Foundation.IClosable
+    {
+        XamlApplication();
+    }
+}
