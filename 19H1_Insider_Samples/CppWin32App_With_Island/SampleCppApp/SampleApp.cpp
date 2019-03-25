@@ -10,7 +10,10 @@
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HINSTANCE hInst;                                // current instance
+HINSTANCE hInst = nullptr; // current instance
+HWND hMainWnd = nullptr;
+// This Hwnd will be the window handler for the Xaml Island: A child window that contains Xaml.  
+HWND hWndXamlIsland = nullptr;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
@@ -55,6 +58,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 DispatchMessage(&msg);
             }
         }
+        hWndXamlIsland = nullptr;
         retValue = (int)msg.wParam;
         desktopSource.Close();
     }
@@ -102,20 +106,23 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // Store instance handle in our global variable
+    hMainWnd = CreateWindow(
+        szWindowClass,
+        szTitle,
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
+        nullptr, nullptr, hInstance, nullptr);
 
-    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
-    if (!hWnd)
+    if (!hMainWnd)
     {
         winrt::check_hresult(E_FAIL);
     }
 
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
-    SetFocus(hWnd);
+    ShowWindow(hMainWnd, nCmdShow);
+    UpdateWindow(hMainWnd);
+    SetFocus(hMainWnd);
 
-    auto desktopXamlSource = CreateDesktopWindowsXamlSource(hWnd);
+    auto desktopXamlSource = CreateDesktopWindowsXamlSource(hMainWnd);
 
     return desktopXamlSource;
 }
@@ -161,6 +168,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_DESTROY:
         PostQuitMessage(0);
+        break;
+    case WM_SIZE:
+        {
+            if (hMainWnd == hWnd && hWndXamlIsland!=nullptr)
+            {
+                auto newHeight = LOWORD(lParam);
+                auto newWidth = HIWORD(lParam);
+                const auto margin = XamlIslandMargin;
+                SetWindowPos(hWndXamlIsland, 0, margin, margin, newHeight - margin, newWidth - margin, SWP_SHOWWINDOW);
+            }
+        }
         break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);

@@ -58,18 +58,18 @@ template<typename T>
     return ::winrt::box_value(static_cast<T>(userType.CreateEnumUIntFromString(input)));
 }
 
-template<typename TDeclaringType, typename TValue>
-::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MyProperty(::winrt::Windows::Foundation::IInspectable const& instance)
+template <typename T>
+::winrt::Windows::Foundation::IInspectable GetReferenceTypeMember_MyProperty(::winrt::Windows::Foundation::IInspectable const& instance)
 {
-    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MyProperty());
+   return ::winrt::box_value(::winrt::Windows::Foundation::PropertyValue::CreateString(instance.as<T>().MyProperty()));
 }
 
 template<typename TDeclaringType, typename TValue>
-void SetValueTypeMember_MyProperty(
+void SetReferenceTypeMember_MyProperty(
     ::winrt::Windows::Foundation::IInspectable const& instance, 
     ::winrt::Windows::Foundation::IInspectable const& value)
 {
-    instance.as<TDeclaringType>().MyProperty(::winrt::unbox_value<TValue>(value));
+    return instance.as<TDeclaringType>().MyProperty(::winrt::unbox_value<::winrt::hstring>(value));
 }
 
 enum TypeInfo_Flags
@@ -102,7 +102,7 @@ struct TypeInfo
 const TypeInfo TypeInfos[] = 
 {
     //   0
-    L"Int32", L"",
+    L"String", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, TypeKind::Metadata,
@@ -134,7 +134,7 @@ constexpr uint32_t TypeInfoLookup[] = {
       0,   //   3
       0,   //   4
       0,   //   5
-      1,   //   6
+      0,   //   6
       1,   //   7
       1,   //   8
       1,   //   9
@@ -184,9 +184,9 @@ const MemberInfo MemberInfos[] =
 {
     //   0 - SampleUserControl.MyUserControl.MyProperty
     L"MyProperty",
-    &GetValueTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, int32_t>,
-    &SetValueTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, int32_t>,
-    0, // Int32
+    &GetReferenceTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl>,
+    &SetReferenceTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, ::winrt::hstring>,
+    0, // String
     -1,
     false, false, false,
 };

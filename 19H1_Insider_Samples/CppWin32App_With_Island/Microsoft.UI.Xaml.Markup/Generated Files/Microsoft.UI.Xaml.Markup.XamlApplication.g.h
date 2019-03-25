@@ -11,7 +11,7 @@
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation {
 
 template <typename D, typename... I>
-struct WINRT_EBO XamlApplication_base : implements<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, Windows::UI::Xaml::Markup::IXamlMetadataProvider, composing, I...>,
+struct WINRT_EBO XamlApplication_base : implements<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, Windows::UI::Xaml::Markup::IXamlMetadataProvider, composable, composing, I...>,
     impl::require<D, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3>,
     impl::base<D, Windows::UI::Xaml::Application>,
     Windows::UI::Xaml::IApplicationOverridesT<D>, Windows::UI::Xaml::IApplicationOverrides2T<D>
@@ -44,6 +44,9 @@ struct WINRT_EBO XamlApplication_base : implements<D, Microsoft::UI::Xaml::Marku
     {
         impl::call_factory<Windows::UI::Xaml::Application, Windows::UI::Xaml::IApplicationFactory>([&](auto&& f) { f.CreateInstance(*this, this->m_inner); });
     }
+protected:
+    using dispatch = impl::dispatch_to_overridable<D, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2>;
+    auto overridable() noexcept { return dispatch::overridable(static_cast<D&>(*this)); }
 };
 
 }
@@ -51,7 +54,7 @@ struct WINRT_EBO XamlApplication_base : implements<D, Microsoft::UI::Xaml::Marku
 namespace winrt::Microsoft::UI::Xaml::Markup::factory_implementation {
 
 template <typename D, typename T, typename... I>
-struct WINRT_EBO XamlApplicationT : implements<D, Windows::Foundation::IActivationFactory, I...>
+struct WINRT_EBO XamlApplicationT : implements<D, Windows::Foundation::IActivationFactory, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory, I...>
 {
     using instance_type = Microsoft::UI::Xaml::Markup::XamlApplication;
 
@@ -62,7 +65,12 @@ struct WINRT_EBO XamlApplicationT : implements<D, Windows::Foundation::IActivati
 
     Windows::Foundation::IInspectable ActivateInstance() const
     {
-        return make<T>();
+        throw hresult_not_implemented();
+    }
+
+    Microsoft::UI::Xaml::Markup::XamlApplication CreateInstance(Windows::Foundation::IInspectable const& baseInterface, Windows::Foundation::IInspectable& innerInterface)
+    {
+        return impl::composable_factory<T>::template CreateInstance<Microsoft::UI::Xaml::Markup::XamlApplication>(baseInterface, innerInterface);
     }
 };
 

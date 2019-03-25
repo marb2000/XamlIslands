@@ -1,10 +1,31 @@
 #include "pch.h"
 
 #include "XamlBridge.h"
-
+#include "Resource.h"
+#include "SampleApp.h"
 #include <roapi.h>
 #include "..\Microsoft.UI.Xaml.Markup\Generated Files\Microsoft.UI.Xaml.Markup.XamlApplication.g.h"
 #include "..\SampleUserControl\Generated Files\MyUserControl.g.h"
+
+extern HWND hWndXamlIsland;
+
+winrt::Windows::UI::Xaml::UIElement LoadXaml(uint32_t id)
+{
+    auto rc = ::FindResource(nullptr, MAKEINTRESOURCE(id), MAKEINTRESOURCE(XAMLRESOURCE));
+    if (!rc)
+    {
+        winrt::check_hresult(HRESULT_FROM_WIN32(GetLastError()));
+    }
+    HGLOBAL rcData = ::LoadResource(nullptr, rc);
+    if (!rcData)
+    {
+        winrt::check_hresult(HRESULT_FROM_WIN32(GetLastError()));
+    }
+    auto pData = static_cast<wchar_t*>(::LockResource(rcData));
+    auto content = winrt::Windows::UI::Xaml::Markup::XamlReader::Load(winrt::get_abi(pData));
+    auto uiElement = content.as<winrt::Windows::UI::Xaml::UIElement>();
+    return uiElement;
+}
 
 winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsXamlSource(HWND parentWindow)
 {
@@ -25,21 +46,26 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     hr = interop->AttachToWindow(parentWindow);
     winrt::check_hresult(hr);
 
-    // This Hwnd will be the window handler for the Xaml Island: A child window that contains Xaml.  
-    HWND hWndXamlIsland = nullptr;
     // Get the new child window's hwnd 
     hr = interop->get_WindowHandle(&hWndXamlIsland);
     winrt::check_hresult(hr);
-    // Update the xaml island window size becuase initially is 0,0
-    SetWindowPos(hWndXamlIsland, 0, 200, 100, 800, 400, SWP_SHOWWINDOW);
     SetFocus(hWndXamlIsland);
 
-    //Creating the Xaml content
-    winrt::SampleUserControl::MyUserControl control;
-    winrt::Windows::UI::Xaml::Controls::StackPanel xamlContainer;
-    xamlContainer.Children().Append(control);
-    xamlContainer.UpdateLayout();
-    desktopSource.Content(xamlContainer);
+    auto content = LoadXaml(IDR_XAML_MAINPAGE);
+    auto mainPage = content.as<winrt::Windows::UI::Xaml::Controls::Page>();
+    desktopSource.Content(mainPage);
+
+    const auto newHeight = InitialHeight;
+    const auto newWidth = InitialWidth;
+    const auto margin = XamlIslandMargin;
+    SetWindowPos(hWndXamlIsland, 0, margin, margin, newHeight - margin, newWidth - margin, SWP_SHOWWINDOW);
+
+    //winrt::SampleUserControl::MyUserControl control;
+    //winrt::Windows::UI::Xaml::Controls::StackPanel xamlContainer;
+    //xamlContainer.Children().Append(control);
+
+    mainPage.UpdateLayout();
+    desktopSource.Content(mainPage);
 
     return desktopSource;
 }

@@ -4,6 +4,6 @@ namespace SampleUserControl
     runtimeclass MyUserControl : Windows.UI.Xaml.Controls.UserControl
     {
         MyUserControl();
-        Int32 MyProperty;
+        String MyProperty;
     }
 }

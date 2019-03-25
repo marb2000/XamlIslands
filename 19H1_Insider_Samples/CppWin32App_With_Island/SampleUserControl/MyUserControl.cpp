@@ -11,14 +11,14 @@ namespace winrt::SampleUserControl::implementation
         InitializeComponent();
     }
 
-    int32_t MyUserControl::MyProperty()
+    hstring MyUserControl::MyProperty()
     {
-        throw hresult_not_implemented();
+        return Text1().Text();
     }
 
-    void MyUserControl::MyProperty(int32_t /* value */)
+    void MyUserControl::MyProperty(hstring value)
     {
-        throw hresult_not_implemented();
+        Text1().Text(value);
     }
 }
 

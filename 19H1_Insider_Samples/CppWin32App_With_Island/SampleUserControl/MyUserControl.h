@@ -15,8 +15,8 @@ namespace winrt::SampleUserControl::implementation
     {
         MyUserControl();
 
-        int32_t MyProperty();
-        void MyProperty(int32_t value);
+        hstring MyProperty();
+        void MyProperty(hstring value);
 		void Button_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& e);
 	};
 }

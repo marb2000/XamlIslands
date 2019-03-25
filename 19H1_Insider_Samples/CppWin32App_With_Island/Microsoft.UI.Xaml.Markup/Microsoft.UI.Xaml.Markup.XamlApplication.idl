@@ -7,7 +7,7 @@ namespace Microsoft.UI.Xaml.Markup
     };
 
     [default_interface]
-    runtimeclass XamlApplication : Windows.UI.Xaml.Application, Windows.UI.Xaml.Markup.IXamlMetadataProvider, IXamlMetadataProviderContainer, Windows.Foundation.IClosable
+    unsealed runtimeclass XamlApplication : Windows.UI.Xaml.Application, Windows.UI.Xaml.Markup.IXamlMetadataProvider, IXamlMetadataProviderContainer, Windows.Foundation.IClosable
     {
         XamlApplication();
     }

@@ -16,6 +16,13 @@ static_assert(winrt::check_version(CPPWINRT_VERSION, "1.0.190111.3"), "Mismatche
 
 namespace winrt::impl {
 
+template <typename D> Microsoft::UI::Xaml::Markup::XamlApplication consume_Microsoft_UI_Xaml_Markup_IXamlApplicationFactory<D>::CreateInstance(Windows::Foundation::IInspectable const& baseInterface, Windows::Foundation::IInspectable& innerInterface) const
+{
+    Microsoft::UI::Xaml::Markup::XamlApplication value{ nullptr };
+    check_hresult(WINRT_SHIM(Microsoft::UI::Xaml::Markup::IXamlApplicationFactory)->CreateInstance(get_abi(baseInterface), put_abi(innerInterface), put_abi(value)));
+    return value;
+}
+
 template <typename D> Windows::Foundation::Collections::IVector<Windows::UI::Xaml::Markup::IXamlMetadataProvider> consume_Microsoft_UI_Xaml_Markup_IXamlMetadataProviderContainer<D>::Providers() const
 {
     Windows::Foundation::Collections::IVector<Windows::UI::Xaml::Markup::IXamlMetadataProvider> value{ nullptr };
@@ -26,6 +33,26 @@ template <typename D> Windows::Foundation::Collections::IVector<Windows::UI::Xam
 template <typename D>
 struct produce<D, Microsoft::UI::Xaml::Markup::IXamlApplication> : produce_base<D, Microsoft::UI::Xaml::Markup::IXamlApplication>
 {};
+
+template <typename D>
+struct produce<D, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory> : produce_base<D, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>
+{
+    int32_t WINRT_CALL CreateInstance(void* baseInterface, void** innerInterface, void** value) noexcept final
+    {
+        try
+        {
+            if (innerInterface) *innerInterface = nullptr;
+            *value = nullptr;
+            typename D::abi_guard guard(this->shim());
+            Windows::Foundation::IInspectable __local_innerInterface;
+            WINRT_ASSERT_DECLARATION(CreateInstance, WINRT_WRAP(Microsoft::UI::Xaml::Markup::XamlApplication), Windows::Foundation::IInspectable const&, Windows::Foundation::IInspectable&);
+            *value = detach_from<Microsoft::UI::Xaml::Markup::XamlApplication>(this->shim().CreateInstance(*reinterpret_cast<Windows::Foundation::IInspectable const*>(&baseInterface), __local_innerInterface));
+            if (innerInterface) *innerInterface = detach_abi(__local_innerInterface);
+            return 0;
+        }
+        catch (...) { return to_hresult(); }
+    }
+};
 
 template <typename D>
 struct produce<D, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer> : produce_base<D, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer>
@@ -48,9 +75,27 @@ struct produce<D, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer> :
 
 WINRT_EXPORT namespace winrt::Microsoft::UI::Xaml::Markup {
 
-inline XamlApplication::XamlApplication() :
-    XamlApplication(impl::call_factory<XamlApplication>([](auto&& f) { return f.template ActivateInstance<XamlApplication>(); }))
-{}
+inline XamlApplication::XamlApplication()
+{
+    Windows::Foundation::IInspectable baseInterface, innerInterface;
+    *this = impl::call_factory<XamlApplication, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>([&](auto&& f) { return f.CreateInstance(baseInterface, innerInterface); });
+}
+
+template <typename D, typename... Interfaces>
+struct XamlApplicationT :
+    implements<D, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, composing, Interfaces...>,
+    impl::require<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3, Windows::UI::Xaml::Markup::IXamlMetadataProvider>,
+    impl::base<D, Microsoft::UI::Xaml::Markup::XamlApplication, Windows::UI::Xaml::Application>,
+    Windows::UI::Xaml::IApplicationOverridesT<D>, Windows::UI::Xaml::IApplicationOverrides2T<D>
+{
+    using composable = XamlApplication;
+
+protected:
+    XamlApplicationT()
+    {
+        impl::call_factory<Microsoft::UI::Xaml::Markup::XamlApplication, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>([&](auto&& f) { f.CreateInstance(*this, this->m_inner); });
+    }
+};
 
 }
 
@@ -115,6 +160,7 @@ struct base_type<Microsoft::UI::Xaml::Markup::XamlApplication> { using type = Wi
 WINRT_EXPORT namespace std {
 
 template<> struct hash<winrt::Microsoft::UI::Xaml::Markup::IXamlApplication> : winrt::impl::hash_base<winrt::Microsoft::UI::Xaml::Markup::IXamlApplication> {};
+template<> struct hash<winrt::Microsoft::UI::Xaml::Markup::IXamlApplicationFactory> : winrt::impl::hash_base<winrt::Microsoft::UI::Xaml::Markup::IXamlApplicationFactory> {};
 template<> struct hash<winrt::Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer> : winrt::impl::hash_base<winrt::Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer> {};
 template<> struct hash<winrt::Microsoft::UI::Xaml::Markup::XamlApplication> : winrt::impl::hash_base<winrt::Microsoft::UI::Xaml::Markup::XamlApplication> {};
 

@@ -3,12 +3,12 @@
 
 namespace winrt::SampleUserControl::implementation
 {
-    int32_t MyUserControl::MyProperty()
+    hstring MyUserControl::MyProperty()
     {
         throw hresult_not_implemented();
     }
 
-    void MyUserControl::MyProperty(int32_t value)
+    void MyUserControl::MyProperty(hstring const& value)
     {
         throw hresult_not_implemented();
     }

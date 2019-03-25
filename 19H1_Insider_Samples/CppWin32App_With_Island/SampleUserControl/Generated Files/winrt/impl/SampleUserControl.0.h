@@ -37,21 +37,21 @@ template <> struct category<SampleUserControl::XamlMetaDataProvider>{ using type
 template <> struct name<SampleUserControl::IMyUserControl>{ static constexpr auto & value{ L"SampleUserControl.IMyUserControl" }; };
 template <> struct name<SampleUserControl::MyUserControl>{ static constexpr auto & value{ L"SampleUserControl.MyUserControl" }; };
 template <> struct name<SampleUserControl::XamlMetaDataProvider>{ static constexpr auto & value{ L"SampleUserControl.XamlMetaDataProvider" }; };
-template <> struct guid_storage<SampleUserControl::IMyUserControl>{ static constexpr guid value{ 0x835CFC5B,0xB1E3,0x5542,{ 0xA1,0x65,0x4F,0x96,0xB4,0xDE,0x31,0x7E } }; };
+template <> struct guid_storage<SampleUserControl::IMyUserControl>{ static constexpr guid value{ 0x6F0034F9,0xDCBD,0x523E,{ 0x82,0xC7,0xC4,0xE6,0x35,0x12,0xC4,0x1C } }; };
 template <> struct default_interface<SampleUserControl::MyUserControl>{ using type = SampleUserControl::IMyUserControl; };
 template <> struct default_interface<SampleUserControl::XamlMetaDataProvider>{ using type = Windows::UI::Xaml::Markup::IXamlMetadataProvider; };
 
 template <> struct abi<SampleUserControl::IMyUserControl>{ struct type : IInspectable
 {
-    virtual int32_t WINRT_CALL get_MyProperty(int32_t* value) noexcept = 0;
-    virtual int32_t WINRT_CALL put_MyProperty(int32_t value) noexcept = 0;
+    virtual int32_t WINRT_CALL get_MyProperty(void** value) noexcept = 0;
+    virtual int32_t WINRT_CALL put_MyProperty(void* value) noexcept = 0;
 };};
 
 template <typename D>
 struct consume_SampleUserControl_IMyUserControl
 {
-    int32_t MyProperty() const;
-    void MyProperty(int32_t value) const;
+    hstring MyProperty() const;
+    void MyProperty(param::hstring const& value) const;
 };
 template <> struct consume<SampleUserControl::IMyUserControl> { template <typename D> using type = consume_SampleUserControl_IMyUserControl<D>; };
 

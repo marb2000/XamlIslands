@@ -17,40 +17,41 @@ static_assert(winrt::check_version(CPPWINRT_VERSION, "1.0.190111.3"), "Mismatche
 
 namespace winrt::impl {
 
-template <typename D> int32_t consume_SampleUserControl_IMyUserControl<D>::MyProperty() const
+template <typename D> hstring consume_SampleUserControl_IMyUserControl<D>::MyProperty() const
 {
-    int32_t value{};
-    check_hresult(WINRT_SHIM(SampleUserControl::IMyUserControl)->get_MyProperty(&value));
+    hstring value{};
+    check_hresult(WINRT_SHIM(SampleUserControl::IMyUserControl)->get_MyProperty(put_abi(value)));
     return value;
 }
 
-template <typename D> void consume_SampleUserControl_IMyUserControl<D>::MyProperty(int32_t value) const
+template <typename D> void consume_SampleUserControl_IMyUserControl<D>::MyProperty(param::hstring const& value) const
 {
-    check_hresult(WINRT_SHIM(SampleUserControl::IMyUserControl)->put_MyProperty(value));
+    check_hresult(WINRT_SHIM(SampleUserControl::IMyUserControl)->put_MyProperty(get_abi(value)));
 }
 
 template <typename D>
 struct produce<D, SampleUserControl::IMyUserControl> : produce_base<D, SampleUserControl::IMyUserControl>
 {
-    int32_t WINRT_CALL get_MyProperty(int32_t* value) noexcept final
+    int32_t WINRT_CALL get_MyProperty(void** value) noexcept final
     {
         try
         {
+            *value = nullptr;
             typename D::abi_guard guard(this->shim());
-            WINRT_ASSERT_DECLARATION(MyProperty, WINRT_WRAP(int32_t));
-            *value = detach_from<int32_t>(this->shim().MyProperty());
+            WINRT_ASSERT_DECLARATION(MyProperty, WINRT_WRAP(hstring));
+            *value = detach_from<hstring>(this->shim().MyProperty());
             return 0;
         }
         catch (...) { return to_hresult(); }
     }
 
-    int32_t WINRT_CALL put_MyProperty(int32_t value) noexcept final
+    int32_t WINRT_CALL put_MyProperty(void* value) noexcept final
     {
         try
         {
             typename D::abi_guard guard(this->shim());
-            WINRT_ASSERT_DECLARATION(MyProperty, WINRT_WRAP(void), int32_t);
-            this->shim().MyProperty(value);
+            WINRT_ASSERT_DECLARATION(MyProperty, WINRT_WRAP(void), hstring const&);
+            this->shim().MyProperty(*reinterpret_cast<hstring const*>(&value));
             return 0;
         }
         catch (...) { return to_hresult(); }
@@ -78,7 +79,7 @@ struct property_SampleUserControl_IMyUserControl
     struct MyProperty
     {
         struct name { static constexpr std::wstring_view value{ L"MyProperty"sv }; };
-        using property_type = int32_t;
+        using property_type = winrt::hstring;
         using target_type = winrt::SampleUserControl::IMyUserControl;
 
         using is_readable = std::true_type;
@@ -108,7 +109,7 @@ struct property_SampleUserControl_MyUserControl
     struct MyProperty
     {
         struct name { static constexpr std::wstring_view value{ L"MyProperty"sv }; };
-        using property_type = int32_t;
+        using property_type = winrt::hstring;
         using target_type = winrt::SampleUserControl::MyUserControl;
 
         using is_readable = std::true_type;

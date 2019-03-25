@@ -16,6 +16,13 @@ struct WINRT_EBO IXamlApplication :
     IXamlApplication(std::nullptr_t = nullptr) noexcept {}
 };
 
+struct WINRT_EBO IXamlApplicationFactory :
+    Windows::Foundation::IInspectable,
+    impl::consume_t<IXamlApplicationFactory>
+{
+    IXamlApplicationFactory(std::nullptr_t = nullptr) noexcept {}
+};
+
 struct WINRT_EBO IXamlMetadataProviderContainer :
     Windows::Foundation::IInspectable,
     impl::consume_t<IXamlMetadataProviderContainer>

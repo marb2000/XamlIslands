@@ -4,6 +4,10 @@
 
 #include "XamlBridge.h"
 
+#define InitialHeight 600
+#define InitialWidth 600
+#define XamlIslandMargin 30
+
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 
 winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANCE, int);

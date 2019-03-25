@@ -8,8 +8,8 @@ namespace winrt::SampleUserControl::implementation
     {
         MyUserControl() = default;
 
-        int32_t MyProperty();
-        void MyProperty(int32_t value);
+        hstring MyProperty();
+        void MyProperty(hstring const& value);
     };
 }
 
