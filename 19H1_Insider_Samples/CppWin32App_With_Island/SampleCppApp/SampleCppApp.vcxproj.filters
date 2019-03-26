@@ -60,6 +60,8 @@
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="SampleCppApp.exe.manifest" />
+    <Manifest Include="..\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest" />
+    <Manifest Include="..\SampleUserControl\SampleUserControl.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
