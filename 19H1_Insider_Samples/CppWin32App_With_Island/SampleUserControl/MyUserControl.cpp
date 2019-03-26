@@ -11,19 +11,19 @@ namespace winrt::SampleUserControl::implementation
         InitializeComponent();
     }
 
-    hstring MyUserControl::MyProperty()
+    winrt::hstring MyUserControl::MyProperty()
     {
         return Text1().Text();
     }
 
-    void MyUserControl::MyProperty(hstring value)
+    void MyUserControl::MyProperty(winrt::hstring value)
     {
         Text1().Text(value);
     }
+
+    void MyUserControl::Button_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
+    {
+        Text1().Text(sender.as<winrt::Windows::UI::Xaml::Controls::Button>().Name());
+    }
 }
 
-
-void winrt::SampleUserControl::implementation::MyUserControl::Button_Click(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const& )
-{
-    Text1().Text(sender.as<winrt::Windows::UI::Xaml::Controls::Button>().Name());
-}

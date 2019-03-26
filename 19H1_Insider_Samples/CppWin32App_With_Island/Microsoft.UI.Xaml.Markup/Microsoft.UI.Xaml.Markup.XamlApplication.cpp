@@ -17,6 +17,16 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
         : m_providers(winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>())
         , m_windowsXamlManager(xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread())
     {
+#if defined _DEBUG
+        this->UnhandledException([this](IInspectable const&, winrt::Windows::UI::Xaml::UnhandledExceptionEventArgs const& e)
+        {
+            if (IsDebuggerPresent())
+            {
+                auto errorMessage = e.Message();
+                __debugbreak();
+            }
+        });
+#endif
     }
 
     void XamlApplication::Close()

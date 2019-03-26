@@ -51,19 +51,13 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     winrt::check_hresult(hr);
     SetFocus(hWndXamlIsland);
 
-    auto content = LoadXaml(IDR_XAML_MAINPAGE);
-    auto mainPage = content.as<winrt::Windows::UI::Xaml::Controls::Page>();
-    desktopSource.Content(mainPage);
-
     const auto newHeight = InitialHeight;
     const auto newWidth = InitialWidth;
     const auto margin = XamlIslandMargin;
     SetWindowPos(hWndXamlIsland, 0, margin, margin, newHeight - margin, newWidth - margin, SWP_SHOWWINDOW);
 
-    //winrt::SampleUserControl::MyUserControl control;
-    //winrt::Windows::UI::Xaml::Controls::StackPanel xamlContainer;
-    //xamlContainer.Children().Append(control);
-
+    auto content = LoadXaml(IDR_XAML_MAINPAGE);
+    auto mainPage = content.as<winrt::Windows::UI::Xaml::UIElement>();
     mainPage.UpdateLayout();
     desktopSource.Content(mainPage);
 
