@@ -133,6 +133,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="InternalUserControl.h">
+      <DependentUpon>InternalUserControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClInclude>
     <ClInclude Include="MyUserControl.h">
       <DependentUpon>MyUserControl.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -140,6 +144,10 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InternalUserControl.cpp">
+      <DependentUpon>InternalUserControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </ClCompile>
     <ClCompile Include="MyUserControl.cpp">
       <DependentUpon>MyUserControl.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -150,6 +158,10 @@
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Midl Include="InternalUserControl.idl">
+      <DependentUpon>InternalUserControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Midl>
     <Midl Include="MyUserControl.idl">
       <DependentUpon>MyUserControl.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -165,6 +177,9 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="InternalUserControl.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MyUserControl.xaml">
       <SubType>Designer</SubType>
     </Page>

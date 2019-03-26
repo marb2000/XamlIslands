@@ -11,8 +11,10 @@
 
 #include "XamlTypeInfo.xaml.g.h"
 
+#include "InternalUserControl.h"
 #include "MyUserControl.h"
 #include "XamlBindingInfo.xaml.g.hpp"
+#include "InternalUserControl.xaml.g.hpp"
 #include "MyUserControl.xaml.g.hpp"
 
 namespace winrt::SampleUserControl::implementation
@@ -58,10 +60,24 @@ template<typename T>
     return ::winrt::box_value(static_cast<T>(userType.CreateEnumUIntFromString(input)));
 }
 
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MyProperty(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MyProperty());
+}
+
 template <typename T>
 ::winrt::Windows::Foundation::IInspectable GetReferenceTypeMember_MyProperty(::winrt::Windows::Foundation::IInspectable const& instance)
 {
    return ::winrt::box_value(::winrt::Windows::Foundation::PropertyValue::CreateString(instance.as<T>().MyProperty()));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MyProperty(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MyProperty(::winrt::unbox_value<TValue>(value));
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -102,28 +118,40 @@ struct TypeInfo
 const TypeInfo TypeInfos[] = 
 {
     //   0
-    L"String", L"",
+    L"Int32", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   1
+    L"String", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    0, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   2
     L"SampleUserControl.MyUserControl", L"",
     &ActivateLocalType<::winrt::SampleUserControl::implementation::MyUserControl>, nullptr, nullptr, nullptr,
-    2, // Windows.UI.Xaml.Controls.UserControl
+    3, // Windows.UI.Xaml.Controls.UserControl
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   2
+    //   3
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     1, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //   4
+    L"SampleUserControl.InternalUserControl", L"",
+    &ActivateLocalType<::winrt::SampleUserControl::implementation::InternalUserControl>, nullptr, nullptr, nullptr,
+    3, // Windows.UI.Xaml.Controls.UserControl
+    1, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    1, 0, -1, TypeKind::Custom,
+    2, 0, -1, TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -134,38 +162,39 @@ constexpr uint32_t TypeInfoLookup[] = {
       0,   //   3
       0,   //   4
       0,   //   5
-      0,   //   6
-      1,   //   7
-      1,   //   8
-      1,   //   9
-      1,   //  10
-      1,   //  11
-      1,   //  12
-      1,   //  13
-      1,   //  14
-      1,   //  15
-      1,   //  16
-      1,   //  17
-      1,   //  18
-      1,   //  19
-      1,   //  20
-      1,   //  21
-      1,   //  22
-      1,   //  23
-      1,   //  24
-      1,   //  25
-      1,   //  26
-      1,   //  27
-      1,   //  28
-      1,   //  29
-      1,   //  30
-      1,   //  31
-      2,   //  32
-      2,   //  33
-      2,   //  34
-      2,   //  35
-      2,   //  36
-      3,   //  37
+      1,   //   6
+      2,   //   7
+      2,   //   8
+      2,   //   9
+      2,   //  10
+      2,   //  11
+      2,   //  12
+      2,   //  13
+      2,   //  14
+      2,   //  15
+      2,   //  16
+      2,   //  17
+      2,   //  18
+      2,   //  19
+      2,   //  20
+      2,   //  21
+      2,   //  22
+      2,   //  23
+      2,   //  24
+      2,   //  25
+      2,   //  26
+      2,   //  27
+      2,   //  28
+      2,   //  29
+      2,   //  30
+      2,   //  31
+      3,   //  32
+      3,   //  33
+      3,   //  34
+      3,   //  35
+      3,   //  36
+      4,   //  37
+      5,   //  38
 };
 
 struct MemberInfo 
@@ -186,7 +215,14 @@ const MemberInfo MemberInfos[] =
     L"MyProperty",
     &GetReferenceTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl>,
     &SetReferenceTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, ::winrt::hstring>,
-    0, // String
+    1, // String
+    -1,
+    false, false, false,
+    //   1 - SampleUserControl.InternalUserControl.MyProperty
+    L"MyProperty",
+    &GetValueTypeMember_MyProperty<::winrt::SampleUserControl::InternalUserControl, int32_t>,
+    &SetValueTypeMember_MyProperty<::winrt::SampleUserControl::InternalUserControl, int32_t>,
+    0, // Int32
     -1,
     false, false, false,
 };

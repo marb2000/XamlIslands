@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 #include "pch.h"
 #include "MyUserControl.h"
+#include "InternalUserControl.h"
 
 #pragma warning(push)
 #pragma warning(disable: 4100) // unreferenced formal parameter
@@ -80,6 +81,12 @@ namespace winrt::SampleUserControl::implementation
                         ::winrt::get_self<D>(t)->Button_Click(p0, p1);
                     }
                 });
+            }
+            break;
+        case 6:
+            {
+                auto targetElement = target.as<::winrt::SampleUserControl::InternalUserControl>();
+                this->internalUserControl(targetElement);
             }
             break;
         }

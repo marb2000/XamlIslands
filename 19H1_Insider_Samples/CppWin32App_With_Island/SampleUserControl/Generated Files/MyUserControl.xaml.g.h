@@ -62,6 +62,15 @@ namespace winrt::SampleUserControl::implementation
         {
             _Button3 = value;
         }
+
+        ::winrt::SampleUserControl::InternalUserControl internalUserControl()
+        {
+            return _internalUserControl;
+        }
+        void internalUserControl(::winrt::SampleUserControl::InternalUserControl value)
+        {
+            _internalUserControl = value;
+        }
         
     protected:
         bool _contentLoaded{false};
@@ -73,6 +82,7 @@ namespace winrt::SampleUserControl::implementation
         ::winrt::Windows::UI::Xaml::Controls::Button _Button1{nullptr};
         ::winrt::Windows::UI::Xaml::Controls::Button _Button2{nullptr};
         ::winrt::Windows::UI::Xaml::Controls::Button _Button3{nullptr};
+        ::winrt::SampleUserControl::InternalUserControl _internalUserControl{nullptr};
     };
 }
 

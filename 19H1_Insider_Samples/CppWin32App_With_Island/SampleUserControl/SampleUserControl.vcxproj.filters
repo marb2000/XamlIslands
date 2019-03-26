@@ -25,6 +25,7 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MyUserControl.xaml" />
+    <Page Include="InternalUserControl.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="SampleUserControl.manifest" />

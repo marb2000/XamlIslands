@@ -12,5 +12,6 @@
         <Button x:Name="Button1" Click="Button_Click">Button 1</Button>
         <Button x:Name="Button2" Click="Button_Click">Button 2</Button>
         <Button x:Name="Button3" Click="Button_Click">Button 3</Button>
+        <local:InternalUserControl x:Name="internalUserControl" />
     </StackPanel>
 </UserControl>

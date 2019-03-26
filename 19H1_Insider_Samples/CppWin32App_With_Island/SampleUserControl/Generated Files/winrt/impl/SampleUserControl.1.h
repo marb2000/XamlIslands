@@ -10,6 +10,13 @@
 
 WINRT_EXPORT namespace winrt::SampleUserControl {
 
+struct WINRT_EBO IInternalUserControl :
+    Windows::Foundation::IInspectable,
+    impl::consume_t<IInternalUserControl>
+{
+    IInternalUserControl(std::nullptr_t = nullptr) noexcept {}
+};
+
 struct WINRT_EBO IMyUserControl :
     Windows::Foundation::IInspectable,
     impl::consume_t<IMyUserControl>

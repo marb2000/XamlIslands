@@ -17,6 +17,18 @@ static_assert(winrt::check_version(CPPWINRT_VERSION, "1.0.190111.3"), "Mismatche
 
 namespace winrt::impl {
 
+template <typename D> int32_t consume_SampleUserControl_IInternalUserControl<D>::MyProperty() const
+{
+    int32_t value{};
+    check_hresult(WINRT_SHIM(SampleUserControl::IInternalUserControl)->get_MyProperty(&value));
+    return value;
+}
+
+template <typename D> void consume_SampleUserControl_IInternalUserControl<D>::MyProperty(int32_t value) const
+{
+    check_hresult(WINRT_SHIM(SampleUserControl::IInternalUserControl)->put_MyProperty(value));
+}
+
 template <typename D> hstring consume_SampleUserControl_IMyUserControl<D>::MyProperty() const
 {
     hstring value{};
@@ -28,6 +40,34 @@ template <typename D> void consume_SampleUserControl_IMyUserControl<D>::MyProper
 {
     check_hresult(WINRT_SHIM(SampleUserControl::IMyUserControl)->put_MyProperty(get_abi(value)));
 }
+
+template <typename D>
+struct produce<D, SampleUserControl::IInternalUserControl> : produce_base<D, SampleUserControl::IInternalUserControl>
+{
+    int32_t WINRT_CALL get_MyProperty(int32_t* value) noexcept final
+    {
+        try
+        {
+            typename D::abi_guard guard(this->shim());
+            WINRT_ASSERT_DECLARATION(MyProperty, WINRT_WRAP(int32_t));
+            *value = detach_from<int32_t>(this->shim().MyProperty());
+            return 0;
+        }
+        catch (...) { return to_hresult(); }
+    }
+
+    int32_t WINRT_CALL put_MyProperty(int32_t value) noexcept final
+    {
+        try
+        {
+            typename D::abi_guard guard(this->shim());
+            WINRT_ASSERT_DECLARATION(MyProperty, WINRT_WRAP(void), int32_t);
+            this->shim().MyProperty(value);
+            return 0;
+        }
+        catch (...) { return to_hresult(); }
+    }
+};
 
 template <typename D>
 struct produce<D, SampleUserControl::IMyUserControl> : produce_base<D, SampleUserControl::IMyUserControl>
@@ -62,6 +102,10 @@ struct produce<D, SampleUserControl::IMyUserControl> : produce_base<D, SampleUse
 
 WINRT_EXPORT namespace winrt::SampleUserControl {
 
+inline InternalUserControl::InternalUserControl() :
+    InternalUserControl(impl::call_factory<InternalUserControl>([](auto&& f) { return f.template ActivateInstance<InternalUserControl>(); }))
+{}
+
 inline MyUserControl::MyUserControl() :
     MyUserControl(impl::call_factory<MyUserControl>([](auto&& f) { return f.template ActivateInstance<MyUserControl>(); }))
 {}
@@ -74,6 +118,36 @@ inline XamlMetaDataProvider::XamlMetaDataProvider() :
 
 namespace winrt::impl {
 
+struct property_SampleUserControl_IInternalUserControl
+{ struct named {
+    struct MyProperty
+    {
+        struct name { static constexpr std::wstring_view value{ L"MyProperty"sv }; };
+        using property_type = int32_t;
+        using target_type = winrt::SampleUserControl::IInternalUserControl;
+
+        using is_readable = std::true_type;
+        using is_writable = std::true_type;
+        using is_static = std::false_type;
+        struct getter
+        {
+            auto operator()(target_type const& target) const
+            {
+                return target.MyProperty();
+            }
+        };
+        struct setter
+        {
+            template <typename Value>
+            void operator()(target_type const& target, Value&& value) const
+            {
+                target.MyProperty(std::forward<Value>(value));
+            }
+        };
+    };};
+    struct list { using type = impl::typelist<named::MyProperty>; };
+};
+
 struct property_SampleUserControl_IMyUserControl
 { struct named {
     struct MyProperty
@@ -81,6 +155,36 @@ struct property_SampleUserControl_IMyUserControl
         struct name { static constexpr std::wstring_view value{ L"MyProperty"sv }; };
         using property_type = winrt::hstring;
         using target_type = winrt::SampleUserControl::IMyUserControl;
+
+        using is_readable = std::true_type;
+        using is_writable = std::true_type;
+        using is_static = std::false_type;
+        struct getter
+        {
+            auto operator()(target_type const& target) const
+            {
+                return target.MyProperty();
+            }
+        };
+        struct setter
+        {
+            template <typename Value>
+            void operator()(target_type const& target, Value&& value) const
+            {
+                target.MyProperty(std::forward<Value>(value));
+            }
+        };
+    };};
+    struct list { using type = impl::typelist<named::MyProperty>; };
+};
+
+struct property_SampleUserControl_InternalUserControl
+{ struct named {
+    struct MyProperty
+    {
+        struct name { static constexpr std::wstring_view value{ L"MyProperty"sv }; };
+        using property_type = int32_t;
+        using target_type = winrt::SampleUserControl::InternalUserControl;
 
         using is_readable = std::true_type;
         using is_writable = std::true_type;
@@ -137,18 +241,26 @@ struct property_SampleUserControl_MyUserControl
 }
 
 WINRT_EXPORT namespace winrt::experimental::reflect {
+template <> struct named_property<SampleUserControl::IInternalUserControl> : impl::property_SampleUserControl_IInternalUserControl::named {};
+template <> struct properties<SampleUserControl::IInternalUserControl> : impl::property_SampleUserControl_IInternalUserControl::list {};
 template <> struct named_property<SampleUserControl::IMyUserControl> : impl::property_SampleUserControl_IMyUserControl::named {};
 template <> struct properties<SampleUserControl::IMyUserControl> : impl::property_SampleUserControl_IMyUserControl::list {};
+template <> struct named_property<SampleUserControl::InternalUserControl> : impl::property_SampleUserControl_InternalUserControl::named {};
+template <> struct properties<SampleUserControl::InternalUserControl> : impl::property_SampleUserControl_InternalUserControl::list {};
 template <> struct named_property<SampleUserControl::MyUserControl> : impl::property_SampleUserControl_MyUserControl::named {};
 template <> struct properties<SampleUserControl::MyUserControl> : impl::property_SampleUserControl_MyUserControl::list {};
 
+template <>
+struct base_type<SampleUserControl::InternalUserControl> { using type = Windows::UI::Xaml::Controls::UserControl; };
 template <>
 struct base_type<SampleUserControl::MyUserControl> { using type = Windows::UI::Xaml::Controls::UserControl; };
 }
 
 WINRT_EXPORT namespace std {
 
+template<> struct hash<winrt::SampleUserControl::IInternalUserControl> : winrt::impl::hash_base<winrt::SampleUserControl::IInternalUserControl> {};
 template<> struct hash<winrt::SampleUserControl::IMyUserControl> : winrt::impl::hash_base<winrt::SampleUserControl::IMyUserControl> {};
+template<> struct hash<winrt::SampleUserControl::InternalUserControl> : winrt::impl::hash_base<winrt::SampleUserControl::InternalUserControl> {};
 template<> struct hash<winrt::SampleUserControl::MyUserControl> : winrt::impl::hash_base<winrt::SampleUserControl::MyUserControl> {};
 template<> struct hash<winrt::SampleUserControl::XamlMetaDataProvider> : winrt::impl::hash_base<winrt::SampleUserControl::XamlMetaDataProvider> {};
 
