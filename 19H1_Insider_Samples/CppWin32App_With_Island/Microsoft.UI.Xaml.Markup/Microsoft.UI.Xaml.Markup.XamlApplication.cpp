@@ -4,6 +4,13 @@
 
 namespace xaml = ::winrt::Windows::UI::Xaml;
 
+extern "C" {
+    WINBASEAPI HMODULE WINAPI LoadLibraryExW(_In_ LPCWSTR lpLibFileName, _Reserved_ HANDLE hFile, _In_ DWORD dwFlags);
+    WINBASEAPI HMODULE WINAPI GetModuleHandleW(_In_opt_ LPCWSTR lpModuleName);
+    WINUSERAPI BOOL WINAPI PeekMessageW(_Out_ LPMSG lpMsg, _In_opt_ HWND hWnd, _In_ UINT wMsgFilterMin, _In_ UINT wMsgFilterMax, _In_ UINT wRemoveMsg);
+    WINUSERAPI LRESULT WINAPI DispatchMessageW(_In_ CONST MSG* lpMsg);
+}
+
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 {
     XamlApplication::XamlApplication()
@@ -14,8 +21,24 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     void XamlApplication::Close()
     {
+        if (m_bIsClosed)
+        {
+            return;
+        }
+
+        m_bIsClosed = true;
         m_windowsXamlManager.Close();
         m_providers.Clear();
+        m_windowsXamlManager = nullptr;
+
+        Exit();
+        {
+            MSG msg = {};
+            while (PeekMessageW(&msg, nullptr, 0, 0, PM_REMOVE))
+            {
+                ::DispatchMessageW(&msg);
+            }
+        }
     }
 
     XamlApplication::~XamlApplication()
@@ -71,4 +94,23 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
         return m_providers;
     }
 
+}
+
+namespace winrt::Microsoft::UI::Xaml::Markup::factory_implementation
+{
+    XamlApplication::XamlApplication()
+    {
+        // Workaround a bug where twinapi.appcore.dll gets loaded after it has been unloaded
+        // becuase of a call to GetActivationFactory
+        m_tWinApiAppCoreInstance = ::LoadLibraryExW(L"twinapi.appcore.dll", nullptr, 0);
+    }
+
+    XamlApplication::~XamlApplication()
+    {
+        if (m_tWinApiAppCoreInstance != nullptr)
+        {
+            ::FreeLibrary(m_tWinApiAppCoreInstance);
+            m_tWinApiAppCoreInstance = nullptr;
+        }
+    }
 }

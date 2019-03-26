@@ -61,9 +61,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         hWndXamlIsland = nullptr;
         retValue = (int)msg.wParam;
         desktopSource.Close();
+        desktopSource = nullptr;
     }
     app.Close();
-
+    app = nullptr;
     return retValue;
 }
 

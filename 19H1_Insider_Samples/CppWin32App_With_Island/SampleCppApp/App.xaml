@@ -1,8 +1,0 @@
-﻿<MS:XamlApplication
-    x:Class="SampleCppApp.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:MS="using:Microsoft.UI.Xaml.Markup">
-    xmlns:local="using:SampleCppApp">
-
-</MS:XamlApplication>
