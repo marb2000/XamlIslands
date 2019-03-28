@@ -1,5 +1,5 @@
 ﻿#include "pch.h"
-#include "Microsoft.UI.Xaml.Markup.XamlApplication.h"
+#include "XamlApplication.h"
 
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 {

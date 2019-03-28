@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Microsoft.UI.Xaml.Markup.XamlApplication.g.h"
+#include "XamlApplication.g.h"
 #include <winrt/Windows.UI.Xaml.Hosting.h>
 #include <winrt/Windows.UI.ViewManagement.h>
 #include <Windows.h>
@@ -11,6 +11,7 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
     {
     public:
         XamlApplication();
+        XamlApplication(winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider parentProvider);
         ~XamlApplication();
 
         void Close();
@@ -22,8 +23,8 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
         winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> Providers();
 
     private:
-        winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager m_windowsXamlManager;
-        winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> m_providers;
+        winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager m_windowsXamlManager = nullptr;
+        winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> m_providers = nullptr;
         bool m_bIsClosed = false;
     };
 }

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Components">
+      <UniqueIdentifier>{088e5cb8-cc47-458d-8914-c70e34ac4a7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -62,13 +65,9 @@
     <Manifest Include="SampleCppApp.exe.manifest" />
     <Manifest Include="..\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest" />
     <Manifest Include="..\SampleUserControl\SampleUserControl.manifest" />
+    <Manifest Include="Microsoft.UI.Xaml.manifest" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="MainPage.xaml">
-      <Filter>Source Files</Filter>
-    </Page>
   </ItemGroup>
 </Project>

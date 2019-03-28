@@ -1,0 +1,8 @@
+namespace MyApp
+{
+    [default_interface]
+    runtimeclass App: Microsoft.UI.Xaml.Markup.XamlApplication
+    {
+        App();
+    }
+}

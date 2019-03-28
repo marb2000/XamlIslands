@@ -3,7 +3,7 @@
     xmlns="urn:schemas-microsoft-com:asm.v1"
     xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"
     manifestVersion="1.0">
-    <asmv3:file name="Microsoft.UI.Xaml.Markup.dll">
+    <asmv3:file name="MyApp\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
         <activatableClass
             name="Microsoft.UI.Xaml.Markup.XamlApplication"
             threadingModel="both"

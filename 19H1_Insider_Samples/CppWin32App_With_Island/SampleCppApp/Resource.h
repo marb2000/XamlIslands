@@ -12,7 +12,6 @@
 #define IDI_SMALL                       108
 #define IDC_SAMPLECPPAPP                109
 #define IDR_MAINFRAME                   128
-#define IDR_XAML_MAINPAGE               129
 #define IDC_STATIC                      -1
 
 #define XAMLRESOURCE  256

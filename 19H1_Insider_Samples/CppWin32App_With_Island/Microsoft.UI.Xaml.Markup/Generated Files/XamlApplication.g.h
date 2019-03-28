@@ -72,13 +72,18 @@ struct WINRT_EBO XamlApplicationT : implements<D, Windows::Foundation::IActivati
     {
         return impl::composable_factory<T>::template CreateInstance<Microsoft::UI::Xaml::Markup::XamlApplication>(baseInterface, innerInterface);
     }
+
+    Microsoft::UI::Xaml::Markup::XamlApplication CreateInstance2(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider, Windows::Foundation::IInspectable const& baseInterface, Windows::Foundation::IInspectable& innerInterface)
+    {
+        return impl::composable_factory<T>::template CreateInstance<Microsoft::UI::Xaml::Markup::XamlApplication>(baseInterface, innerInterface, parentProvider);
+    }
 };
 
 }
 
-#if defined(WINRT_FORCE_INCLUDE_XAMLAPPLICATION_XAML_G_H) || __has_include("Microsoft.UI.Xaml.Markup.XamlApplication.xaml.g.h")
+#if defined(WINRT_FORCE_INCLUDE_XAMLAPPLICATION_XAML_G_H) || __has_include("XamlApplication.xaml.g.h")
 
-#include "Microsoft.UI.Xaml.Markup.XamlApplication.xaml.g.h"
+#include "XamlApplication.xaml.g.h"
 
 #else
 

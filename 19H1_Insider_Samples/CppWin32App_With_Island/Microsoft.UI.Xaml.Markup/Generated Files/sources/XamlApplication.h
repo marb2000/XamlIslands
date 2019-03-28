@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Microsoft.UI.Xaml.Markup.XamlApplication.g.h"
+#include "XamlApplication.g.h"
 
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 {

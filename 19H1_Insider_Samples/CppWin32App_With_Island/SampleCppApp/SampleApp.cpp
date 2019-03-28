@@ -5,7 +5,6 @@
 #include "framework.h"
 #include "SampleApp.h"
 #include "XamlBridge.h"
-#include "..\Microsoft.UI.Xaml.Markup\Generated Files\Microsoft.UI.Xaml.Markup.XamlApplication.g.h"
 
 #define MAX_LOADSTRING 100
 
@@ -17,6 +16,8 @@ HWND hWndXamlIsland = nullptr;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
+typedef HRESULT (*CreateAppProc)();
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
     _In_ LPWSTR    lpCmdLine,
@@ -26,8 +27,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
-    winrt::Microsoft::UI::Xaml::Markup::XamlApplication app;
-    app.RequestedTheme(winrt::Windows::UI::Xaml::ApplicationTheme::Light);
+    winrt::MyApp::XamlMetaDataProvider myAppProvider;
+    winrt::Microsoft::UI::Xaml::Markup::XamlApplication app(myAppProvider);
+    //winrt::MyApp::App app;
+    //app.RequestedTheme(winrt::Windows::UI::Xaml::ApplicationTheme::Light);
 
     int retValue = 0;
     {

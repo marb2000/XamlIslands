@@ -23,6 +23,13 @@ template <typename D> Microsoft::UI::Xaml::Markup::XamlApplication consume_Micro
     return value;
 }
 
+template <typename D> Microsoft::UI::Xaml::Markup::XamlApplication consume_Microsoft_UI_Xaml_Markup_IXamlApplicationFactory<D>::CreateInstance2(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider, Windows::Foundation::IInspectable const& baseInterface, Windows::Foundation::IInspectable& innerInterface) const
+{
+    Microsoft::UI::Xaml::Markup::XamlApplication value{ nullptr };
+    check_hresult(WINRT_SHIM(Microsoft::UI::Xaml::Markup::IXamlApplicationFactory)->CreateInstance2(get_abi(parentProvider), get_abi(baseInterface), put_abi(innerInterface), put_abi(value)));
+    return value;
+}
+
 template <typename D> Windows::Foundation::Collections::IVector<Windows::UI::Xaml::Markup::IXamlMetadataProvider> consume_Microsoft_UI_Xaml_Markup_IXamlMetadataProviderContainer<D>::Providers() const
 {
     Windows::Foundation::Collections::IVector<Windows::UI::Xaml::Markup::IXamlMetadataProvider> value{ nullptr };
@@ -47,6 +54,22 @@ struct produce<D, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory> : produc
             Windows::Foundation::IInspectable __local_innerInterface;
             WINRT_ASSERT_DECLARATION(CreateInstance, WINRT_WRAP(Microsoft::UI::Xaml::Markup::XamlApplication), Windows::Foundation::IInspectable const&, Windows::Foundation::IInspectable&);
             *value = detach_from<Microsoft::UI::Xaml::Markup::XamlApplication>(this->shim().CreateInstance(*reinterpret_cast<Windows::Foundation::IInspectable const*>(&baseInterface), __local_innerInterface));
+            if (innerInterface) *innerInterface = detach_abi(__local_innerInterface);
+            return 0;
+        }
+        catch (...) { return to_hresult(); }
+    }
+
+    int32_t WINRT_CALL CreateInstance2(void* parentProvider, void* baseInterface, void** innerInterface, void** value) noexcept final
+    {
+        try
+        {
+            if (innerInterface) *innerInterface = nullptr;
+            *value = nullptr;
+            typename D::abi_guard guard(this->shim());
+            Windows::Foundation::IInspectable __local_innerInterface;
+            WINRT_ASSERT_DECLARATION(CreateInstance2, WINRT_WRAP(Microsoft::UI::Xaml::Markup::XamlApplication), Windows::UI::Xaml::Markup::IXamlMetadataProvider const&, Windows::Foundation::IInspectable const&, Windows::Foundation::IInspectable&);
+            *value = detach_from<Microsoft::UI::Xaml::Markup::XamlApplication>(this->shim().CreateInstance2(*reinterpret_cast<Windows::UI::Xaml::Markup::IXamlMetadataProvider const*>(&parentProvider), *reinterpret_cast<Windows::Foundation::IInspectable const*>(&baseInterface), __local_innerInterface));
             if (innerInterface) *innerInterface = detach_abi(__local_innerInterface);
             return 0;
         }
@@ -81,6 +104,12 @@ inline XamlApplication::XamlApplication()
     *this = impl::call_factory<XamlApplication, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>([&](auto&& f) { return f.CreateInstance(baseInterface, innerInterface); });
 }
 
+inline XamlApplication::XamlApplication(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider)
+{
+    Windows::Foundation::IInspectable baseInterface, innerInterface;
+    *this = impl::call_factory<XamlApplication, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>([&](auto&& f) { return f.CreateInstance2(parentProvider, baseInterface, innerInterface); });
+}
+
 template <typename D, typename... Interfaces>
 struct XamlApplicationT :
     implements<D, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, composing, Interfaces...>,
@@ -94,6 +123,10 @@ protected:
     XamlApplicationT()
     {
         impl::call_factory<Microsoft::UI::Xaml::Markup::XamlApplication, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>([&](auto&& f) { f.CreateInstance(*this, this->m_inner); });
+    }
+    XamlApplicationT(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider)
+    {
+        impl::call_factory<Microsoft::UI::Xaml::Markup::XamlApplication, Microsoft::UI::Xaml::Markup::IXamlApplicationFactory>([&](auto&& f) { f.CreateInstance2(parentProvider, *this, this->m_inner); });
     }
 };
 

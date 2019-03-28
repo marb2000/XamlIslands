@@ -1,6 +1,6 @@
 ﻿#include "pch.h"
 
-#include "Microsoft.UI.Xaml.Markup.XamlApplication.h"
+#include "XamlApplication.h"
 
 namespace xaml = ::winrt::Windows::UI::Xaml;
 
@@ -13,10 +13,18 @@ extern "C" {
 
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 {
-    XamlApplication::XamlApplication()
-        : m_providers(winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>())
-        , m_windowsXamlManager(xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread())
+    XamlApplication::XamlApplication(winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider parentProvider)
     {
+        m_providers = winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>();
+        m_providers.Append(parentProvider);
+        m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+    }
+
+    XamlApplication::XamlApplication()
+    {
+        m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+
+        m_providers = winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>();
 #if defined _DEBUG
         this->UnhandledException([this](IInspectable const&, winrt::Windows::UI::Xaml::UnhandledExceptionEventArgs const& e)
         {
@@ -58,6 +66,8 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     xaml::Markup::IXamlType XamlApplication::GetXamlType(xaml::Interop::TypeName const& type)
     {
+        if (!m_providers) return nullptr;
+
         for (const auto& provider : m_providers)
         {
             const auto xamlType = provider.GetXamlType(type);
@@ -72,6 +82,8 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     xaml::Markup::IXamlType XamlApplication::GetXamlType(winrt::hstring const& fullName)
     {
+        if (!m_providers) return nullptr;
+
         for (const auto& provider : m_providers)
         {
             const auto xamlType = provider.GetXamlType(fullName);
@@ -86,6 +98,8 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     winrt::com_array<xaml::Markup::XmlnsDefinition> XamlApplication::GetXmlnsDefinitions()
     {
+        if (!m_providers) return winrt::com_array<xaml::Markup::XmlnsDefinition>();
+
         std::list<xaml::Markup::XmlnsDefinition> definitions;
         for (const auto& provider : m_providers)
         {
