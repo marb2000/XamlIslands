@@ -30,7 +30,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     winrt::MyApp::XamlMetaDataProvider myAppProvider;
     winrt::Microsoft::UI::Xaml::Markup::XamlApplication app(myAppProvider);
     //winrt::MyApp::App app;
-    //app.RequestedTheme(winrt::Windows::UI::Xaml::ApplicationTheme::Light);
 
     int retValue = 0;
     {

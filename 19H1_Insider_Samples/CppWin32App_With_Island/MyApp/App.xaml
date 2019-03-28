@@ -6,5 +6,9 @@
     xmlns:MSMarkup="using:Microsoft.UI.Xaml.Markup"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    RequestedTheme="Light"
     mc:Ignorable="d">
+    <MSMarkup:XamlApplication.Resources>
+        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+    </MSMarkup:XamlApplication.Resources>
 </MSMarkup:XamlApplication>

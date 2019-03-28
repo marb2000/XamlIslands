@@ -61,6 +61,114 @@ template<typename T>
 }
 
 template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MinValue(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MinValue());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MinSaturation(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MinSaturation());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MinHue(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MinHue());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MaxValue(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MaxValue());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MaxSaturation(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MaxSaturation());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_MaxHue(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().MaxHue());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsMoreButtonVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsMoreButtonVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsHexInputVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsHexInputVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsColorSpectrumVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsColorSpectrumVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsColorSliderVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsColorSliderVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsColorPreviewVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsColorPreviewVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsColorChannelTextInputVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsColorChannelTextInputVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsAlphaTextInputVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsAlphaTextInputVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsAlphaSliderVisible(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsAlphaSliderVisible());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsAlphaEnabled(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsAlphaEnabled());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_ColorSpectrumShape(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().ColorSpectrumShape());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_ColorSpectrumComponents(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().ColorSpectrumComponents());
+}
+
+template<typename TDeclaringType, typename TValue>
+::winrt::Windows::Foundation::IInspectable GetValueTypeMember_Color(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().Color());
+}
+
+template<typename TDeclaringType, typename TValue>
 ::winrt::Windows::Foundation::IInspectable GetValueTypeMember_IsExpanded(::winrt::Windows::Foundation::IInspectable const& instance)
 {
     return ::winrt::box_value<TValue>(instance.as<TDeclaringType>().IsExpanded());
@@ -97,6 +205,12 @@ template <typename T>
 }
 
 template <typename T>
+::winrt::Windows::Foundation::IInspectable GetReferenceTypeMember_PreviousColor(::winrt::Windows::Foundation::IInspectable const& instance)
+{
+    return ::winrt::box_value(instance.as<T>().PreviousColor());
+}
+
+template <typename T>
 ::winrt::Windows::Foundation::IInspectable GetReferenceTypeMember_Content(::winrt::Windows::Foundation::IInspectable const& instance)
 {
     return ::winrt::box_value(instance.as<T>().Content());
@@ -112,6 +226,150 @@ template <typename T>
 ::winrt::Windows::Foundation::IInspectable GetReferenceTypeMember_Parent(::winrt::Windows::Foundation::IInspectable const& instance)
 {
     return ::winrt::box_value(instance.as<T>().Parent());
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetEnumMember_ColorSpectrumShape(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().ColorSpectrumShape(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetEnumMember_ColorSpectrumComponents(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().ColorSpectrumComponents(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MinValue(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MinValue(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MinSaturation(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MinSaturation(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MinHue(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MinHue(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MaxValue(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MaxValue(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MaxSaturation(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MaxSaturation(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_MaxHue(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().MaxHue(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsMoreButtonVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsMoreButtonVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsHexInputVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsHexInputVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsColorSpectrumVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsColorSpectrumVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsColorSliderVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsColorSliderVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsColorPreviewVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsColorPreviewVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsColorChannelTextInputVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsColorChannelTextInputVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsAlphaTextInputVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsAlphaTextInputVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsAlphaSliderVisible(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsAlphaSliderVisible(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_IsAlphaEnabled(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().IsAlphaEnabled(::winrt::unbox_value<TValue>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetValueTypeMember_Color(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().Color(::winrt::unbox_value<TValue>(value));
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -136,6 +394,14 @@ void SetReferenceTypeMember_MyProperty(
     ::winrt::Windows::Foundation::IInspectable const& value)
 {
     return instance.as<TDeclaringType>().MyProperty(::winrt::unbox_value<::winrt::hstring>(value));
+}
+
+template<typename TDeclaringType, typename TValue>
+void SetReferenceTypeMember_PreviousColor(
+    ::winrt::Windows::Foundation::IInspectable const& instance, 
+    ::winrt::Windows::Foundation::IInspectable const& value)
+{
+    instance.as<TDeclaringType>().PreviousColor(value.as<TValue>());
 }
 
 template<typename TDeclaringType, typename TValue>
@@ -182,13 +448,13 @@ const TypeInfo TypeInfos[] =
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   1
-    L"String", L"",
+    L"Object", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   2
-    L"Object", L"",
+    L"String", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, TypeKind::Metadata,
@@ -200,70 +466,130 @@ const TypeInfo TypeInfos[] =
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
     //   4
+    L"System.Enum", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    6, // System.ValueType
+    0, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //   5
+    L"Windows.UI.Color", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    6, // System.ValueType
+    0, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //   6
+    L"System.ValueType", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    1, // Object
+    0, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //   7
     L"MyApp.MainUserControl", L"",
     &ActivateLocalType<::winrt::MyApp::implementation::MainUserControl>, nullptr, nullptr, nullptr,
-    8, // Windows.UI.Xaml.Controls.UserControl
+    13, // Windows.UI.Xaml.Controls.UserControl
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsLocalType | TypeInfo_Flags_None,
-    //   5
+    //   8
     L"Windows.UI.Xaml.Application", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //   6
+    //   9
     L"SampleUserControl.MyUserControl", L"",
     &ActivateType<::winrt::SampleUserControl::MyUserControl>, nullptr, nullptr, nullptr,
-    8, // Windows.UI.Xaml.Controls.UserControl
+    13, // Windows.UI.Xaml.Controls.UserControl
     0, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //   7
+    //  10
+    L"Windows.UI.Xaml.Controls.Control", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    1, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  11
     L"Windows.UI.Xaml.DependencyObject", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     1, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //   8
+    //  12
+    L"Windows.UI.Xaml.ResourceDictionary", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    1, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
+    //  13
     L"Windows.UI.Xaml.Controls.UserControl", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
     1, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //   9
+    //  14
+    L"Microsoft.UI.Xaml.Controls.ColorPicker", L"",
+    &ActivateType<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker>, nullptr, nullptr, nullptr,
+    10, // Windows.UI.Xaml.Controls.Control
+    1, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  15
     L"Microsoft.UI.Xaml.Controls.TreeViewNode", L"",
     &ActivateType<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode>, nullptr, nullptr, nullptr,
-    7, // Windows.UI.Xaml.DependencyObject
-    1, 0, -1, TypeKind::Metadata,
+    11, // Windows.UI.Xaml.DependencyObject
+    20, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsBindable | TypeInfo_Flags_None,
-    //  10
+    //  16
     L"Microsoft.UI.Xaml.Markup.XamlApplication", L"",
     &ActivateType<::winrt::Microsoft::UI::Xaml::Markup::XamlApplication>, nullptr, nullptr, nullptr,
-    5, // Windows.UI.Xaml.Application
-    8, 0, -1, TypeKind::Metadata,
+    8, // Windows.UI.Xaml.Application
+    27, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_None,
-    //  11
+    //  17
     L"Windows.UI.Xaml.Markup.IXamlMetadataProvider", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1,
-    9, 0, -1, TypeKind::Metadata,
+    28, 0, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsSystemType | TypeInfo_Flags_None,
-    //  12
+    //  18
+    L"Microsoft.UI.Xaml.Controls.ColorSpectrumShape", L"",
+    nullptr, nullptr, nullptr, &FromStringConverter<::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumShape>,
+    4, // System.Enum
+    28, 0, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  19
+    L"Microsoft.UI.Xaml.Controls.XamlControlsResources", L"",
+    &ActivateType<::winrt::Microsoft::UI::Xaml::Controls::XamlControlsResources>, nullptr, &DictionaryAdd<::winrt::Microsoft::UI::Xaml::Controls::XamlControlsResources, ::winrt::Windows::Foundation::IInspectable, ::winrt::Windows::Foundation::IInspectable>, nullptr,
+    12, // Windows.UI.Xaml.ResourceDictionary
+    28, 2, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  20
+    L"Windows.Foundation.IReference`1<Windows.UI.Color>", L"",
+    nullptr, nullptr, nullptr, nullptr,
+    -1,
+    28, 2, -1, TypeKind::Metadata,
+    TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
+    //  21
+    L"Microsoft.UI.Xaml.Controls.ColorSpectrumComponents", L"",
+    nullptr, nullptr, nullptr, &FromStringConverter<::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents>,
+    4, // System.Enum
+    28, 2, -1, TypeKind::Metadata,
+    TypeInfo_Flags_None,
+    //  22
     L"Windows.Foundation.Collections.IVector`1<Microsoft.UI.Xaml.Controls.TreeViewNode>", L"",
     nullptr, &CollectionAdd<::winrt::Windows::Foundation::Collections::IVector<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode>, ::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode>, nullptr, nullptr,
     -1,
-    9, 0, -1, TypeKind::Metadata,
+    28, 8, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
-    //  13
+    //  23
     L"Windows.Foundation.Collections.IVector`1<Windows.UI.Xaml.Markup.IXamlMetadataProvider>", L"",
     nullptr, &CollectionAdd<::winrt::Windows::Foundation::Collections::IVector<::winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider>, ::winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider>, nullptr, nullptr,
     -1,
-    9, 0, -1, TypeKind::Metadata,
+    28, 8, -1, TypeKind::Metadata,
     TypeInfo_Flags_IsReturnTypeStub | TypeInfo_Flags_None,
     //  Last type here is for padding
     L"", L"",
     nullptr, nullptr, nullptr, nullptr,
     -1, 
-    9, 0, -1, TypeKind::Custom,
+    28, 8, -1, TypeKind::Custom,
     TypeInfo_Flags_None,
 };
 
@@ -280,82 +606,100 @@ constexpr uint32_t TypeInfoLookup[] = {
       4,   //   9
       4,   //  10
       4,   //  11
-      4,   //  12
-      4,   //  13
-      4,   //  14
-      4,   //  15
-      4,   //  16
-      4,   //  17
-      4,   //  18
-      4,   //  19
-      4,   //  20
-      4,   //  21
-      5,   //  22
-      5,   //  23
-      5,   //  24
-      5,   //  25
-      5,   //  26
-      5,   //  27
-      6,   //  28
-      6,   //  29
-      6,   //  30
-      6,   //  31
-      7,   //  32
-      8,   //  33
-      8,   //  34
-      8,   //  35
-      8,   //  36
-      9,   //  37
-      9,   //  38
-      9,   //  39
-     10,   //  40
-     11,   //  41
-     11,   //  42
-     11,   //  43
-     11,   //  44
-     12,   //  45
-     12,   //  46
-     12,   //  47
-     12,   //  48
-     12,   //  49
-     12,   //  50
-     12,   //  51
-     12,   //  52
-     12,   //  53
-     12,   //  54
-     12,   //  55
-     12,   //  56
-     12,   //  57
-     12,   //  58
-     12,   //  59
-     12,   //  60
-     12,   //  61
-     12,   //  62
-     12,   //  63
-     12,   //  64
-     12,   //  65
-     12,   //  66
-     12,   //  67
-     12,   //  68
-     12,   //  69
-     12,   //  70
-     12,   //  71
-     12,   //  72
-     12,   //  73
-     12,   //  74
-     12,   //  75
-     12,   //  76
-     12,   //  77
-     12,   //  78
-     12,   //  79
-     12,   //  80
-     12,   //  81
-     13,   //  82
-     13,   //  83
-     13,   //  84
-     13,   //  85
-     13,   //  86
-     14,   //  87
+      5,   //  12
+      5,   //  13
+      5,   //  14
+      5,   //  15
+      5,   //  16
+      7,   //  17
+      7,   //  18
+      7,   //  19
+      7,   //  20
+      7,   //  21
+      8,   //  22
+      8,   //  23
+      8,   //  24
+      8,   //  25
+      8,   //  26
+      8,   //  27
+      9,   //  28
+      9,   //  29
+      9,   //  30
+      9,   //  31
+     10,   //  32
+     12,   //  33
+     12,   //  34
+     13,   //  35
+     13,   //  36
+     14,   //  37
+     14,   //  38
+     15,   //  39
+     16,   //  40
+     17,   //  41
+     17,   //  42
+     17,   //  43
+     17,   //  44
+     18,   //  45
+     19,   //  46
+     19,   //  47
+     19,   //  48
+     20,   //  49
+     21,   //  50
+     22,   //  51
+     22,   //  52
+     22,   //  53
+     22,   //  54
+     22,   //  55
+     22,   //  56
+     22,   //  57
+     22,   //  58
+     22,   //  59
+     22,   //  60
+     22,   //  61
+     22,   //  62
+     22,   //  63
+     22,   //  64
+     22,   //  65
+     22,   //  66
+     22,   //  67
+     22,   //  68
+     22,   //  69
+     22,   //  70
+     22,   //  71
+     22,   //  72
+     22,   //  73
+     22,   //  74
+     22,   //  75
+     22,   //  76
+     22,   //  77
+     22,   //  78
+     22,   //  79
+     22,   //  80
+     22,   //  81
+     23,   //  82
+     23,   //  83
+     23,   //  84
+     23,   //  85
+     23,   //  86
+     24,   //  87
+};
+
+struct EnumValueInfo
+{
+    const wchar_t* name{nullptr};
+    int eValue;
+};
+
+const EnumValueInfo EnumValues[] =
+{ 
+    L"Box", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumShape::Box),
+    L"Ring", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumShape::Ring),
+    L"HueValue", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents::HueValue),
+    L"ValueHue", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents::ValueHue),
+    L"HueSaturation", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents::HueSaturation),
+    L"SaturationHue", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents::SaturationHue),
+    L"SaturationValue", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents::SaturationValue),
+    L"ValueSaturation", static_cast<int>(::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents::ValueSaturation),
 };
 
 struct MemberInfo 
@@ -376,63 +720,196 @@ const MemberInfo MemberInfos[] =
     L"MyProperty",
     &GetReferenceTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl>,
     &SetReferenceTypeMember_MyProperty<::winrt::SampleUserControl::MyUserControl, ::winrt::hstring>,
-    1, // String
+    2, // String
     -1,
     false, false, false,
-    //   1 - Microsoft.UI.Xaml.Controls.TreeViewNode.IsExpanded
+    //   1 - Microsoft.UI.Xaml.Controls.ColorPicker.PreviousColor
+    L"PreviousColor",
+    &GetReferenceTypeMember_PreviousColor<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker>,
+    &SetReferenceTypeMember_PreviousColor<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Windows::Foundation::IReference<::winrt::Windows::UI::Color>>,
+    20, // Windows.Foundation.IReference`1<Windows.UI.Color>
+    -1,
+    false, true,  false,
+    //   2 - Microsoft.UI.Xaml.Controls.ColorPicker.MinValue
+    L"MinValue",
+    &GetValueTypeMember_MinValue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    &SetValueTypeMember_MinValue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    0, // Int32
+    -1,
+    false, true,  false,
+    //   3 - Microsoft.UI.Xaml.Controls.ColorPicker.MinSaturation
+    L"MinSaturation",
+    &GetValueTypeMember_MinSaturation<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    &SetValueTypeMember_MinSaturation<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    0, // Int32
+    -1,
+    false, true,  false,
+    //   4 - Microsoft.UI.Xaml.Controls.ColorPicker.MinHue
+    L"MinHue",
+    &GetValueTypeMember_MinHue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    &SetValueTypeMember_MinHue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    0, // Int32
+    -1,
+    false, true,  false,
+    //   5 - Microsoft.UI.Xaml.Controls.ColorPicker.MaxValue
+    L"MaxValue",
+    &GetValueTypeMember_MaxValue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    &SetValueTypeMember_MaxValue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    0, // Int32
+    -1,
+    false, true,  false,
+    //   6 - Microsoft.UI.Xaml.Controls.ColorPicker.MaxSaturation
+    L"MaxSaturation",
+    &GetValueTypeMember_MaxSaturation<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    &SetValueTypeMember_MaxSaturation<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    0, // Int32
+    -1,
+    false, true,  false,
+    //   7 - Microsoft.UI.Xaml.Controls.ColorPicker.MaxHue
+    L"MaxHue",
+    &GetValueTypeMember_MaxHue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    &SetValueTypeMember_MaxHue<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, int32_t>,
+    0, // Int32
+    -1,
+    false, true,  false,
+    //   8 - Microsoft.UI.Xaml.Controls.ColorPicker.IsMoreButtonVisible
+    L"IsMoreButtonVisible",
+    &GetValueTypeMember_IsMoreButtonVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsMoreButtonVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //   9 - Microsoft.UI.Xaml.Controls.ColorPicker.IsHexInputVisible
+    L"IsHexInputVisible",
+    &GetValueTypeMember_IsHexInputVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsHexInputVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  10 - Microsoft.UI.Xaml.Controls.ColorPicker.IsColorSpectrumVisible
+    L"IsColorSpectrumVisible",
+    &GetValueTypeMember_IsColorSpectrumVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsColorSpectrumVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  11 - Microsoft.UI.Xaml.Controls.ColorPicker.IsColorSliderVisible
+    L"IsColorSliderVisible",
+    &GetValueTypeMember_IsColorSliderVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsColorSliderVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  12 - Microsoft.UI.Xaml.Controls.ColorPicker.IsColorPreviewVisible
+    L"IsColorPreviewVisible",
+    &GetValueTypeMember_IsColorPreviewVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsColorPreviewVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  13 - Microsoft.UI.Xaml.Controls.ColorPicker.IsColorChannelTextInputVisible
+    L"IsColorChannelTextInputVisible",
+    &GetValueTypeMember_IsColorChannelTextInputVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsColorChannelTextInputVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  14 - Microsoft.UI.Xaml.Controls.ColorPicker.IsAlphaTextInputVisible
+    L"IsAlphaTextInputVisible",
+    &GetValueTypeMember_IsAlphaTextInputVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsAlphaTextInputVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  15 - Microsoft.UI.Xaml.Controls.ColorPicker.IsAlphaSliderVisible
+    L"IsAlphaSliderVisible",
+    &GetValueTypeMember_IsAlphaSliderVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsAlphaSliderVisible<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  16 - Microsoft.UI.Xaml.Controls.ColorPicker.IsAlphaEnabled
+    L"IsAlphaEnabled",
+    &GetValueTypeMember_IsAlphaEnabled<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    &SetValueTypeMember_IsAlphaEnabled<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, bool>,
+    3, // Boolean
+    -1,
+    false, true,  false,
+    //  17 - Microsoft.UI.Xaml.Controls.ColorPicker.ColorSpectrumShape
+    L"ColorSpectrumShape",
+    &GetValueTypeMember_ColorSpectrumShape<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumShape>,
+    &SetEnumMember_ColorSpectrumShape<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumShape>,
+    18, // Microsoft.UI.Xaml.Controls.ColorSpectrumShape
+    -1,
+    false, true,  false,
+    //  18 - Microsoft.UI.Xaml.Controls.ColorPicker.ColorSpectrumComponents
+    L"ColorSpectrumComponents",
+    &GetValueTypeMember_ColorSpectrumComponents<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents>,
+    &SetEnumMember_ColorSpectrumComponents<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Microsoft::UI::Xaml::Controls::ColorSpectrumComponents>,
+    21, // Microsoft.UI.Xaml.Controls.ColorSpectrumComponents
+    -1,
+    false, true,  false,
+    //  19 - Microsoft.UI.Xaml.Controls.ColorPicker.Color
+    L"Color",
+    &GetValueTypeMember_Color<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Windows::UI::Color>,
+    &SetValueTypeMember_Color<::winrt::Microsoft::UI::Xaml::Controls::ColorPicker, ::winrt::Windows::UI::Color>,
+    5, // Windows.UI.Color
+    -1,
+    false, true,  false,
+    //  20 - Microsoft.UI.Xaml.Controls.TreeViewNode.IsExpanded
     L"IsExpanded",
     &GetValueTypeMember_IsExpanded<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, bool>,
     &SetValueTypeMember_IsExpanded<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, bool>,
     3, // Boolean
     -1,
     false, true,  false,
-    //   2 - Microsoft.UI.Xaml.Controls.TreeViewNode.HasUnrealizedChildren
+    //  21 - Microsoft.UI.Xaml.Controls.TreeViewNode.HasUnrealizedChildren
     L"HasUnrealizedChildren",
     &GetValueTypeMember_HasUnrealizedChildren<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, bool>,
     &SetValueTypeMember_HasUnrealizedChildren<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, bool>,
     3, // Boolean
     -1,
     false, false, false,
-    //   3 - Microsoft.UI.Xaml.Controls.TreeViewNode.Content
+    //  22 - Microsoft.UI.Xaml.Controls.TreeViewNode.Content
     L"Content",
     &GetReferenceTypeMember_Content<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode>,
     &SetReferenceTypeMember_Content<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, ::winrt::Windows::Foundation::IInspectable>,
-    2, // Object
+    1, // Object
     -1,
     false, true,  false,
-    //   4 - Microsoft.UI.Xaml.Controls.TreeViewNode.Children
+    //  23 - Microsoft.UI.Xaml.Controls.TreeViewNode.Children
     L"Children",
     &GetReferenceTypeMember_Children<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode>,
     nullptr,
-    12, // Windows.Foundation.Collections.IVector`1<Microsoft.UI.Xaml.Controls.TreeViewNode>
+    22, // Windows.Foundation.Collections.IVector`1<Microsoft.UI.Xaml.Controls.TreeViewNode>
     -1,
     true,  false, false,
-    //   5 - Microsoft.UI.Xaml.Controls.TreeViewNode.Depth
+    //  24 - Microsoft.UI.Xaml.Controls.TreeViewNode.Depth
     L"Depth",
     &GetValueTypeMember_Depth<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, int32_t>,
     nullptr,
     0, // Int32
     -1,
     true,  true,  false,
-    //   6 - Microsoft.UI.Xaml.Controls.TreeViewNode.HasChildren
+    //  25 - Microsoft.UI.Xaml.Controls.TreeViewNode.HasChildren
     L"HasChildren",
     &GetValueTypeMember_HasChildren<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode, bool>,
     nullptr,
     3, // Boolean
     -1,
     true,  true,  false,
-    //   7 - Microsoft.UI.Xaml.Controls.TreeViewNode.Parent
+    //  26 - Microsoft.UI.Xaml.Controls.TreeViewNode.Parent
     L"Parent",
     &GetReferenceTypeMember_Parent<::winrt::Microsoft::UI::Xaml::Controls::TreeViewNode>,
     nullptr,
-    9, // Microsoft.UI.Xaml.Controls.TreeViewNode
+    15, // Microsoft.UI.Xaml.Controls.TreeViewNode
     -1,
     true,  false, false,
-    //   8 - Microsoft.UI.Xaml.Markup.XamlApplication.Providers
+    //  27 - Microsoft.UI.Xaml.Markup.XamlApplication.Providers
     L"Providers",
     &GetReferenceTypeMember_Providers<::winrt::Microsoft::UI::Xaml::Markup::XamlApplication>,
     nullptr,
-    13, // Windows.Foundation.Collections.IVector`1<Windows.UI.Xaml.Markup.IXamlMetadataProvider>
+    23, // Windows.Foundation.Collections.IVector`1<Windows.UI.Xaml.Markup.IXamlMetadataProvider>
     -1,
     true,  false, false,
 };
@@ -496,6 +973,9 @@ std::vector<::winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> const& Xa
         _otherProviders.push_back(::winrt::Microsoft::UI::Xaml::Markup::XamlApplication());
         _otherProviders.push_back(::winrt::Microsoft::UI::Xaml::XamlTypeInfo::XamlControlsXamlMetaDataProvider());
         _otherProviders.push_back(::winrt::SampleUserControl::XamlMetaDataProvider());
+        _otherProviders.push_back(::winrt::Microsoft::UI::Xaml::Markup::XamlApplication());
+        _otherProviders.push_back(::winrt::Microsoft::UI::Xaml::XamlTypeInfo::XamlControlsXamlMetaDataProvider());
+        _otherProviders.push_back(::winrt::SampleUserControl::XamlMetaDataProvider());
     }
     return _otherProviders;
 }
@@ -530,6 +1010,10 @@ IXamlType XamlTypeInfoProvider::CreateXamlType(::winrt::hstring const& typeName)
         for (int i = pTypeInfo->firstMemberIndex; i < pNextTypeInfo->firstMemberIndex; ++i)
         {
             userType->AddMemberName(MemberInfos[i].shortName);
+        }
+        for (int i = pTypeInfo->firstEnumValueIndex; i < pNextTypeInfo->firstEnumValueIndex; ++i)
+        {
+            userType->AddEnumValue(EnumValues[i].name, winrt::Windows::Foundation::PropertyValue::CreateInt32(EnumValues[i].eValue));
         }
         return userType.as<IXamlType>();
     }

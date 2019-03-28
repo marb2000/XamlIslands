@@ -16,25 +16,27 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
     XamlApplication::XamlApplication(winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider parentProvider)
     {
         m_providers = winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>();
-        m_providers.Append(parentProvider);
+        if (parentProvider)
+        {
+            m_providers.Append(parentProvider);
+        }
         m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+
+#if defined _DEBUG
+        this->UnhandledException([this](IInspectable const&, winrt::Windows::UI::Xaml::UnhandledExceptionEventArgs const& e)
+            {
+                if (IsDebuggerPresent())
+                {
+                    auto errorMessage = e.Message();
+                    __debugbreak();
+                }
+            });
+#endif
     }
 
     XamlApplication::XamlApplication()
+        : XamlApplication(nullptr)
     {
-        m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
-
-        m_providers = winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>();
-#if defined _DEBUG
-        this->UnhandledException([this](IInspectable const&, winrt::Windows::UI::Xaml::UnhandledExceptionEventArgs const& e)
-        {
-            if (IsDebuggerPresent())
-            {
-                auto errorMessage = e.Message();
-                __debugbreak();
-            }
-        });
-#endif
     }
 
     void XamlApplication::Close()
@@ -66,8 +68,6 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     xaml::Markup::IXamlType XamlApplication::GetXamlType(xaml::Interop::TypeName const& type)
     {
-        if (!m_providers) return nullptr;
-
         for (const auto& provider : m_providers)
         {
             const auto xamlType = provider.GetXamlType(type);
@@ -82,8 +82,6 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     xaml::Markup::IXamlType XamlApplication::GetXamlType(winrt::hstring const& fullName)
     {
-        if (!m_providers) return nullptr;
-
         for (const auto& provider : m_providers)
         {
             const auto xamlType = provider.GetXamlType(fullName);
@@ -98,8 +96,6 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     winrt::com_array<xaml::Markup::XmlnsDefinition> XamlApplication::GetXmlnsDefinitions()
     {
-        if (!m_providers) return winrt::com_array<xaml::Markup::XmlnsDefinition>();
-
         std::list<xaml::Markup::XmlnsDefinition> definitions;
         for (const auto& provider : m_providers)
         {
@@ -117,7 +113,6 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
     {
         return m_providers;
     }
-
 }
 
 namespace winrt::Microsoft::UI::Xaml::Markup::factory_implementation

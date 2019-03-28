@@ -259,3 +259,4 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/19H1_Insider_Samples/CppWin32App_With_Island/enc_temp_folder

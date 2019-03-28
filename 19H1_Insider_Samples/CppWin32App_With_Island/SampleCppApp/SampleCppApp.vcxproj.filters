@@ -70,4 +70,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <PRIResource Include="resources.pri" />
+  </ItemGroup>
 </Project>
