@@ -7,7 +7,7 @@
 
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 {
-    class XamlApplication : public XamlApplicationT<XamlApplication>
+    class XamlApplication : public XamlApplicationT<XamlApplication, Windows::UI::Xaml::Markup::IXamlMetadataProvider>
     {
     public:
         XamlApplication();

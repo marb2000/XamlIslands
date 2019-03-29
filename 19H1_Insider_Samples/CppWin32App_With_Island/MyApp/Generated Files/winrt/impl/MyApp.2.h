@@ -23,7 +23,7 @@ WINRT_EXPORT namespace winrt::MyApp {
 struct WINRT_EBO App :
     MyApp::IApp,
     impl::base<App, Microsoft::UI::Xaml::Markup::XamlApplication, Windows::UI::Xaml::Application>,
-    impl::require<App, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, Windows::UI::Xaml::Markup::IXamlMetadataProvider>
+    impl::require<App, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2>
 {
     App(std::nullptr_t) noexcept {}
     App();

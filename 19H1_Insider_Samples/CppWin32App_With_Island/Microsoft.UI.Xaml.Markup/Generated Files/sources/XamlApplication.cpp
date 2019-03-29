@@ -12,19 +12,4 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
     {
         throw hresult_not_implemented();
     }
-
-    Windows::UI::Xaml::Markup::IXamlType XamlApplication::GetXamlType(Windows::UI::Xaml::Interop::TypeName const& type)
-    {
-        throw hresult_not_implemented();
-    }
-
-    Windows::UI::Xaml::Markup::IXamlType XamlApplication::GetXamlType(hstring const& fullName)
-    {
-        throw hresult_not_implemented();
-    }
-
-    com_array<Windows::UI::Xaml::Markup::XmlnsDefinition> XamlApplication::GetXmlnsDefinitions()
-    {
-        throw hresult_not_implemented();
-    }
 }

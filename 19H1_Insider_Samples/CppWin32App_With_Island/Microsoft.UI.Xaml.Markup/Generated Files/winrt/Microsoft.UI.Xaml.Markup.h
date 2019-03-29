@@ -8,7 +8,6 @@
 static_assert(winrt::check_version(CPPWINRT_VERSION, "1.0.190111.3"), "Mismatched component and base headers.");
 #include "winrt/Windows.Foundation.h"
 #include "winrt/Windows.Foundation.Collections.h"
-#include "winrt/impl/Windows.UI.Xaml.Interop.2.h"
 #include "winrt/impl/Windows.UI.Xaml.Markup.2.h"
 #include "winrt/impl/Windows.Foundation.2.h"
 #include "winrt/impl/Windows.UI.Xaml.2.h"
@@ -113,7 +112,7 @@ inline XamlApplication::XamlApplication(Windows::UI::Xaml::Markup::IXamlMetadata
 template <typename D, typename... Interfaces>
 struct XamlApplicationT :
     implements<D, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, composing, Interfaces...>,
-    impl::require<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3, Windows::UI::Xaml::Markup::IXamlMetadataProvider>,
+    impl::require<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3>,
     impl::base<D, Microsoft::UI::Xaml::Markup::XamlApplication, Windows::UI::Xaml::Application>,
     Windows::UI::Xaml::IApplicationOverridesT<D>, Windows::UI::Xaml::IApplicationOverrides2T<D>
 {

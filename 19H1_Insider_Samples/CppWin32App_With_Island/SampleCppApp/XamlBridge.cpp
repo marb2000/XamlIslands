@@ -10,14 +10,14 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
 {
     HRESULT hr = S_OK;
 
-    auto app = winrt::Windows::UI::Xaml::Application::Current();
-    auto metadataContainer = app.as<winrt::Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer>();
+    //auto app = winrt::Windows::UI::Xaml::Application::Current();
+    //auto metadataContainer = app.as<winrt::Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer>();
 
-    winrt::SampleUserControl::XamlMetaDataProvider metadataProvider;
-    metadataContainer.Providers().InsertAt(0, metadataProvider);
+    //winrt::SampleUserControl::XamlMetaDataProvider metadataProvider;
+    //metadataContainer.Providers().InsertAt(0, metadataProvider);
 
-    winrt::Microsoft::UI::Xaml::XamlTypeInfo::XamlControlsXamlMetaDataProvider muxMetadataProvider;
-    metadataContainer.Providers().InsertAt(0, muxMetadataProvider);
+    //winrt::Microsoft::UI::Xaml::XamlTypeInfo::XamlControlsXamlMetaDataProvider muxMetadataProvider;
+    //metadataContainer.Providers().InsertAt(0, muxMetadataProvider);
 
     // This DesktopWindowXamlSource is the object that enables a non-UWP desktop application 
     // to host UWP controls in any UI element that is associated with a window handle (HWND).

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "winrt/Windows.UI.Xaml.Interop.h"
 #include "winrt/Windows.UI.Xaml.Markup.h"
 #include "winrt/Windows.Foundation.h"
 #include "winrt/Windows.UI.Xaml.h"
@@ -11,7 +10,7 @@
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation {
 
 template <typename D, typename... I>
-struct WINRT_EBO XamlApplication_base : implements<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, Windows::UI::Xaml::Markup::IXamlMetadataProvider, composable, composing, I...>,
+struct WINRT_EBO XamlApplication_base : implements<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, composable, composing, I...>,
     impl::require<D, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3>,
     impl::base<D, Windows::UI::Xaml::Application>,
     Windows::UI::Xaml::IApplicationOverridesT<D>, Windows::UI::Xaml::IApplicationOverrides2T<D>

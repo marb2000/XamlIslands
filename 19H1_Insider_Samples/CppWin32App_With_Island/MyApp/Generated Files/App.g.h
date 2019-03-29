@@ -15,7 +15,7 @@ namespace winrt::MyApp::implementation {
 
 template <typename D, typename... I>
 struct WINRT_EBO App_base : implements<D, MyApp::IApp, Windows::UI::Xaml::IApplicationOverrides, Windows::UI::Xaml::IApplicationOverrides2, composing, I...>,
-    impl::require<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3, Windows::UI::Xaml::Markup::IXamlMetadataProvider>,
+    impl::require<D, Microsoft::UI::Xaml::Markup::IXamlApplication, Microsoft::UI::Xaml::Markup::IXamlMetadataProviderContainer, Windows::Foundation::IClosable, Windows::UI::Xaml::IApplication, Windows::UI::Xaml::IApplication2, Windows::UI::Xaml::IApplication3>,
     impl::base<D, Microsoft::UI::Xaml::Markup::XamlApplication, Windows::UI::Xaml::Application>,
     Windows::UI::Xaml::IApplicationOverridesT<D>, Windows::UI::Xaml::IApplicationOverrides2T<D>
 {

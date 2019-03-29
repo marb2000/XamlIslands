@@ -4,8 +4,8 @@
 
 #include "XamlBridge.h"
 
-#define InitialHeight 600
-#define InitialWidth 600
+#define InitialHeight 800
+#define InitialWidth  800
 #define XamlIslandMargin 30
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);

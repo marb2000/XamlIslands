@@ -2,17 +2,9 @@
 
 #pragma once
 
-WINRT_EXPORT namespace winrt::Windows::UI::Xaml::Interop {
-
-struct TypeName;
-
-}
-
 WINRT_EXPORT namespace winrt::Windows::UI::Xaml::Markup {
 
 struct IXamlMetadataProvider;
-struct IXamlType;
-struct XmlnsDefinition;
 
 }
 
