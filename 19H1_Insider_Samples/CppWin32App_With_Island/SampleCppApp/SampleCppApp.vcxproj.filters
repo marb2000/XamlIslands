@@ -62,10 +62,18 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="SampleCppApp.exe.manifest" />
-    <Manifest Include="..\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest" />
-    <Manifest Include="..\SampleUserControl\SampleUserControl.manifest" />
-    <Manifest Include="Microsoft.UI.Xaml.manifest" />
+    <Manifest Include="Microsoft.UI.Xaml.manifest">
+      <Filter>Components</Filter>
+    </Manifest>
+    <Manifest Include="..\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest">
+      <Filter>Components</Filter>
+    </Manifest>
+    <Manifest Include="SampleCppApp.exe.manifest">
+      <Filter>Components</Filter>
+    </Manifest>
+    <Manifest Include="..\SampleUserControl\SampleUserControl.manifest">
+      <Filter>Components</Filter>
+    </Manifest>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
