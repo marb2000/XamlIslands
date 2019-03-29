@@ -972,8 +972,6 @@ std::vector<::winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> const& Xa
     {
         _otherProviders.push_back(::winrt::Microsoft::UI::Xaml::XamlTypeInfo::XamlControlsXamlMetaDataProvider());
         _otherProviders.push_back(::winrt::SampleUserControl::XamlMetaDataProvider());
-        _otherProviders.push_back(::winrt::Microsoft::UI::Xaml::XamlTypeInfo::XamlControlsXamlMetaDataProvider());
-        _otherProviders.push_back(::winrt::SampleUserControl::XamlMetaDataProvider());
     }
     return _otherProviders;
 }
