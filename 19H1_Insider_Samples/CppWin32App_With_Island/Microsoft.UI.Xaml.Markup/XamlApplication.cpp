@@ -21,17 +21,6 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
             m_providers.Append(parentProvider);
         }
         m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
-
-#if defined _DEBUG
-        this->UnhandledException([this](IInspectable const&, winrt::Windows::UI::Xaml::UnhandledExceptionEventArgs const& e)
-            {
-                if (IsDebuggerPresent())
-                {
-                    auto errorMessage = e.Message();
-                    __debugbreak();
-                }
-            });
-#endif
     }
 
     XamlApplication::XamlApplication()
@@ -119,17 +108,25 @@ namespace winrt::Microsoft::UI::Xaml::Markup::factory_implementation
 {
     XamlApplication::XamlApplication()
     {
-        // Workaround a bug where twinapi.appcore.dll gets loaded after it has been unloaded
-        // becuase of a call to GetActivationFactory
-        m_tWinApiAppCoreInstance = ::LoadLibraryExW(L"twinapi.appcore.dll", nullptr, 0);
+        // Workaround a bug where twinapi.appcore.dll and threadpoolwinrt.dll gets loaded after it has been unloaded
+        // because of a call to GetActivationFactory
+        const wchar_t* preloadDlls[] = {
+            L"twinapi.appcore.dll",
+            L"threadpoolwinrt.dll",
+        };
+        for (auto dllName : preloadDlls)
+        {
+            const auto module = ::LoadLibraryExW(dllName, nullptr, 0);
+            m_preloadInstances.push_back(module);
+        }
     }
 
     XamlApplication::~XamlApplication()
     {
-        if (m_tWinApiAppCoreInstance != nullptr)
+        for (auto module : m_preloadInstances)
         {
-            ::FreeLibrary(m_tWinApiAppCoreInstance);
-            m_tWinApiAppCoreInstance = nullptr;
+            ::FreeLibrary(module);
         }
+        m_preloadInstances.clear();
     }
 }

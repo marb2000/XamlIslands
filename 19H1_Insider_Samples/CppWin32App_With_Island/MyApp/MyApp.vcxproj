@@ -70,24 +70,24 @@
     <PackageCertificateThumbprint>1132EA939A7107B303D4D40ED6CE28778FC96409</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(MSBuildProjectName)\</OutDir>
+    <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -115,6 +115,15 @@
     <Midl>
       <MetadataFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)Unmerged\%(Filename).winmd</MetadataFileName>
     </Midl>
+    <Link>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <Link>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <Link>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
@@ -132,6 +141,15 @@
     <Midl>
       <MetadataFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)Unmerged\%(Filename).winmd</MetadataFileName>
     </Midl>
+    <Link>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <Link>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+    <Link>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="App.h">

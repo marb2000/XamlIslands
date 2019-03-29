@@ -8,7 +8,7 @@
             <maxversiontested Id="10.0.18334.0"/>
         </application>
     </compatibility>
-    <asmv3:file name="MyApp\MyApp.dll">
+    <asmv3:file name="MyApp.dll">
         <activatableClass
             name="MyApp.App"
             threadingModel="both"

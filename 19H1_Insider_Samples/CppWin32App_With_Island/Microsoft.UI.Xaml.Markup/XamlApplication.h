@@ -37,6 +37,6 @@ namespace winrt::Microsoft::UI::Xaml::Markup::factory_implementation
         XamlApplication();
         ~XamlApplication();
     private:
-        HINSTANCE m_tWinApiAppCoreInstance = nullptr;
+        std::vector<HMODULE> m_preloadInstances;
     };
 }

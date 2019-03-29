@@ -111,13 +111,13 @@
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(OutDir)\..\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <Link>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\..\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <Link>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)\..\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -125,13 +125,13 @@
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">$(OutDir)\..\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <Link>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\..\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
     <Link>
-      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)\..\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
