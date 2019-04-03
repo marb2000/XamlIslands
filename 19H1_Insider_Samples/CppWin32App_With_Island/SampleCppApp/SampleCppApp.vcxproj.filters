@@ -74,6 +74,9 @@
     <Manifest Include="..\SampleUserControl\SampleUserControl.manifest">
       <Filter>Components</Filter>
     </Manifest>
+    <Manifest Include="..\MyApp\MyApp.manifest">
+      <Filter>Components</Filter>
+    </Manifest>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
