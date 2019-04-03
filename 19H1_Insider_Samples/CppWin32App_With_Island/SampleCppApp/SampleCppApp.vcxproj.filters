@@ -16,9 +16,6 @@
     <Filter Include="Components">
       <UniqueIdentifier>{088e5cb8-cc47-458d-8914-c70e34ac4a7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CopyToOutput">
-      <UniqueIdentifier>{597a03b6-d34e-45ab-a12d-ee84f26adc8a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -83,23 +80,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\App.xbf">
-      <Filter>Resource Files</Filter>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\Microsoft.UI.Xaml.dll">
-      <Filter>Resource Files</Filter>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
-      <Filter>Resource Files</Filter>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\MyApp.dll">
-      <Filter>Resource Files</Filter>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
-      <Filter>Resource Files</Filter>
-    </Content>
-    <Content Include="resources.pri">
-      <Filter>Resource Files</Filter>
-    </Content>
   </ItemGroup>
 </Project>
