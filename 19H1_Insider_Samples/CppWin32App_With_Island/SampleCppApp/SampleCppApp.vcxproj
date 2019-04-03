@@ -95,8 +95,12 @@
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
+  <!-- Configure these for your main App project -->
   <PropertyGroup>
-    <AppIncludeDirectories>$(SolutionDir)\obj\$(Platform)\$(Configuration)\MyApp\;$(SolutionDir)\obj\$(Platform)\$(Configuration)\MyApp\Generated Files\;</AppIncludeDirectories>
+    <AppProjectName>MyApp</AppProjectName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AppIncludeDirectories>$(SolutionDir)\obj\$(Platform)\$(Configuration)\$(AppProjectName)\;$(SolutionDir)\obj\$(Platform)\$(Configuration)\$(AppProjectName)\Generated Files\;</AppIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -231,15 +235,15 @@
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
-    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.xbf">
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\*.xbf">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
-    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.dll">
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\*.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
-    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\resources.pri">
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\resources.pri">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
