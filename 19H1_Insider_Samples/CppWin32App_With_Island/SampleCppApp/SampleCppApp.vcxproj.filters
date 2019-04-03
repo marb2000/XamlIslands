@@ -83,23 +83,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\App.xbf">
-      <Filter>CopyToOutput</Filter>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\Microsoft.UI.Xaml.dll">
-      <Filter>CopyToOutput</Filter>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
-      <Filter>CopyToOutput</Filter>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\MyApp.dll">
-      <Filter>CopyToOutput</Filter>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
-      <Filter>CopyToOutput</Filter>
-    </None>
-    <None Include="resources.pri">
-      <Filter>CopyToOutput</Filter>
-    </None>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\App.xbf">
+      <Filter>Resource Files</Filter>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\Microsoft.UI.Xaml.dll">
+      <Filter>Resource Files</Filter>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
+      <Filter>Resource Files</Filter>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\MyApp.dll">
+      <Filter>Resource Files</Filter>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
+      <Filter>Resource Files</Filter>
+    </Content>
+    <Content Include="resources.pri">
+      <Filter>Resource Files</Filter>
+    </Content>
   </ItemGroup>
 </Project>

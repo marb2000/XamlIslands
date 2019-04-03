@@ -224,31 +224,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
-      <CopyToOutputDirectory>True</CopyToOutputDirectory>
       <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
-      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
       <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\MyApp.dll">
-      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.xbf">
       <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\App.xbf">
-      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.dll">
       <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\Microsoft.UI.Xaml.dll">
-      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\resources.pri">
       <DeploymentContent>true</DeploymentContent>
-    </None>
-    <None Include="resources.pri">
-      <CopyToOutputDirectory>True</CopyToOutputDirectory>
-      <DeploymentContent>true</DeploymentContent>
-    </None>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
-  
 </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
