@@ -96,7 +96,7 @@
     <OutDir>$(SolutionDir)\bin\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup>
-      <AppIncludeDirectories>$(SolutionDir)\obj\$(Platform)\$(Configuration)\MyApp\;$(SolutionDir)\obj\$(Platform)\$(Configuration)\MyApp\Generated Files\;</AppIncludeDirectories>
+    <AppIncludeDirectories>$(SolutionDir)\obj\$(Platform)\$(Configuration)\MyApp\;$(SolutionDir)\obj\$(Platform)\$(Configuration)\MyApp\Generated Files\;</AppIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -223,20 +223,33 @@
     <Manifest Include="SampleCppApp.exe.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
+    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
       <CopyToOutputDirectory>True</CopyToOutputDirectory>
       <DeploymentContent>true</DeploymentContent>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
+    </None>
+    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
       <CopyToOutputDirectory>True</CopyToOutputDirectory>
       <DeploymentContent>true</DeploymentContent>
-    </Content>
+    </None>
+    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\MyApp.dll">
+      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\App.xbf">
+      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\Microsoft.UI.Xaml.dll">
+      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="resources.pri">
+      <CopyToOutputDirectory>True</CopyToOutputDirectory>
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="packages.config" />
-    <PRIResource Include="resources.pri">
-      <DeploymentContent>true</DeploymentContent>
-      <FileType>Document</FileType>
-    </PRIResource>
-  </ItemGroup>
+  
+</ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
