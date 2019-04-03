@@ -223,26 +223,26 @@
     <Manifest Include="SampleCppApp.exe.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.xbf">
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.xbf">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.dll">
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\*.dll">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\resources.pri">
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\MyApp\resources.pri">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </NativeReferenceFile>
     <None Include="packages.config" />
 </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
