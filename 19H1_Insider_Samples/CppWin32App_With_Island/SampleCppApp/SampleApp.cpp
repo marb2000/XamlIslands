@@ -27,9 +27,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(lpCmdLine);
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
-    winrt::MyApp::XamlMetaDataProvider myAppProvider;
-    winrt::Microsoft::UI::Xaml::Markup::XamlApplication app(myAppProvider);
-    //winrt::MyApp::App app;
+    winrt::MyApp::App app;
 
     int retValue = 0;
     {
