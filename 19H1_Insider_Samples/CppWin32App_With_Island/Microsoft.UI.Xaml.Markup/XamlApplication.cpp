@@ -15,17 +15,23 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 {
     XamlApplication::XamlApplication(winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider parentProvider)
     {
-        m_providers = winrt::single_threaded_vector<xaml::Markup::IXamlMetadataProvider>();
-        if (parentProvider)
-        {
-            m_providers.Append(parentProvider);
-        }
-        m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+        m_providers.Append(parentProvider);
     }
 
     XamlApplication::XamlApplication()
-        : XamlApplication(nullptr)
     {
+        Init();
+    }
+
+    void XamlApplication::Init()
+    {
+        const auto out = outer();
+        if (out)
+        {
+            out->AddRef();
+        }
+
+        m_windowsXamlManager = xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
     }
 
     void XamlApplication::Close()
@@ -36,6 +42,7 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
         }
 
         m_bIsClosed = true;
+
         m_windowsXamlManager.Close();
         m_providers.Clear();
         m_windowsXamlManager = nullptr;

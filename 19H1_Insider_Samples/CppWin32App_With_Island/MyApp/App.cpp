@@ -15,5 +15,10 @@ namespace winrt::MyApp::implementation
     App::App(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider)
         : base_type(parentProvider)
     {
+        Init();
+    }
+
+    App::~App()
+    {
     }
 }

@@ -15,6 +15,7 @@ namespace winrt::MyApp::implementation
     {
     public:
         App();
+        ~App();
     private:
         App(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider);
     };

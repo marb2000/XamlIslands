@@ -10,6 +10,7 @@ namespace Microsoft.UI.Xaml.Markup
     unsealed runtimeclass XamlApplication : Windows.UI.Xaml.Application, IXamlMetadataProviderContainer, Windows.Foundation.IClosable
     {
         XamlApplication();
-        XamlApplication(Windows.UI.Xaml.Markup.IXamlMetadataProvider parentProvider);
+        protected XamlApplication(Windows.UI.Xaml.Markup.IXamlMetadataProvider parentProvider);
+        protected void Init();
     }
 }

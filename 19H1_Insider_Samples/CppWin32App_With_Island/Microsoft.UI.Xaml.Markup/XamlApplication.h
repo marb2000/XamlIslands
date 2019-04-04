@@ -14,6 +14,7 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
         XamlApplication(winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider parentProvider);
         ~XamlApplication();
 
+        void Init();
         void Close();
 
         winrt::Windows::UI::Xaml::Markup::IXamlType GetXamlType(winrt::Windows::UI::Xaml::Interop::TypeName const& type);
@@ -24,7 +25,7 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     private:
         winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager m_windowsXamlManager = nullptr;
-        winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> m_providers = nullptr;
+        winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> m_providers = winrt::single_threaded_vector<Windows::UI::Xaml::Markup::IXamlMetadataProvider>();
         bool m_bIsClosed = false;
     };
 }
