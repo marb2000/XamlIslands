@@ -8,9 +8,8 @@ This sample demostrates the following features:
 * [Use of custom third party types](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#AppObject)
 * [Auto deployment of the Microsoft VCLib library for Win32 applications](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#VCLib)
  
-![Screenshoot](/19H1_Insider_Samples/CppWin32App_With_Island/ScreenShoot.PNG "Screen shoot")
+![Screenshoot](/19H1_Insider_Samples/CppWin32App_With_Island/Screenshoot.PNG)
 
-Reference 
 ## Projects in the solution:
 
 * [Main Win32 Windows Application](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/ReadMe.md)
