@@ -31,7 +31,7 @@
     <Target Name="UnzipVCLibPackage" BeforeTargets="PrepareForBuild">
         <Message Text="Extracting @(VCLibPackage) to $(IntDir)\VCLibs\" />
         <MakeDir Directories="$(IntDir)\VCLibs\" />
-        <UnZip SourceFiles="@(VCLibPackage)" DestinationFolder=".\$(IntDir)\VCLibs\" />
+        <UnZip SourceFiles="@(VCLibPackage)" DestinationFolder="$(IntDir)\VCLibs\" />
         <CreateItem Include="$(IntDir)\VCLibs\*.dll">
             <Output
                 TaskParameter="Include"
