@@ -203,8 +203,8 @@ For example:
 ```
 
 It is avisable to sperate each manifest file per component and have multiple manifest files:
-* [Custom Xaml Application](/19H1_Insider_Samples/CppWin32App_With_Island\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest)
-* [MyApp](/19H1_Insider_Samples/CppWin32App_With_Island\MyApp\MyApp.manifest)
-* [Microsoft UI Xaml](/19H1_Insider_Samples/CppWin32App_With_Island\SampleCppApp\Microsoft.UI.Xaml.manifest)
-* [Sample User Control](/19H1_Insider_Samples/CppWin32App_With_Island\SampleUserControl\SampleUserControl.manifest)
+* [Custom Xaml Application](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/Microsoft.UI.Xaml.Markup.manifest)
+* [MyApp](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/MyApp.manifest)
+* [Microsoft UI Xaml](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/Microsoft.UI.Xaml.manifest)
+* [Sample User Control](/19H1_Insider_Samples/CppWin32App_With_Island/SampleUserControl/SampleUserControl.manifest)
 
