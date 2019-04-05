@@ -6,7 +6,7 @@ This sample demostrates the following features:
 * [Keyboard input for Windows 10 1903](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Keyboard)
 * [Generation of WinRT resources for Win32 apps](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources)
 * [Use of custom third party types](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#AppObject)
-* Auto deployment of the Microsoft VCLib library for Win32 applications
+* [Auto deployment of the Microsoft VCLib library for Win32 applications](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#VCLib)
  
 ## Projects in the solution:
 
@@ -119,3 +119,6 @@ Also make sure to [deploy](/19H1_Insider_Samples/CppWin32App_With_Island/SampleC
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
 ```
+
+## <a name="VCLib"/> Auto deployment of the Microsoft VCLib library for Win32 applications
+
