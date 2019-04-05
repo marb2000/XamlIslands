@@ -3,7 +3,7 @@
 ## Overview
 
 This sample demostrates the following features:
-* [Keyboard input for Windows 10 1903] (//19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Keyboard)
+* [Keyboard input for Windows 10 1903] (/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Keyboard)
 * Generation of the main WinRT resources for Win32 apps.
 * Use of custom third party types (e.g.: Microsoft.UI.Xaml controls)
 * Auto deployment of the Microsoft VCLib library for Win32 applications
