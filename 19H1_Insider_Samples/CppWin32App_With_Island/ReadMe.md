@@ -8,7 +8,19 @@ This sample demostrates the following features:
 * [Use of custom third party types](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#AppObject)
 * [Auto deployment of the Microsoft VCLib library for Win32 applications](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#VCLib)
 * [WinRT registration](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#WinRT_Registration)
- 
+
+After putting everything together:
+```
+    winrt::init_apartment(winrt::apartment_type::single_threaded);
+    winrt::MyApp::App app;
+    winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopSource;
+    auto interop = desktopSource.as<IDesktopWindowXamlSourceNative>();
+    hr = interop->AttachToWindow(parentWindow);
+    winrt::check_hresult(hr);
+    winrt::MyApp::MainUserControl mainUserControl;
+    desktopSource.Content(mainUserControl);
+```
+
 ![Screenshoot](/19H1_Insider_Samples/CppWin32App_With_Island/Screenshoot.PNG)
 
 ## Projects in the solution:
