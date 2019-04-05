@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<assembly
+    xmlns="urn:schemas-microsoft-com:asm.v1"
+    xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"
+    manifestVersion="1.0">
+    <asmv3:file name="Microsoft.UI.Xaml.Markup.dll">
+        <activatableClass
+            name="Microsoft.UI.Xaml.Markup.XamlApplication"
+            threadingModel="both"
+            xmlns="urn:schemas-microsoft-com:winrt.v1" />
+    </asmv3:file>
+</assembly>
