@@ -19,9 +19,7 @@
   <ItemGroup>
     <None Include="SampleUserControl.def" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme.txt" />
+    <None Include="ReadMe.md" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="MyUserControl.xaml" />

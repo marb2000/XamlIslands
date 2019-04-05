@@ -152,12 +152,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="ReadMe.md" />
     <None Include="SampleUserControl.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="readme.txt">
-      <DeploymentContent>false</DeploymentContent>
-    </Text>
   </ItemGroup>
   <ItemGroup>
     <Page Include="InternalUserControl.xaml">
