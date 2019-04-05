@@ -38,21 +38,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
         // Perform application initialization:
         auto desktopSource = InitInstance(hInstance, nCmdShow);
-        auto desktopSourceNative2 = desktopSource.as<IDesktopWindowXamlSourceNative2>();
         HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
         MSG msg = {};
         HRESULT hr = S_OK;
 
+        std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources = {
+            desktopSource,
+        };
+
         // Main message loop:
         while (GetMessage(&msg, nullptr, 0, 0))
         {
-            BOOL processMessage = FALSE;
             // When multiple child windows are present it is needed to pre dispatch messages to all 
             // DesktopWindowXamlSource instances so keyboard accelerators and 
             // keyboard focus work correctly.
-            hr = desktopSourceNative2->PreTranslateMessage(&msg, &processMessage);
-            winrt::check_hresult(hr);
-            if (!processMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            BOOL xamlSourceProcessedMessage = FALSE;
+            {
+                for (auto xamlSource : xamlSources)
+                {
+                    auto xamlSourceNative2 = xamlSource.as<IDesktopWindowXamlSourceNative2>();
+                    hr = xamlSourceNative2->PreTranslateMessage(&msg, &xamlSourceProcessedMessage);
+                    winrt::check_hresult(hr);
+                    if (xamlSourceProcessedMessage)
+                    {
+                        break;
+                    }
+                }
+            }
+            if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
             {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
