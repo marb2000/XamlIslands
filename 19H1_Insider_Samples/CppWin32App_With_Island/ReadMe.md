@@ -16,7 +16,7 @@ This sample demostrates the following features:
 * [Sample 3rd party control](/19H1_Insider_Samples/CppWin32App_With_Island/SampleUserControl/ReadMe.md)
 
 ## <a name="Keyboard"></a> Keyboard input for Windows 10 1903
-This is an [implementaion]((/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleCppApp.cpp) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
+This is an [implementation](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleCppApp.cpp) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
 ```
 HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
 MSG msg = {};
