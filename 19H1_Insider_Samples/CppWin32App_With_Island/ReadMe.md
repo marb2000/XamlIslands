@@ -1,4 +1,4 @@
-# Native Win32 Sample for Windows 10 1903
+# Unpackaged Native Win32 Sample for Windows 10 1903
 
 ## Overview
 
@@ -123,4 +123,53 @@ Also make sure to [deploy](/19H1_Insider_Samples/CppWin32App_With_Island/SampleC
 ```
 
 ## <a name="VCLib"/> Auto deployment of the Microsoft VCLib library for Win32 applications
+
+In a normal Windows Store App, the Microsoft VC Lib is reference via a Store Framework package, for a unpackaged Win32 application we need to deploy the VC Libs to the same folder where the Win32 executable file is deployed.
+
+This is performed using the following [MSBuild code](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.VCLibs.Win32.targets):
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+        <VCLibConfig>Debug</VCLibConfig>
+        <VCLibConfigName>Debug.</VCLibConfigName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <VCLibConfig>Retail</VCLibConfig>
+        <VCLibConfigName></VCLibConfigName>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)'=='Win32'">
+        <VCLibPlatform>x86</VCLibPlatform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)'=='x64'">
+        <VCLibPlatform>x64</VCLibPlatform>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Platform)'=='ARM'">
+        <VCLibPlatform>ARM</VCLibPlatform>
+    </PropertyGroup>
+    <PropertyGroup>
+        <WindowsKitDir>C:\Program Files (x86)\Microsoft SDKs\Windows Kits\10\</WindowsKitDir>
+        <VCLibVersion>14</VCLibVersion>
+        <VCLibDir>$(WindowsKitDir)\ExtensionSDKs\Microsoft.VCLibs\$(VCLibVersion).0\Appx\$(VCLibConfig)\$(VCLibPlatform)\</VCLibDir>
+        <VCLibName>Microsoft.VCLibs.$(VCLibPlatform).$(VCLibConfigName)$(VCLibVersion).00.appx</VCLibName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <VCLibPackage Include="$(VCLibDir)$(VCLibName)" />
+    </ItemGroup>
+
+    <Target Name="UnzipVCLibPackage" BeforeTargets="PrepareForBuild">
+        <Message Text="Extracting @(VCLibPackage) to $(IntDir)\VCLibs\" />
+        <MakeDir Directories="$(IntDir)\VCLibs\" />
+        <UnZip SourceFiles="@(VCLibPackage)" DestinationFolder="$(IntDir)\VCLibs\" />
+        <CreateItem Include="$(IntDir)\VCLibs\*.dll">
+            <Output
+                TaskParameter="Include"
+                ItemName="VCLibItems"/>
+        </CreateItem>
+        <Copy SourceFiles="@(VCLibItems)" DestinationFolder="$(OutDir)"/>
+    </Target>
+</Project>
+```
+
 
