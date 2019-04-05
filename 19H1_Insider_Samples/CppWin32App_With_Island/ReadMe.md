@@ -4,7 +4,7 @@
 
 This sample demostrates the following features:
 * [Keyboard input for Windows 10 1903](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Keyboard)
-* Generation of the main WinRT resources for Win32 apps.
+* [Generation of WinRT resources for Win32 apps](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources)
 * Use of custom third party types (e.g.: Microsoft.UI.Xaml controls)
 * Auto deployment of the Microsoft VCLib library for Win32 applications
  
@@ -15,8 +15,10 @@ This sample demostrates the following features:
 * [Xaml Application for Win32](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md)
 * [Sample 3rd party control](/19H1_Insider_Samples/CppWin32App_With_Island/SampleUserControl/ReadMe.md)
 
-## <a name="Keyboard"></a> Keyboard input for Windows 10 1903
-This is an [implementation](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleApp.cpp#L47-50) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
+## <a name="Keyboard"/> Keyboard input for Windows 10 1903
+
+This is an [implementation](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleApp.cpp#L47-L74) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
+
 ```
 HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
 MSG msg = {};
@@ -44,4 +46,18 @@ while (GetMessage(&msg, nullptr, 0, 0))
     DispatchMessage(&msg);
   }
 }
+```
+
+## <a name="Resources"/> Generation of WinRT resources for Win32 apps
+
+By default a Windows Store app of a Win32 app that uses 3rd party controls or its own resources requires the generation of a consolidated Resources.pri file.
+This is performed by the tool MakePri.exe.
+In a typical UWP App, this only happens when the Appx is generated.
+For Win32 Apps you need to perform the following steps:
+1. Create a new Blank UWP App
+2. Change the output type to be a Dynamic link dll.
+3. Change the [AppxPackage](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/Package.appxmanifest#L20) to deploy a dummy exe.
+4. Change these properties in your project:
+```
+
 ```
