@@ -18,7 +18,6 @@
   <PropertyGroup Label="Globals">
     <WindowsAppContainer>true</WindowsAppContainer>
     <AppxGeneratePriEnabled>true</AppxGeneratePriEnabled>
-    <!--<GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>-->
     <ProjectPriIndexName>App</ProjectPriIndexName>
     <AppxPackage>true</AppxPackage>
   </PropertyGroup>
