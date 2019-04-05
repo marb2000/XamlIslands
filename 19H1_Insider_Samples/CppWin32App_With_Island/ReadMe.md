@@ -79,7 +79,7 @@ For Win32 Apps you need to perform the following steps:
 
 The use of 3rd party control objects requires the use of a consolidated [resources file](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources) and a [custom application](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md) object that:
 1. Registers the Xaml metedata providers.
-2. Initializes Xaml by calling [InitializaeForCurrentThread] (https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.windowsxamlmanager.initializeforcurrentthread)
+2. Initializes Xaml by calling [InitializeForCurrentThread](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.windowsxamlmanager.initializeforcurrentthread)
 
 In this sample this is implemented by [App.xaml](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/App.xaml) and the [Xaml Application for Win32](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md)
 
@@ -98,4 +98,24 @@ In this sample this is implemented by [App.xaml](/19H1_Insider_Samples/CppWin32A
         <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
     </MSMarkup:XamlApplication.Resources>
 </MSMarkup:XamlApplication>
+```
+
+Also make sure to [deploy](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleCppApp.vcxproj#L232-L247) all Xaml compiler output from your App in your Win32 app project:
+```
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\*.xbf">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </NativeReferenceFile>
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\*.dll">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </NativeReferenceFile>
 ```
