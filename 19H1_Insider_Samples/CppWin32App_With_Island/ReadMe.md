@@ -7,7 +7,7 @@ ms.localizationpriority: medium
 ---
 # Using the UWP XAML hosting API in a desktop application
 
-[Win32 Windows Application](/SampleCppApp/ReadMe.md)
+[Win32 Windows Application](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/ReadMe.md)
 Starting in Windows 10, version 1903, non-UWP desktop applications (including WPF, Windows Forms, and C++ Win32 applications) can use the *UWP XAML hosting API* to host UWP controls in any UI element that is associated with a window handle (HWND). This API enables non-UWP desktop applications to use the latest Windows 10 UI features that are only available via UWP controls. For example, non-UWP desktop applications can use this API to host UWP controls that use the [Fluent Design System](../design/fluent-design-system/index.md) and support [Windows Ink](../design/input/pen-and-stylus-interactions.md).
 
 The UWP XAML hosting API provides the foundation for a broader set of controls that we are providing to enable developers to bring Fluent UI to non-UWP desktop applications. This feature is called *XAML Islands*. For an overview of this feature, see [UWP controls in desktop applications](xaml-host-controls.md).
