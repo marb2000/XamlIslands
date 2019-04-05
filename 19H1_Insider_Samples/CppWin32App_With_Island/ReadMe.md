@@ -178,3 +178,33 @@ This is performed using the following [MSBuild code](/19H1_Insider_Samples/CppWi
 ## <a name="WinRT_Registration"/> WinRT registration
 
 In order for a 3rd party type to instanciated by an Win32 executable, the type needs to be registered in the executable manifest.
+For example:
+```
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<assembly
+    xmlns="urn:schemas-microsoft-com:asm.v1"
+    xmlns:asmv3="urn:schemas-microsoft-com:asm.v3"
+    manifestVersion="1.0">
+    <asmv3:file name="MyApp.dll">
+        <activatableClass
+            name="MyApp.App"
+            threadingModel="both"
+            xmlns="urn:schemas-microsoft-com:winrt.v1" />
+        <activatableClass
+            name="MyApp.XamlMetadataProvider"
+            threadingModel="both"
+            xmlns="urn:schemas-microsoft-com:winrt.v1" />
+        <activatableClass
+            name="MyApp.MainUserControl"
+            threadingModel="both"
+            xmlns="urn:schemas-microsoft-com:winrt.v1" />
+    </asmv3:file>
+</assembly>
+```
+
+It is avisable to sperate each manifest file per component and have multiple manifest files:
+* [Custom Xaml Application](/19H1_Insider_Samples/CppWin32App_With_Island\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest)
+* [MyApp](/19H1_Insider_Samples/CppWin32App_With_Island\MyApp\MyApp.manifest)
+* [Microsoft UI Xaml](/19H1_Insider_Samples/CppWin32App_With_Island\SampleCppApp\Microsoft.UI.Xaml.manifest)
+* [Sample User Control](/19H1_Insider_Samples/CppWin32App_With_Island\SampleUserControl\SampleUserControl.manifest)
+
