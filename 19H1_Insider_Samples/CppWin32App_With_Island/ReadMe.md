@@ -5,7 +5,7 @@
 This sample demostrates the following features:
 * [Keyboard input for Windows 10 1903](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Keyboard)
 * [Generation of WinRT resources for Win32 apps](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources)
-* [Use of custom third party types] (e.g.: Microsoft.UI.Xaml controls)(/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#AppObject)
+* [Use of custom third party types](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#AppObject)
 * Auto deployment of the Microsoft VCLib library for Win32 applications
  
 ## Projects in the solution:
@@ -77,12 +77,25 @@ For Win32 Apps you need to perform the following steps:
 
 ## <a name="AppObject"/> Use of 3rd party controls
 
-The use of 3rd party control objects requires the use of a consolidated [resources file](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources) and a custom application object that:
+The use of 3rd party control objects requires the use of a consolidated [resources file](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources) and a [custom application](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md) object that:
 1. Registers the Xaml metedata providers.
 2. Initializes Xaml by calling [InitializaeForCurrentThread] (https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.windowsxamlmanager.initializeforcurrentthread)
 
 In this sample this is implemented by [App.xaml](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/App.xaml) and the [Xaml Application for Win32](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md)
 
 ```
-
+<MSMarkup:XamlApplication
+    x:Class="MyApp.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:MyApp"
+    xmlns:MSMarkup="using:Microsoft.UI.Xaml.Markup"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    RequestedTheme="Light"
+    mc:Ignorable="d">
+    <MSMarkup:XamlApplication.Resources>
+        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls"/>
+    </MSMarkup:XamlApplication.Resources>
+</MSMarkup:XamlApplication>
 ```
