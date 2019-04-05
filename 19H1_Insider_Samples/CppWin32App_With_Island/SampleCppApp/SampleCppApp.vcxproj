@@ -248,7 +248,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
     <None Include="packages.config" />
-    <None Include="Readme.md" />
+    <None Include="ReadMe.md" />
   </ItemGroup>
   <Import Project="..\Microsoft.VCLibs.Win32.targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

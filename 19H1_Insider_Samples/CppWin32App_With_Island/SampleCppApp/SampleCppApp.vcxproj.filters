@@ -80,6 +80,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Readme.md" />
+    <None Include="ReadMe.md" />
   </ItemGroup>
 </Project>
