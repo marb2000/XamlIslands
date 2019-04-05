@@ -17,3 +17,31 @@ This sample demostrates the following features:
 
 ## <a name="Keyboard"></a> Keyboard input for Windows 10 1903
 
+```
+HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
+MSG msg = {};
+HRESULT hr = S_OK;
+// Main message loop:
+while (GetMessage(&msg, nullptr, 0, 0))
+{
+  // When multiple child windows are present it is needed to pre dispatch messages to all 
+  // DesktopWindowXamlSource instances so keyboard accelerators and 
+  // keyboard focus work correctly.
+  BOOL xamlSourceProcessedMessage = FALSE;
+  for (auto xamlSource : xamlSources)
+  {
+    auto xamlSourceNative2 = xamlSource.as<IDesktopWindowXamlSourceNative2>();
+    hr = xamlSourceNative2->PreTranslateMessage(&msg, &xamlSourceProcessedMessage);
+    winrt::check_hresult(hr);
+    if (xamlSourceProcessedMessage)
+    {
+      break;
+    }
+  }
+  if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+  {
+    TranslateMessage(&msg);
+    DispatchMessage(&msg);
+  }
+}
+```
