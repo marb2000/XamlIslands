@@ -57,7 +57,21 @@ For Win32 Apps you need to perform the following steps:
 1. Create a new Blank UWP App
 2. Change the output type to be a Dynamic link dll.
 3. Change the [AppxPackage](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/Package.appxmanifest#L20) to deploy a dummy exe.
-4. Change these properties in your project:
+4. Change these [properties](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/MyApp.vcxproj#L18) in your project:
 ```
+  <PropertyGroup Label="Globals">
+    <WindowsAppContainer>true</WindowsAppContainer>
+    <AppxGeneratePriEnabled>true</AppxGeneratePriEnabled>
+    <ProjectPriIndexName>App</ProjectPriIndexName>
+    <AppxPackage>true</AppxPackage>
+  </PropertyGroup>
+```
+5. In your [main Win32 project](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleCppApp.vcxproj#L248), make sure you deploy the file resources.pri to your output directory:
+```
+    <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\resources.pri">
+      <DeploymentContent>true</DeploymentContent>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </NativeReferenceFile>
+```
+6. Make sure to create a build dependency between your [main Win32 project](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleCppApp.vcxproj) and the [UWP App project](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/MyApp.vcxproj)
 
-```
