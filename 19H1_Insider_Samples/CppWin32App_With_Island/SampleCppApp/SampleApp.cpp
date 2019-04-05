@@ -47,7 +47,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
             MSG msg = {};
             HRESULT hr = S_OK;
-
             // Main message loop:
             while (GetMessage(&msg, nullptr, 0, 0))
             {
