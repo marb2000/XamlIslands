@@ -36,45 +36,51 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         LoadStringW(hInstance, IDC_SAMPLECPPAPP, szWindowClass, MAX_LOADSTRING);
         MyRegisterClass(hInstance);
 
-        // Perform application initialization:
-        auto desktopSource = InitInstance(hInstance, nCmdShow);
-        HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
-        MSG msg = {};
-        HRESULT hr = S_OK;
-
-        std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources = {
-            desktopSource,
-        };
-
-        // Main message loop:
-        while (GetMessage(&msg, nullptr, 0, 0))
         {
-            // When multiple child windows are present it is needed to pre dispatch messages to all 
-            // DesktopWindowXamlSource instances so keyboard accelerators and 
-            // keyboard focus work correctly.
-            BOOL xamlSourceProcessedMessage = FALSE;
+            std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources;
+            // Perform application initialization
             {
-                for (auto xamlSource : xamlSources)
+                auto desktopSource = InitInstance(hInstance, nCmdShow);
+                xamlSources.push_back(std::move(desktopSource));
+            }
+
+            HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
+            MSG msg = {};
+            HRESULT hr = S_OK;
+
+            // Main message loop:
+            while (GetMessage(&msg, nullptr, 0, 0))
+            {
+                // When multiple child windows are present it is needed to pre dispatch messages to all 
+                // DesktopWindowXamlSource instances so keyboard accelerators and 
+                // keyboard focus work correctly.
+                BOOL xamlSourceProcessedMessage = FALSE;
                 {
-                    auto xamlSourceNative2 = xamlSource.as<IDesktopWindowXamlSourceNative2>();
-                    hr = xamlSourceNative2->PreTranslateMessage(&msg, &xamlSourceProcessedMessage);
-                    winrt::check_hresult(hr);
-                    if (xamlSourceProcessedMessage)
+                    for (auto xamlSource : xamlSources)
                     {
-                        break;
+                        auto xamlSourceNative2 = xamlSource.as<IDesktopWindowXamlSourceNative2>();
+                        hr = xamlSourceNative2->PreTranslateMessage(&msg, &xamlSourceProcessedMessage);
+                        winrt::check_hresult(hr);
+                        if (xamlSourceProcessedMessage)
+                        {
+                            break;
+                        }
                     }
                 }
+                if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+                {
+                    TranslateMessage(&msg);
+                    DispatchMessage(&msg);
+                }
             }
-            if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+            hWndXamlIsland = nullptr;
+            retValue = (int)msg.wParam;
+            for (auto xamlSource : xamlSources)
             {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
+                xamlSource.Close();
             }
+            xamlSources.clear();
         }
-        hWndXamlIsland = nullptr;
-        retValue = (int)msg.wParam;
-        desktopSource.Close();
-        desktopSource = nullptr;
     }
     app.Close();
     app = nullptr;
