@@ -7,6 +7,7 @@ This sample demostrates the following features:
 * [Generation of WinRT resources for Win32 apps](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#Resources)
 * [Use of custom third party types](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#AppObject)
 * [Auto deployment of the Microsoft VCLib library for Win32 applications](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#VCLib)
+* [WinRT registration](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#WinRT_Registration)
  
 ![Screenshoot](/19H1_Insider_Samples/CppWin32App_With_Island/Screenshoot.PNG)
 
@@ -84,9 +85,9 @@ The use of 3rd party control objects requires:
 2. A [custom application](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md) object that:
 ### 1. Registers the Xaml metedata providers.
 ### 2. Initializes Xaml by calling [InitializeForCurrentThread](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.windowsxamlmanager.initializeforcurrentthread)
-3. Provide WinRT registration of activatable classes.
+### 3. Provide [WinRT registration](/19H1_Insider_Samples/CppWin32App_With_Island/ReadMe.md#WinRT_Registration) of activatable classes.
 
-In this sample this is implemented by [App.xaml](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/App.xaml) and the [Xaml Application for Win32](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md)
+In this sample 1 and 2 are implemented by [App.xaml](/19H1_Insider_Samples/CppWin32App_With_Island/MyApp/App.xaml) and the [Xaml Application for Win32](/19H1_Insider_Samples/CppWin32App_With_Island/Microsoft.UI.Xaml.Markup/ReadMe.md)
 
 ```
 <MSMarkup:XamlApplication
@@ -174,5 +175,6 @@ This is performed using the following [MSBuild code](/19H1_Insider_Samples/CppWi
     </Target>
 </Project>
 ```
+## <a name="WinRT_Registration"/> WinRT registration
 
-
+In order for a 3rd party type to instanciated by an Win32 executable, the type needs to be registered in the executable manifest.
