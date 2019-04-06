@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Components">
-      <UniqueIdentifier>{088e5cb8-cc47-458d-8914-c70e34ac4a7c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -62,24 +59,13 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="Microsoft.UI.Xaml.manifest">
-      <Filter>Components</Filter>
-    </Manifest>
-    <Manifest Include="..\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest">
-      <Filter>Components</Filter>
-    </Manifest>
-    <Manifest Include="SampleCppApp.exe.manifest">
-      <Filter>Components</Filter>
-    </Manifest>
-    <Manifest Include="..\SampleUserControl\SampleUserControl.manifest">
-      <Filter>Components</Filter>
-    </Manifest>
-    <Manifest Include="..\MyApp\MyApp.manifest">
-      <Filter>Components</Filter>
-    </Manifest>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
     <None Include="ReadMe.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\AppxManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="Application.manifest" />
   </ItemGroup>
 </Project>

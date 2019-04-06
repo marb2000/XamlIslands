@@ -222,11 +222,8 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="..\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.manifest" />
-    <Manifest Include="..\MyApp\MyApp.manifest" />
-    <Manifest Include="..\SampleUserControl\SampleUserControl.manifest" />
-    <Manifest Include="Microsoft.UI.Xaml.manifest" />
-    <Manifest Include="SampleCppApp.exe.manifest" />
+    <Manifest Include="Application.manifest" />
+    <AppxManifest Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\AppxManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
@@ -253,6 +250,7 @@
     <None Include="ReadMe.md" />
   </ItemGroup>
   <Import Project="..\Microsoft.VCLibs.Win32.targets" />
+  <Import Project="..\Microsoft.WinRT.Win32.targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.1.0.190211.5\build\native\Microsoft.Windows.CppWinRT.targets')" />
