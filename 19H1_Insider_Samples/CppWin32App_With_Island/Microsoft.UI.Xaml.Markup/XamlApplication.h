@@ -3,6 +3,7 @@
 #include "XamlApplication.g.h"
 #include <winrt/Windows.UI.Xaml.Hosting.h>
 #include <winrt/Windows.UI.ViewManagement.h>
+#include <winrt/Windows.Foundation.Collections.h>
 #include <Windows.h>
 
 namespace winrt::Microsoft::UI::Xaml::Markup::implementation
@@ -25,7 +26,7 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
 
     private:
         winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager m_windowsXamlManager = nullptr;
-        winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> m_providers = winrt::single_threaded_vector<Windows::UI::Xaml::Markup::IXamlMetadataProvider>();
+		winrt::Windows::Foundation::Collections::IVector<winrt::Windows::UI::Xaml::Markup::IXamlMetadataProvider> m_providers = winrt::single_threaded_vector<Windows::UI::Xaml::Markup::IXamlMetadataProvider>();
         bool m_bIsClosed = false;
     };
 }

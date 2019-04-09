@@ -37,9 +37,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="MyApp_TemporaryKey.pfx" />
-    <None Include="packages.config" />
     <None Include="dummy.exe" />
     <None Include="ReadMe.md" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Assets">

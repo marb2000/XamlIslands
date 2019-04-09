@@ -19,7 +19,7 @@ namespace winrt::Microsoft::UI::Xaml::Markup::implementation
     }
 
     XamlApplication::XamlApplication()
-    {
+	{
         Init();
     }
 
