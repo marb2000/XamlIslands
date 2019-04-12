@@ -18,4 +18,10 @@ This is a normal UWP Application project that have had the following modificatio
 ```
 - The build settings have been modified to produced resources.pri and AppxManifest at build time:
 ```
+  <PropertyGroup Label="Globals">
+    <WindowsAppContainer>true</WindowsAppContainer>
+    <AppxGeneratePriEnabled>true</AppxGeneratePriEnabled>
+    <ProjectPriIndexName>App</ProjectPriIndexName>
+    <AppxPackage>true</AppxPackage>
+  </PropertyGroup>
 ```
