@@ -35,7 +35,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     ...
     
-    
-
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+       BOOL xamlSourceProcessedMessage = FALSE;
+       auto xamlSourceNative2 = desktopSource.as<IDesktopWindowXamlSourceNative2>();
+       hr = xamlSourceNative2->PreTranslateMessage(&msg, &xamlSourceProcessedMessage);
+       winrt::check_hresult(hr);
+       if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+       {
+           TranslateMessage(&msg);
+           DispatchMessage(&msg);
+       }
+   }
+   desktopSource.Close();
+   app.Close();
+   return 0;
 }
 ```
