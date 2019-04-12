@@ -1,4 +1,4 @@
-# Sample WinRT App
+# App object for Win32 Desktop
 
 This is a normal UWP Application project that have had the following modifications:
 - Compile as a Dynamic Link Library instead of an Executable
