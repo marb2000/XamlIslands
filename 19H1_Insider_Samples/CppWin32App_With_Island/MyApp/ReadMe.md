@@ -1,7 +1,7 @@
 # Sample WinRT App
 
 This is a normal UWP Application project that have had the following modifications:
-- 1 Compile as a Dynamic Link Library instead of an Executable
+1. Compile as a Dynamic Link Library instead of an Executable
 - 2 The Xaml Application object inherits from Microsoft.UI.Markup.XamlApplication instead of Windows.UI.Xaml.Application
 ```
 <MSMarkup:XamlApplication
