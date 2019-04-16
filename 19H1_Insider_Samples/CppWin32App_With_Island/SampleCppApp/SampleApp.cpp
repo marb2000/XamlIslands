@@ -129,7 +129,7 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANC
         szWindowClass,
         szTitle,
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
+        CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight+200,
         nullptr, nullptr, hInstance, nullptr);
 
     if (!hMainWnd)
@@ -158,8 +158,23 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANC
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
+	static HWND hButton1 = nullptr;
+	const static HMENU buttonID1 = (HMENU)0x1001;
+	const static HMENU buttonID2 = (HMENU)0x1002;
+	static HWND hButton2 = nullptr;
+
+	switch (message)
     {
+	case WM_CREATE:
+		hButton1 = CreateWindow(TEXT("button"), TEXT("Button1"),
+			WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			(ButtonMargin + InitialWidth - ButtonWidth)/2, ButtonMargin, ButtonWidth, ButtonHeight,
+			hWnd, buttonID1, hInst, NULL);
+		hButton2 = CreateWindow(TEXT("button"), TEXT("Button2"),
+			WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			(ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin + InitialHeight, ButtonWidth, ButtonHeight,
+			hWnd, buttonID2, hInst, NULL);
+		break;
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);
@@ -192,10 +207,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             if (hMainWnd == hWnd && hWndXamlIsland!=nullptr)
             {
-                auto newHeight = LOWORD(lParam);
-                auto newWidth = HIWORD(lParam);
-                const auto margin = XamlIslandMargin;
-                SetWindowPos(hWndXamlIsland, 0, margin, margin, newHeight - margin, newWidth - margin, SWP_SHOWWINDOW);
+				const auto newHeight = HIWORD(lParam);
+				const auto newWidth = LOWORD(lParam);
+				//const auto width = newWidth - (XamlIslandMargin + (ButtonHeight * 2));
+				const auto margin = XamlIslandMargin;
+				const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
+				const auto islandWidth = newWidth - (ButtonMargin * 2);
+				SetWindowPos(hButton1,       0, (ButtonMargin + newWidth - ButtonWidth) / 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+				SetWindowPos(hWndXamlIsland, 0, ButtonMargin, margin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+				SetWindowPos(hButton2,       0, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
             }
         }
         break;

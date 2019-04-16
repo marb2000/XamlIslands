@@ -26,7 +26,7 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     const auto newHeight = InitialHeight;
     const auto newWidth = InitialWidth;
     const auto margin = XamlIslandMargin;
-    SetWindowPos(hWndXamlIsland, 0, margin, margin, newHeight - margin, newWidth - margin, SWP_SHOWWINDOW);
+    SetWindowPos(hWndXamlIsland, 0, ButtonMargin, XamlIslandMargin, IslandInitialWidth, IslandInitialHeight, SWP_SHOWWINDOW);
 
     winrt::MyApp::MainUserControl mainUserControl;
     mainUserControl.UpdateLayout();

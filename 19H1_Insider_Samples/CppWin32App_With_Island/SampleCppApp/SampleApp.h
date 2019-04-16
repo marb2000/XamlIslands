@@ -4,9 +4,14 @@
 
 #include "XamlBridge.h"
 
-#define InitialHeight 800
-#define InitialWidth  800
-#define XamlIslandMargin 30
+#define ButtonMargin   10
+#define ButtonWidth   100
+#define ButtonHeight   50
+#define IslandInitialHeight 600
+#define IslandInitialWidth  800
+#define XamlIslandMargin ButtonMargin+ButtonHeight
+#define InitialHeight (IslandInitialHeight+((ButtonMargin+ButtonHeight)*2))
+#define InitialWidth  (IslandInitialWidth+(ButtonMargin*2))
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 
