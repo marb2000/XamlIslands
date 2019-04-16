@@ -37,7 +37,7 @@
                 TaskParameter="Include"
                 ItemName="VCLibItems"/>
         </CreateItem>
-        <Copy SourceFiles="@(VCLibItems)" DestinationFolder="$(OutDir)"/>
+        <Copy SourceFiles="@(VCLibItems)" DestinationFolder="$(OutDir)KK"/>
     </Target>
 
 </Project>
