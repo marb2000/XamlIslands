@@ -1,6 +1,3 @@
-// SampleCppApp.cpp : Defines the entry point for the application.
-//
-
 #include "pch.h"
 #include "framework.h"
 #include "SampleApp.h"
@@ -10,13 +7,11 @@
 
 // Global Variables:
 HINSTANCE hInst = nullptr; // current instance
-HWND hMainWnd = nullptr;
-// This Hwnd will be the window handler for the Xaml Island: A child window that contains Xaml.  
-HWND hWndXamlIsland = nullptr;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources;
 
-bool FilterMessage(const std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource>& xamlSources, const MSG* msg)
+bool FilterMessage(const MSG* msg)
 {
     // When multiple child windows are present it is needed to pre dispatch messages to all 
     // DesktopWindowXamlSource instances so keyboard accelerators and 
@@ -38,7 +33,7 @@ bool FilterMessage(const std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopW
     return !!xamlSourceProcessedMessage;
 }
 
-winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource GetFocusedIsland(const std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource>& xamlSources)
+winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource GetFocusedIsland()
 {
     for (auto xamlSource : xamlSources)
     {
@@ -82,13 +77,13 @@ winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason GetReasonFrom
     return reason;
 }
 
-void NavigateFocus(const std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource>& xamlSources, HWND previousFocusedWindow, const MSG& msg)
+void NavigateFocus(HWND previousFocusedWindow, const MSG& msg)
 {
     if (msg.message != WM_KEYDOWN)
     {
         return;
     }
-    const auto focusedIsland = GetFocusedIsland(xamlSources);
+    const auto focusedIsland = GetFocusedIsland();
     if (!focusedIsland)
     {
         return;
@@ -112,17 +107,17 @@ void NavigateFocus(const std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopW
     }
 }
 
-int MainMessageLoop(const std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource>& xamlSources, HACCEL hAccelTable)
+int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)
 {
     MSG msg = {};
     HRESULT hr = S_OK;
     while (GetMessage(&msg, nullptr, 0, 0))
     {
-        const bool xamlSourceProcessedMessage = FilterMessage(xamlSources, &msg);
+        const bool xamlSourceProcessedMessage = FilterMessage(&msg);
         if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
             const auto previousFocusedWindow = ::GetFocus();
-            const auto previousFocusedIsland = GetFocusedIsland(xamlSources);
+            const auto previousFocusedIsland = GetFocusedIsland();
             if (previousFocusedIsland || !IsDialogMessage(hMainWnd, &msg))
             {
                 TranslateMessage(&msg);
@@ -130,7 +125,7 @@ int MainMessageLoop(const std::vector<winrt::Windows::UI::Xaml::Hosting::Desktop
             }
             else
             {
-                NavigateFocus(xamlSources, previousFocusedWindow, msg);
+                NavigateFocus(previousFocusedWindow, msg);
             }
         }
     }
@@ -155,26 +150,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
         LoadStringW(hInstance, IDC_SAMPLECPPAPP, szWindowClass, MAX_LOADSTRING);
         MyRegisterClass(hInstance);
+        HWND hMainWnd = InitInstance(hInstance, nCmdShow);
 
-        {
-            std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources;
-            {
-                // Perform application initialization
-                const auto desktopXamlSource = InitInstance(hInstance, nCmdShow);
-                xamlSources.push_back(desktopXamlSource);
-            }
-
-            HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
-
-            retValue = MainMessageLoop(xamlSources, hAccelTable);
-
-            hWndXamlIsland = nullptr;
-            for (auto xamlSource : xamlSources)
-            {
-                xamlSource.Close();
-            }
-            xamlSources.clear();
-        }
+        HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
+        retValue = MainMessageLoop(hMainWnd, hAccelTable);
     }
     app.Close();
     app = nullptr;
@@ -217,10 +196,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 //        In this function, we save the instance handle in a global variable and
 //        create and display the main program window.
 //
-winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANCE hInstance, int nCmdShow)
+HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
     hInst = hInstance; // Store instance handle in our global variable
-    hMainWnd = CreateWindow(
+    HWND hMainWnd = CreateWindow(
         szWindowClass,
         szTitle,
         WS_OVERLAPPEDWINDOW,
@@ -234,11 +213,7 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANC
 
     ShowWindow(hMainWnd, nCmdShow);
     UpdateWindow(hMainWnd);
-    SetFocus(hMainWnd);
-
-    auto desktopXamlSource = CreateDesktopWindowsXamlSource(hMainWnd);
-
-    return desktopXamlSource;
+    return hMainWnd;
 }
 
 //
@@ -257,20 +232,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     const static HMENU buttonID1 = (HMENU)0x1001;
     const static HMENU buttonID2 = (HMENU)0x1002;
     static HWND hButton2 = nullptr;
+    static HWND hWndXamlIsland = nullptr;
+    static winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopXamlSource;
+    HRESULT hr = S_OK;
 
     switch (message)
     {
     case WM_CREATE:
-        hButton1 = CreateWindow(TEXT("button"), TEXT("Button1"),
-            WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
-            (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
-            ButtonWidth, ButtonHeight,
-            hWnd, buttonID1, hInst, NULL);
-        hButton2 = CreateWindow(TEXT("button"), TEXT("Button2"),
-            WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
-            (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
-            ButtonWidth, ButtonHeight,
-            hWnd, buttonID2, hInst, NULL);
+        {
+            hButton1 = CreateWindow(TEXT("button"), TEXT("Button1"),
+                WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
+                (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
+                ButtonWidth, ButtonHeight,
+                hWnd, buttonID1, hInst, NULL);
+
+            hButton2 = CreateWindow(TEXT("button"), TEXT("Button2"),
+                WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
+                (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
+                ButtonWidth, ButtonHeight,
+                hWnd, buttonID2, hInst, NULL);
+
+            desktopXamlSource = CreateDesktopWindowsXamlSource(hWnd);
+            const auto interop = desktopXamlSource.as<IDesktopWindowXamlSourceNative>();
+            hr = interop->get_WindowHandle(&hWndXamlIsland);
+            winrt::check_hresult(hr);
+            xamlSources.push_back(desktopXamlSource);
+        }
         break;
     case WM_COMMAND:
     {
@@ -299,21 +286,29 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     break;
     case WM_DESTROY:
         DestroyWindow(hButton1);
+        hButton1 = nullptr;
+
         DestroyWindow(hButton2);
+        hButton2 = nullptr;
+
+        desktopXamlSource = nullptr;
+        for (auto xamlSource : xamlSources)
+        {
+            xamlSource.Close();
+        }
+        xamlSources.clear();
+
         PostQuitMessage(0);
         break;
     case WM_SIZE:
     {
-        if (hMainWnd == hWnd && hWndXamlIsland != nullptr)
-        {
-            const auto newHeight = HIWORD(lParam);
-            const auto newWidth = LOWORD(lParam);
-            const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
-            const auto islandWidth = newWidth - (ButtonMargin * 2);
-            SetWindowPos(hButton1, 0, (ButtonMargin + newWidth - ButtonWidth) / 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-            SetWindowPos(hWndXamlIsland, hButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
-            SetWindowPos(hButton2, hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        }
+        const auto newHeight = HIWORD(lParam);
+        const auto newWidth = LOWORD(lParam);
+        const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
+        const auto islandWidth = newWidth - (ButtonMargin * 2);
+        SetWindowPos(hButton1, 0, (ButtonMargin + newWidth - ButtonWidth) / 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(hWndXamlIsland, hButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+        SetWindowPos(hButton2, hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
     }
     break;
     default:

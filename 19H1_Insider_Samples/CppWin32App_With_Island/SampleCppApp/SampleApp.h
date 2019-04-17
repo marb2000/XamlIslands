@@ -11,12 +11,9 @@
 #define InitialHeight 1000
 #define InitialWidth  900
 
-extern HWND hMainWnd;
-extern HWND hWndXamlIsland;
-
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 
-winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANCE, int);
+HWND InitInstance(HINSTANCE, int);
 
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 

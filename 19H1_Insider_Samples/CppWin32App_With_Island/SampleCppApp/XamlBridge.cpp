@@ -4,14 +4,19 @@
 #include "Resource.h"
 #include "SampleApp.h"
 
-void OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource const& /* sender */, winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs const& args)
+void OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource const& sender, winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs const& args)
 {
     const auto reason = args.Request().Reason();
     const BOOL previous =
         (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First ||
          reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down ||
          reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
-    const auto nextElement = ::GetNextDlgTabItem(hMainWnd, hWndXamlIsland, previous);
+
+    const auto nativeXamlSource = sender.as<IDesktopWindowXamlSourceNative>();
+    HWND senderHwnd = nullptr;
+    winrt::check_hresult(nativeXamlSource->get_WindowHandle(&senderHwnd));
+    HWND parentWindow = ::GetParent(senderHwnd);
+    const auto nextElement = ::GetNextDlgTabItem(parentWindow, senderHwnd, previous);
     ::SetFocus(nextElement);
 }
 
@@ -28,13 +33,14 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     winrt::check_hresult(hr);
 
     // Get the new child window's hwnd 
+    HWND hWndXamlIsland = nullptr;
     hr = interop->get_WindowHandle(&hWndXamlIsland);
     winrt::check_hresult(hr);
     DWORD dwNewStyle = GetWindowLong(hWndXamlIsland, GWL_STYLE);
     dwNewStyle |= WS_TABSTOP;
     SetWindowLong(hWndXamlIsland, GWL_STYLE, dwNewStyle);
 
-    PostMessage(parentWindow, WM_SIZE, 0, MAKELPARAM(InitialHeight, InitialWidth));
+    //PostMessage(parentWindow, WM_SIZE, 0, MAKELPARAM(InitialHeight, InitialWidth));
 
     winrt::MyApp::MainUserControl mainUserControl;
     mainUserControl.UpdateLayout();
