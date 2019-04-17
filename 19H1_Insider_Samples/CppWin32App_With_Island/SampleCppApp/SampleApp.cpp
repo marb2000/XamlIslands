@@ -229,8 +229,8 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     static HWND hButton1 = nullptr;
-    const static HMENU buttonID1 = (HMENU)0x1001;
-    const static HMENU buttonID2 = (HMENU)0x1002;
+    const static WPARAM IDM_ButtonID1 = 0x1001;
+    const static WPARAM IDM_ButtonID2 = 0x1002;
     static HWND hButton2 = nullptr;
     static HWND hWndXamlIsland = nullptr;
     static winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopXamlSource;
@@ -244,13 +244,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
                 (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
                 ButtonWidth, ButtonHeight,
-                hWnd, buttonID1, hInst, NULL);
+                hWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
 
             hButton2 = CreateWindow(TEXT("button"), TEXT("Button2"),
                 WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
                 (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
                 ButtonWidth, ButtonHeight,
-                hWnd, buttonID2, hInst, NULL);
+                hWnd, (HMENU)IDM_ButtonID2, hInst, NULL);
 
             desktopXamlSource = CreateDesktopWindowsXamlSource(hWnd);
             const auto interop = desktopXamlSource.as<IDesktopWindowXamlSourceNative>();
@@ -261,7 +261,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     case WM_COMMAND:
     {
-        int wmId = LOWORD(wParam);
+        const auto wmId = LOWORD(wParam);
         // Parse the menu selections:
         switch (wmId)
         {
@@ -271,6 +271,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
+        case IDM_ButtonID1:
+        case IDM_ButtonID2:
+        {
+            const auto userControl = desktopXamlSource.Content().as<winrt::MyApp::MainUserControl>();
+            const auto string = (wmId == IDM_ButtonID1) ? winrt::hstring(L"Native button 1") : winrt::hstring(L"Native button 2");
+            userControl.MyProperty(string);
+        }
+        break;
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
         }
