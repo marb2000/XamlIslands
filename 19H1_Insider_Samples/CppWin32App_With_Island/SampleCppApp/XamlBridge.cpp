@@ -4,12 +4,15 @@
 #include "Resource.h"
 #include "SampleApp.h"
 
-extern HWND hWndXamlIsland;
-
 void OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource const& /* sender */, winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs const& args)
 {
-	const WPARAM wParam = (args.Request().Reason() == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First) ? 1 : 0;
-	::SendMessage(hMainWnd, WM_MOVEFOCUS, wParam, 0);
+    const auto reason = args.Request().Reason();
+    const BOOL previous =
+        (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First ||
+         reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down ||
+         reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
+    const auto nextElement = ::GetNextDlgTabItem(hMainWnd, hWndXamlIsland, previous);
+    ::SetFocus(nextElement);
 }
 
 winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsXamlSource(HWND parentWindow)
@@ -27,17 +30,17 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     // Get the new child window's hwnd 
     hr = interop->get_WindowHandle(&hWndXamlIsland);
     winrt::check_hresult(hr);
-	DWORD dwNewStyle = GetWindowLong(hWndXamlIsland, GWL_STYLE);
-	dwNewStyle |= WS_TABSTOP;
-	SetWindowLong(hWndXamlIsland, GWL_STYLE, dwNewStyle);
+    DWORD dwNewStyle = GetWindowLong(hWndXamlIsland, GWL_STYLE);
+    dwNewStyle |= WS_TABSTOP;
+    SetWindowLong(hWndXamlIsland, GWL_STYLE, dwNewStyle);
 
-	PostMessage(parentWindow, WM_SIZE, 0, MAKELPARAM(InitialWidth, InitialHeight));
+    PostMessage(parentWindow, WM_SIZE, 0, MAKELPARAM(InitialHeight, InitialWidth));
 
     winrt::MyApp::MainUserControl mainUserControl;
     mainUserControl.UpdateLayout();
     desktopSource.Content(mainUserControl);
 
-	desktopSource.TakeFocusRequested(OnTakeFocusRequested);
+    desktopSource.TakeFocusRequested(OnTakeFocusRequested);
 
     return desktopSource;
 }

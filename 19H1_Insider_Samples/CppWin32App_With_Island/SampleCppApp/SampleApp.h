@@ -7,16 +7,12 @@
 #define ButtonMargin   10
 #define ButtonWidth   100
 #define ButtonHeight   50
-#define IslandInitialHeight 800
-#define IslandInitialWidth  800
 #define XamlIslandMargin ButtonMargin+ButtonHeight
-#define InitialHeight (IslandInitialHeight+((ButtonMargin+ButtonHeight)*2))
-#define InitialWidth  (IslandInitialWidth+(ButtonMargin*2))
-
-const int WM_MOVEFOCUS = WM_USER + 1;
-const int WM_ISDIALOGKEY = WM_USER + 2;
+#define InitialHeight 1000
+#define InitialWidth  900
 
 extern HWND hMainWnd;
+extern HWND hWndXamlIsland;
 
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 
