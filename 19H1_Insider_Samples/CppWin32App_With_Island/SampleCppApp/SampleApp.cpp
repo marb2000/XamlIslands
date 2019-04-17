@@ -15,8 +15,8 @@ HWND hMainWnd = nullptr;
 HWND hWndXamlIsland = nullptr;
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopXamlSource(nullptr);
 
-typedef HRESULT (*CreateAppProc)();
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -39,11 +39,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         {
             std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources;
             // Perform application initialization
-            {
-                auto desktopSource = InitInstance(hInstance, nCmdShow);
-                xamlSources.push_back(std::move(desktopSource));
-            }
-
+			desktopXamlSource = InitInstance(hInstance, nCmdShow);
+            xamlSources.push_back(desktopXamlSource);
+    
             HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
             MSG msg = {};
             HRESULT hr = S_OK;
@@ -66,10 +64,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                         }
                     }
                 }
+
                 if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
                 {
-                    TranslateMessage(&msg);
-                    DispatchMessage(&msg);
+					TranslateMessage(&msg);
+					DispatchMessage(&msg);
                 }
             }
             hWndXamlIsland = nullptr;
@@ -78,6 +77,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             {
                 xamlSource.Close();
             }
+			desktopXamlSource = nullptr;
             xamlSources.clear();
         }
     }
@@ -99,7 +99,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
+    wcex.cbClsExtra = DLGWINDOWEXTRA;
     wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SAMPLECPPAPP));
@@ -129,7 +129,7 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANC
         szWindowClass,
         szTitle,
         WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight+200,
+        CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
         nullptr, nullptr, hInstance, nullptr);
 
     if (!hMainWnd)
@@ -144,6 +144,36 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource InitInstance(HINSTANC
     auto desktopXamlSource = CreateDesktopWindowsXamlSource(hMainWnd);
 
     return desktopXamlSource;
+}
+
+const auto static invalidReason = static_cast<winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason>(-1);
+
+winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason GetReasonFromKey(WPARAM key)
+{
+	auto reason = invalidReason;
+	if (key == VK_TAB)
+	{
+		byte keyboardState[256] = {};
+		::GetKeyboardState(keyboardState);
+		reason = (keyboardState[VK_SHIFT] & 0x80) ? winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Last : reason;
+	}
+	else if (key == VK_LEFT)
+	{
+		reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Left;
+	}
+	else if (key == VK_RIGHT)
+	{
+		reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right;
+	}
+	else if (key == VK_UP)
+	{
+		reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Up;
+	}
+	else if (key == VK_DOWN)
+	{
+		reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down;
+	}
+	return reason;
 }
 
 //
@@ -167,11 +197,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_CREATE:
 		hButton1 = CreateWindow(TEXT("button"), TEXT("Button1"),
-			WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
 			(ButtonMargin + InitialWidth - ButtonWidth)/2, ButtonMargin, ButtonWidth, ButtonHeight,
 			hWnd, buttonID1, hInst, NULL);
 		hButton2 = CreateWindow(TEXT("button"), TEXT("Button2"),
-			WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON,
+			WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
 			(ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin + InitialHeight, ButtonWidth, ButtonHeight,
 			hWnd, buttonID2, hInst, NULL);
 		break;
@@ -201,21 +231,46 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
     case WM_DESTROY:
-        PostQuitMessage(0);
+		DestroyWindow(hButton1);
+		DestroyWindow(hButton2);
+		PostQuitMessage(0);
         break;
+	case WM_ISDIALOGKEY:
+	{
+		const MSG* msg = reinterpret_cast<MSG*>(lParam);
+		if (msg && msg->message == WM_KEYDOWN)
+		{
+			const auto hFocusedWindow = GetParent(::GetFocus());
+			if (hFocusedWindow == hWndXamlIsland)
+			{
+				const auto key = msg->wParam;
+				auto reason = GetReasonFromKey(key);
+				if (reason != invalidReason)
+				{
+					const auto result = desktopXamlSource.NavigateFocus(reason);
+					return result.WasFocusMoved() ? 0 : -1;
+				}
+			}
+		}
+		break;
+	}
+	case WM_MOVEFOCUS:
+	{
+		const auto selectedWnd = (wParam == 1) ? hButton2 : hButton1;
+		::SetFocus(selectedWnd);
+		break;
+	}
     case WM_SIZE:
         {
             if (hMainWnd == hWnd && hWndXamlIsland!=nullptr)
             {
 				const auto newHeight = HIWORD(lParam);
 				const auto newWidth = LOWORD(lParam);
-				//const auto width = newWidth - (XamlIslandMargin + (ButtonHeight * 2));
-				const auto margin = XamlIslandMargin;
 				const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
 				const auto islandWidth = newWidth - (ButtonMargin * 2);
-				SetWindowPos(hButton1,       0, (ButtonMargin + newWidth - ButtonWidth) / 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-				SetWindowPos(hWndXamlIsland, 0, ButtonMargin, margin, islandWidth, islandHeight, SWP_SHOWWINDOW);
-				SetWindowPos(hButton2,       0, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+				SetWindowPos(hButton1, 0, (ButtonMargin + newWidth - ButtonWidth) / 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+				SetWindowPos(hWndXamlIsland, hButton1, ButtonMargin, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+				SetWindowPos(hButton2, hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
             }
         }
         break;
