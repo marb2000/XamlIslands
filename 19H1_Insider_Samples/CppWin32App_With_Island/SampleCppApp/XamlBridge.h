@@ -55,20 +55,33 @@ struct DesktopWindowT : public DesktopWindow
         return DefWindowProc(window, message, wparam, lparam);
     }
 
-    LRESULT MessageHandler(UINT const message, WPARAM const wparam, LPARAM const lparam) noexcept
+    LRESULT MessageHandler(UINT const message, WPARAM const wParam, LPARAM const lParam) noexcept
     {
-        if (WM_DESTROY == message)
+        switch (message)
         {
+        case WM_DESTROY:
             OnDestroy();
             PostQuitMessage(0);
             return 0;
+        case WM_SETFOCUS:
+            if (m_hwndLastFocus) {
+                SetFocus(m_hwndLastFocus);
+            }
+            break;
+        case WM_ACTIVATE:
+            if (wParam == WA_INACTIVE)
+            {
+                m_hwndLastFocus = GetFocus();
+            }
+            break;
         }
 
-        return DefWindowProc(m_hMainWnd, message, wparam, lparam);
+        return DefWindowProc(m_hMainWnd, message, wParam, lParam);
     }
 
-    //protected:
+    HWND m_hwndLastFocus = nullptr;
 
+protected:
     using base_type = DesktopWindowT<T>;
 };
 
