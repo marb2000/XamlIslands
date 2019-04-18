@@ -128,9 +128,15 @@ bool NavigateFocus(HWND hMainWnd, MSG* msg)
         const auto result = nextFocusedIsland.NavigateFocus(request);
         return result.WasFocusMoved();
     }
-    else if (!GetFocusedIsland())
+    else
     {
-        return !!IsDialogMessage(hMainWnd, msg);
+        const bool islandIsFocused = GetFocusedIsland() != nullptr;
+        if (islandIsFocused)
+        {
+            return false;
+        }
+        const bool isDialogMessage = !!IsDialogMessage(hMainWnd, msg);
+        return isDialogMessage;
     }
 
     return false;
@@ -309,7 +315,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     break;
     case WM_GETDLGCODE:
-        return DLGC_WANTALLKEYS;
+        return DefWindowProc(hWnd, message, wParam, lParam);
+        //return DLGC_WANTALLKEYS;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
