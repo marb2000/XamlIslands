@@ -77,34 +77,36 @@ winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason GetReasonFrom
     return reason;
 }
 
-void NavigateFocus(HWND previousFocusedWindow, const MSG& msg)
+bool NavigateFocus(HWND hMainWnd, MSG* msg)
 {
-    if (msg.message != WM_KEYDOWN)
+    const auto previousFocusedWindow = ::GetFocus();
+    const auto isDialogMessage = IsDialogMessage(hMainWnd, msg);
+
+    if (msg->message == WM_KEYDOWN)
     {
-        return;
+        if (const auto focusedIsland = GetFocusedIsland())
+        {
+            const auto key = msg->wParam;
+            auto reason = GetReasonFromKey(key);
+            if (reason != invalidReason)
+            {
+                RECT rect = {};
+                WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));
+                const auto nativeIsland = focusedIsland.as<IDesktopWindowXamlSourceNative>();
+                HWND islandWnd = nullptr;
+                winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
+                POINT pt = { rect.left, rect.top };
+                SIZE size = { rect.right - rect.left, rect.bottom - rect.top };
+                ::ScreenToClient(islandWnd, &pt);
+                const auto hintRect = winrt::Windows::Foundation::Rect({ static_cast<float>(pt.x), static_cast<float>(pt.y), static_cast<float>(size.cx), static_cast<float>(size.cy) });
+                const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(reason, hintRect);
+                const auto result = focusedIsland.NavigateFocus(request);
+                return result.WasFocusMoved();
+            }
+        }
     }
-    const auto focusedIsland = GetFocusedIsland();
-    if (!focusedIsland)
-    {
-        return;
-    }
-    const auto key = msg.wParam;
-    auto reason = GetReasonFromKey(key);
-    if (reason != invalidReason)
-    {
-        RECT rect = {};
-        WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));
-        const auto nativeIsland = focusedIsland.as<IDesktopWindowXamlSourceNative>();
-        HWND islandWnd = nullptr;
-        winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
-        POINT pt = { rect.left, rect.top };
-        SIZE size = { rect.right - rect.left, rect.bottom - rect.top };
-        ::ScreenToClient(islandWnd, &pt);
-        const auto hintRect = winrt::Windows::Foundation::Rect({ static_cast<float>(pt.x), static_cast<float>(pt.y), static_cast<float>(size.cx), static_cast<float>(size.cy) });
-        const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(reason, hintRect);
-        const auto result = focusedIsland.NavigateFocus(request);
-        WINRT_VERIFY(result.WasFocusMoved());
-    }
+
+    return !!isDialogMessage;
 }
 
 int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)
@@ -116,16 +118,10 @@ int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)
         const bool xamlSourceProcessedMessage = FilterMessage(&msg);
         if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
-            const auto previousFocusedWindow = ::GetFocus();
-            const auto previousFocusedIsland = GetFocusedIsland();
-            if (previousFocusedIsland || !IsDialogMessage(hMainWnd, &msg))
+            if (!NavigateFocus(hMainWnd, &msg))
             {
                 TranslateMessage(&msg);
                 DispatchMessage(&msg);
-            }
-            else
-            {
-                NavigateFocus(previousFocusedWindow, msg);
             }
         }
     }
@@ -213,6 +209,7 @@ HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
 
     ShowWindow(hMainWnd, nCmdShow);
     UpdateWindow(hMainWnd);
+    SetFocus(hMainWnd);
     return hMainWnd;
 }
 
@@ -284,6 +281,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
     }
     break;
+    case WM_GETDLGCODE:
+        return DLGC_WANTALLKEYS;
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
