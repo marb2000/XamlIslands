@@ -131,7 +131,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             DEVICE_SCALE_FACTOR scaleFactor = {};
             winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(hWnd, 0), &scaleFactor));
             const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
-            //const auto dip = GetWindowS
+
             winrt::Windows::UI::Xaml::Controls::TextBlock txt;
             txt.Text(winrt::hstring(L"Xbt1"));
             winrt::Windows::UI::Xaml::Controls::Button bt1;
