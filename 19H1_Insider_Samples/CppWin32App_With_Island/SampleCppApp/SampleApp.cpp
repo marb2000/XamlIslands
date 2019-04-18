@@ -240,13 +240,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
     case WM_CREATE:
         {
-            hButton1 = CreateWindow(TEXT("button"), TEXT("Button1"),
+            hButton1 = CreateWindow(TEXT("button"), TEXT("Button &1"),
                 WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
                 (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
                 ButtonWidth, ButtonHeight,
                 hWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
 
-            hButton2 = CreateWindow(TEXT("button"), TEXT("Button2"),
+            hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
                 WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
                 (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
                 ButtonWidth, ButtonHeight,
