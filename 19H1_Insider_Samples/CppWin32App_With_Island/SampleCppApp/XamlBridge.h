@@ -29,10 +29,8 @@ private:
 template <typename T>
 struct DesktopWindowT : public DesktopWindow
 {
-    static T* GetThisFromHandle(HWND const window) noexcept
-    {
-        return reinterpret_cast<T*>(GetWindowLongPtr(window, GWLP_USERDATA));
-    }
+protected:
+    using base_type = DesktopWindowT<T>;
 
     static LRESULT __stdcall WndProc(HWND const window, UINT const message, WPARAM const wparam, LPARAM const lparam) noexcept
     {
@@ -79,9 +77,12 @@ struct DesktopWindowT : public DesktopWindow
         return DefWindowProc(m_hMainWnd, message, wParam, lParam);
     }
 
-    HWND m_hwndLastFocus = nullptr;
+private:
+    static T* GetThisFromHandle(HWND const window) noexcept
+    {
+        return reinterpret_cast<T*>(GetWindowLongPtr(window, GWLP_USERDATA));
+    }
 
-protected:
-    using base_type = DesktopWindowT<T>;
+    HWND m_hwndLastFocus = nullptr;
 };
 
