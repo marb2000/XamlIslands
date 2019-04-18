@@ -33,18 +33,6 @@ bool FilterMessage(const MSG* msg)
     return !!xamlSourceProcessedMessage;
 }
 
-winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource GetFocusedIsland()
-{
-    for (auto xamlSource : xamlSources)
-    {
-        if (xamlSource.HasFocus())
-        {
-            return xamlSource;
-        }
-    }
-    return nullptr;
-}
-
 const auto static invalidReason = static_cast<winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason>(-1);
 
 winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason GetReasonFromKey(WPARAM key)
@@ -77,36 +65,61 @@ winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason GetReasonFrom
     return reason;
 }
 
-bool NavigateFocus(HWND hMainWnd, MSG* msg)
+winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource GetNextFocusedIsland(HWND hMainWnd, MSG* msg)
 {
-    const auto previousFocusedWindow = ::GetFocus();
-    const auto isDialogMessage = IsDialogMessage(hMainWnd, msg);
-
     if (msg->message == WM_KEYDOWN)
     {
-        if (const auto focusedIsland = GetFocusedIsland())
+        const auto key = msg->wParam;
+        auto reason = GetReasonFromKey(key);
+        if (reason != invalidReason)
         {
-            const auto key = msg->wParam;
-            auto reason = GetReasonFromKey(key);
-            if (reason != invalidReason)
+            const BOOL previous =
+                (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First ||
+                    reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down ||
+                    reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
+
+            const auto currentFocusedWindow = ::GetFocus();
+            const auto nextElement = ::GetNextDlgTabItem(hMainWnd, currentFocusedWindow, previous);
+            for (auto xamlSource : xamlSources)
             {
-                RECT rect = {};
-                WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));
-                const auto nativeIsland = focusedIsland.as<IDesktopWindowXamlSourceNative>();
+                const auto nativeIsland = xamlSource.as<IDesktopWindowXamlSourceNative>();
                 HWND islandWnd = nullptr;
                 winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
-                POINT pt = { rect.left, rect.top };
-                SIZE size = { rect.right - rect.left, rect.bottom - rect.top };
-                ::ScreenToClient(islandWnd, &pt);
-                const auto hintRect = winrt::Windows::Foundation::Rect({ static_cast<float>(pt.x), static_cast<float>(pt.y), static_cast<float>(size.cx), static_cast<float>(size.cy) });
-                const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(reason, hintRect);
-                const auto result = focusedIsland.NavigateFocus(request);
-                return result.WasFocusMoved();
+                if (nextElement == islandWnd)
+                {
+                    return xamlSource;
+                }
             }
         }
     }
 
-    return !!isDialogMessage;
+    return nullptr;
+}
+
+bool NavigateFocus(HWND hMainWnd, MSG* msg)
+{
+    if (const auto focusedIsland = GetNextFocusedIsland(hMainWnd, msg))
+    {
+        WINRT_VERIFY(!focusedIsland.HasFocus());
+        const auto previousFocusedWindow = ::GetFocus();
+        RECT rect = {};
+        WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));
+        const auto nativeIsland = focusedIsland.as<IDesktopWindowXamlSourceNative>();
+        HWND islandWnd = nullptr;
+        winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
+        POINT pt = { rect.left, rect.top };
+        SIZE size = { rect.right - rect.left, rect.bottom - rect.top };
+        ::ScreenToClient(islandWnd, &pt);
+        const auto hintRect = winrt::Windows::Foundation::Rect({ static_cast<float>(pt.x), static_cast<float>(pt.y), static_cast<float>(size.cx), static_cast<float>(size.cy) });
+        const auto reason = GetReasonFromKey(msg->wParam);
+        const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(reason, hintRect);
+        const auto result = focusedIsland.NavigateFocus(request);
+        return result.WasFocusMoved();
+    }
+    else
+    {
+        return !!IsDialogMessage(hMainWnd, msg);
+    }
 }
 
 int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)

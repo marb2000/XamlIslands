@@ -40,8 +40,6 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource CreateDesktopWindowsX
     dwNewStyle |= WS_TABSTOP;
     SetWindowLong(hWndXamlIsland, GWL_STYLE, dwNewStyle);
 
-    //PostMessage(parentWindow, WM_SIZE, 0, MAKELPARAM(InitialHeight, InitialWidth));
-
     winrt::MyApp::MainUserControl mainUserControl;
     mainUserControl.UpdateLayout();
     desktopSource.Content(mainUserControl);
