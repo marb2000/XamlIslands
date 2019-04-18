@@ -4,5 +4,6 @@ namespace MyApp
     runtimeclass MainUserControl : Windows.UI.Xaml.Controls.UserControl
     {
         MainUserControl();
+        String MyProperty;
     }
 }

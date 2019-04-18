@@ -6,7 +6,7 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
     <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
     <UseWPF>true</UseWPF>
-    <AssetTargetFallback>uap10.0.18334</AssetTargetFallback>
+    <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
     <ApplicationManifest>MyApp.manifest</ApplicationManifest>
   </PropertyGroup>
 
