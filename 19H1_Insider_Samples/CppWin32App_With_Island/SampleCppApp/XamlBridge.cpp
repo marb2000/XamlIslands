@@ -156,6 +156,33 @@ int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)
 
     return (int)msg.wParam;
 }
+static const WPARAM invalidKey = (WPARAM)-1;
+
+WPARAM GetKeyFromReason(winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason reason)
+{
+    auto key = invalidKey;
+    if (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Last || reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First)
+    {
+        key = VK_TAB;
+    }
+    else if (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Left)
+    {
+        key = VK_LEFT;
+    }
+    else if (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right)
+    {
+        key = VK_RIGHT;
+    }
+    else if (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Up)
+    {
+        key = VK_UP;
+    }
+    else if (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down)
+    {
+        key = VK_DOWN;
+    }
+    return key;
+}
 
 void OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource const& sender, winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs const& args)
 {
@@ -169,8 +196,16 @@ void OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSo
     HWND senderHwnd = nullptr;
     winrt::check_hresult(nativeXamlSource->get_WindowHandle(&senderHwnd));
     HWND parentWindow = ::GetParent(senderHwnd);
-    const auto nextElement = ::GetNextDlgTabItem(parentWindow, senderHwnd, previous);
-    ::SetFocus(nextElement);
+
+    MSG msg = {};
+    msg.hwnd = senderHwnd;
+    msg.message = WM_KEYDOWN;
+    msg.wParam = GetKeyFromReason(reason);
+    if (!NavigateFocus(parentWindow, &msg))
+    {
+        const auto nextElement = ::GetNextDlgTabItem(parentWindow, senderHwnd, previous);
+        ::SetFocus(nextElement);
+    }
 }
 
 HWND CreateDesktopWindowsXamlSource(HWND parentWindow, DWORD dwStyle, winrt::Windows::UI::Xaml::UIElement content)
@@ -179,7 +214,6 @@ HWND CreateDesktopWindowsXamlSource(HWND parentWindow, DWORD dwStyle, winrt::Win
 
     winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopSource;
 
-    // Get handle to corewindow
     auto interop = desktopSource.as<IDesktopWindowXamlSourceNative>();
     // Parent the DesktopWindowXamlSource object to current window
     hr = interop->AttachToWindow(parentWindow);
