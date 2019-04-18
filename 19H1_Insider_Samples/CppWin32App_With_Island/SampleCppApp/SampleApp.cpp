@@ -131,15 +131,16 @@ bool NavigateFocus(HWND hMainWnd, MSG* msg)
     else
     {
         const bool islandIsFocused = GetFocusedIsland() != nullptr;
-        if (islandIsFocused)
+        byte keyboardState[256] = {};
+        WINRT_VERIFY(::GetKeyboardState(keyboardState));
+        const bool isMenuModifier = keyboardState[VK_MENU] & 0x80;
+        if (islandIsFocused && !isMenuModifier)
         {
             return false;
         }
         const bool isDialogMessage = !!IsDialogMessage(hMainWnd, msg);
         return isDialogMessage;
     }
-
-    return false;
 }
 
 int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)
