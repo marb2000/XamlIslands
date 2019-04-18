@@ -9,11 +9,5 @@
 #define InitialHeight 1000
 #define InitialWidth  900
 
-ATOM                MyRegisterClass(HINSTANCE hInstance);
-
-HWND InitInstance(HINSTANCE, int);
-
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 
