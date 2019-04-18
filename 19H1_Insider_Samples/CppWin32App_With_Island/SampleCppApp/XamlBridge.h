@@ -22,6 +22,7 @@ protected:
     void OnDestroy();
     HWND m_hMainWnd = nullptr;
 private:
+    winrt::guid lastFocusRequestId;
     std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> m_xamlSources;
 };
 

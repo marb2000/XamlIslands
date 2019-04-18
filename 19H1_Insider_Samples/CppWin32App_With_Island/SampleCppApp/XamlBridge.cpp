@@ -100,8 +100,6 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource DesktopWindow::GetFoc
     return nullptr;
 }
 
-static winrt::guid lastFocusRequestId;
-
 bool DesktopWindow::NavigateFocus(MSG* msg)
 {
     if (const auto nextFocusedIsland = GetNextFocusedIsland(msg))
@@ -157,6 +155,7 @@ int DesktopWindow::MessageLoop(HACCEL hAccelTable)
 
     return (int)msg.wParam;
 }
+
 static const WPARAM invalidKey = (WPARAM)-1;
 
 WPARAM GetKeyFromReason(winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason reason)
