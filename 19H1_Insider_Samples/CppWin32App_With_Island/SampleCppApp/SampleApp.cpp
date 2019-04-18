@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "SampleApp.h"
 #include "XamlBridge.h"
+#include <ShellScalingApi.h>
 
 #define MAX_LOADSTRING 100
 
@@ -112,7 +113,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     const static WPARAM IDM_ButtonID2 = 0x1002;
     static HWND hButton2 = nullptr;
     static HWND hWndXamlIsland = nullptr;
+    static HWND hWndXamlButton1 = nullptr;
     static winrt::MyApp::MainUserControl mainUserControl(nullptr);
+    static float dpi = 0;
     HRESULT hr = S_OK;
 
     switch (message)
@@ -124,6 +127,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
                 ButtonWidth, ButtonHeight,
                 hWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
+
+            DEVICE_SCALE_FACTOR scaleFactor = {};
+            winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(hWnd, 0), &scaleFactor));
+            const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
+            //const auto dip = GetWindowS
+            winrt::Windows::UI::Xaml::Controls::TextBlock txt;
+            txt.Text(winrt::hstring(L"Xbt1"));
+            winrt::Windows::UI::Xaml::Controls::Button bt1;
+            bt1.Height(ButtonHeight / dpi);
+            bt1.Width(ButtonWidth / dpi);
+            bt1.Content(txt);
+            hWndXamlButton1 = CreateDesktopWindowsXamlSource(hWnd, WS_TABSTOP, bt1);
 
             mainUserControl = winrt::MyApp::MainUserControl();
             hWndXamlIsland = CreateDesktopWindowsXamlSource(hWnd, WS_TABSTOP, mainUserControl);
@@ -194,8 +209,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         const auto newWidth = LOWORD(lParam);
         const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
         const auto islandWidth = newWidth - (ButtonMargin * 2);
-        SetWindowPos(hButton1, 0, (ButtonMargin + newWidth - ButtonWidth) / 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(hWndXamlIsland, hButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+        SetWindowPos(hButton1, 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(hWndXamlButton1, hButton1, newWidth - (ButtonWidth *2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(hWndXamlIsland, hWndXamlButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
         SetWindowPos(hButton2, hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
     }
     break;

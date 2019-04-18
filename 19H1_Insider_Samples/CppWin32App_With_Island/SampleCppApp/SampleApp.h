@@ -2,8 +2,6 @@
 
 #include "resource.h"
 
-#include "XamlBridge.h"
-
 #define ButtonMargin   10
 #define ButtonWidth   100
 #define ButtonHeight   50
