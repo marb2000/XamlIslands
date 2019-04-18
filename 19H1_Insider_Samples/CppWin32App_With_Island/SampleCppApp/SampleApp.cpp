@@ -9,159 +9,7 @@
 HINSTANCE hInst = nullptr; // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> xamlSources;
 
-bool FilterMessage(const MSG* msg)
-{
-    // When multiple child windows are present it is needed to pre dispatch messages to all 
-    // DesktopWindowXamlSource instances so keyboard accelerators and 
-    // keyboard focus work correctly.
-    BOOL xamlSourceProcessedMessage = FALSE;
-    {
-        for (auto xamlSource : xamlSources)
-        {
-            auto xamlSourceNative2 = xamlSource.as<IDesktopWindowXamlSourceNative2>();
-            const auto hr = xamlSourceNative2->PreTranslateMessage(msg, &xamlSourceProcessedMessage);
-            winrt::check_hresult(hr);
-            if (xamlSourceProcessedMessage)
-            {
-                break;
-            }
-        }
-    }
-
-    return !!xamlSourceProcessedMessage;
-}
-
-const auto static invalidReason = static_cast<winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason>(-1);
-
-winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason GetReasonFromKey(WPARAM key)
-{
-    auto reason = invalidReason;
-    if (key == VK_TAB)
-    {
-        byte keyboardState[256] = {};
-        WINRT_VERIFY(::GetKeyboardState(keyboardState));
-        reason = (keyboardState[VK_SHIFT] & 0x80) ?
-            winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Last :
-            winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First;
-    }
-    else if (key == VK_LEFT)
-    {
-        reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Left;
-    }
-    else if (key == VK_RIGHT)
-    {
-        reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right;
-    }
-    else if (key == VK_UP)
-    {
-        reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Up;
-    }
-    else if (key == VK_DOWN)
-    {
-        reason = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down;
-    }
-    return reason;
-}
-
-winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource GetNextFocusedIsland(HWND hMainWnd, MSG* msg)
-{
-    if (msg->message == WM_KEYDOWN)
-    {
-        const auto key = msg->wParam;
-        auto reason = GetReasonFromKey(key);
-        if (reason != invalidReason)
-        {
-            const BOOL previous =
-                (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First ||
-                    reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down ||
-                    reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
-
-            const auto currentFocusedWindow = ::GetFocus();
-            const auto nextElement = ::GetNextDlgTabItem(hMainWnd, currentFocusedWindow, previous);
-            for (auto xamlSource : xamlSources)
-            {
-                const auto nativeIsland = xamlSource.as<IDesktopWindowXamlSourceNative>();
-                HWND islandWnd = nullptr;
-                winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
-                if (nextElement == islandWnd)
-                {
-                    return xamlSource;
-                }
-            }
-        }
-    }
-
-    return nullptr;
-}
-
-winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource GetFocusedIsland()
-{
-    for (auto xamlSource : xamlSources)
-    {
-        if (xamlSource.HasFocus())
-        {
-            return xamlSource;
-        }
-    }
-    return nullptr;
-}
-
-bool NavigateFocus(HWND hMainWnd, MSG* msg)
-{
-    if (const auto nextFocusedIsland = GetNextFocusedIsland(hMainWnd, msg))
-    {
-        WINRT_VERIFY(!nextFocusedIsland.HasFocus());
-        const auto previousFocusedWindow = ::GetFocus();
-        RECT rect = {};
-        WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));
-        const auto nativeIsland = nextFocusedIsland.as<IDesktopWindowXamlSourceNative>();
-        HWND islandWnd = nullptr;
-        winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
-        POINT pt = { rect.left, rect.top };
-        SIZE size = { rect.right - rect.left, rect.bottom - rect.top };
-        ::ScreenToClient(islandWnd, &pt);
-        const auto hintRect = winrt::Windows::Foundation::Rect({ static_cast<float>(pt.x), static_cast<float>(pt.y), static_cast<float>(size.cx), static_cast<float>(size.cy) });
-        const auto reason = GetReasonFromKey(msg->wParam);
-        const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(reason, hintRect);
-        const auto result = nextFocusedIsland.NavigateFocus(request);
-        return result.WasFocusMoved();
-    }
-    else
-    {
-        const bool islandIsFocused = GetFocusedIsland() != nullptr;
-        byte keyboardState[256] = {};
-        WINRT_VERIFY(::GetKeyboardState(keyboardState));
-        const bool isMenuModifier = keyboardState[VK_MENU] & 0x80;
-        if (islandIsFocused && !isMenuModifier)
-        {
-            return false;
-        }
-        const bool isDialogMessage = !!IsDialogMessage(hMainWnd, msg);
-        return isDialogMessage;
-    }
-}
-
-int MainMessageLoop(HWND hMainWnd, HACCEL hAccelTable)
-{
-    MSG msg = {};
-    HRESULT hr = S_OK;
-    while (GetMessage(&msg, nullptr, 0, 0))
-    {
-        const bool xamlSourceProcessedMessage = FilterMessage(&msg);
-        if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-        {
-            if (!NavigateFocus(hMainWnd, &msg))
-            {
-                TranslateMessage(&msg);
-                DispatchMessage(&msg);
-            }
-        }
-    }
-
-    return (int)msg.wParam;
-}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -264,7 +112,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     const static WPARAM IDM_ButtonID2 = 0x1002;
     static HWND hButton2 = nullptr;
     static HWND hWndXamlIsland = nullptr;
-    static winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopXamlSource;
+    static winrt::MyApp::MainUserControl mainUserControl(nullptr);
     HRESULT hr = S_OK;
 
     switch (message)
@@ -277,17 +125,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 ButtonWidth, ButtonHeight,
                 hWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
 
+            mainUserControl = winrt::MyApp::MainUserControl();
+            hWndXamlIsland = CreateDesktopWindowsXamlSource(hWnd, WS_TABSTOP, mainUserControl);
+
             hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
                 WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
                 (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
                 ButtonWidth, ButtonHeight,
                 hWnd, (HMENU)IDM_ButtonID2, hInst, NULL);
-
-            desktopXamlSource = CreateDesktopWindowsXamlSource(hWnd);
-            const auto interop = desktopXamlSource.as<IDesktopWindowXamlSourceNative>();
-            hr = interop->get_WindowHandle(&hWndXamlIsland);
-            winrt::check_hresult(hr);
-            xamlSources.push_back(desktopXamlSource);
         }
         break;
     case WM_COMMAND:
@@ -305,9 +150,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_ButtonID1:
         case IDM_ButtonID2:
         {
-            const auto userControl = desktopXamlSource.Content().as<winrt::MyApp::MainUserControl>();
-            const auto string = (wmId == IDM_ButtonID1) ? winrt::hstring(L"Native button 1") : winrt::hstring(L"Native button 2");
-            userControl.MyProperty(string);
+            if (mainUserControl)
+            {
+                const auto string = (wmId == IDM_ButtonID1) ? winrt::hstring(L"Native button 1") : winrt::hstring(L"Native button 2");
+                mainUserControl.MyProperty(string);
+            }
         }
         break;
         default:
@@ -333,7 +180,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         DestroyWindow(hButton2);
         hButton2 = nullptr;
 
-        desktopXamlSource = nullptr;
         for (auto xamlSource : xamlSources)
         {
             xamlSource.Close();
