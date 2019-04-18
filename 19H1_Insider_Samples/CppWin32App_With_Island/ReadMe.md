@@ -89,6 +89,48 @@ int DesktopWindow::MessageLoop(HACCEL hAccelTable)
     return (int)msg.wParam;
 }
 ```
+Dealing with TAB navigation between multiple islands and multiple Win32 elements
+```
+void DesktopWindow::OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource const& sender, winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs const& args)
+{
+    if (args.Request().CorrelationId() != lastFocusRequestId)
+    {
+        const auto reason = args.Request().Reason();
+        const BOOL previous =
+            (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First ||
+                reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down ||
+                reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
+
+        const auto nativeXamlSource = sender.as<IDesktopWindowXamlSourceNative>();
+        HWND senderHwnd = nullptr;
+        winrt::check_hresult(nativeXamlSource->get_WindowHandle(&senderHwnd));
+
+        MSG msg = {};
+        msg.hwnd = senderHwnd;
+        msg.message = WM_KEYDOWN;
+        msg.wParam = GetKeyFromReason(reason);
+        if (!NavigateFocus(&msg))
+        {
+            const auto nextElement = ::GetNextDlgTabItem(m_hMainWnd, senderHwnd, previous);
+            ::SetFocus(nextElement);
+        }
+    }
+    else
+    {
+        const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Restore);
+        lastFocusRequestId = request.CorrelationId();
+        sender.NavigateFocus(request);
+    }
+}
+HWND DesktopWindow::CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows::UI::Xaml::UIElement content)
+{
+...
+    winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopSource;
+    desktopSource.TakeFocusRequested({ this, &DesktopWindow::OnTakeFocusRequested });
+...
+}
+
+```
 
 ## <a name="Resources"/> Generation of WinRT resources for Win32 apps
 
