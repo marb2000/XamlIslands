@@ -33,32 +33,103 @@ After putting everything together:
 This is an [implementation](/19H1_Insider_Samples/CppWin32App_With_Island/SampleCppApp/SampleApp.cpp#L47-L74) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
 
 ```
-HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
-MSG msg = {};
-HRESULT hr = S_OK;
-// Main message loop:
-while (GetMessage(&msg, nullptr, 0, 0))
+bool DesktopWindow::NavigateFocus(MSG* msg)
 {
-  // When multiple child windows are present it is needed to pre dispatch messages to all 
-  // DesktopWindowXamlSource instances so keyboard accelerators and 
-  // keyboard focus work correctly.
-  BOOL xamlSourceProcessedMessage = FALSE;
-  for (auto xamlSource : xamlSources)
-  {
-    auto xamlSourceNative2 = xamlSource.as<IDesktopWindowXamlSourceNative2>();
-    hr = xamlSourceNative2->PreTranslateMessage(&msg, &xamlSourceProcessedMessage);
-    winrt::check_hresult(hr);
-    if (xamlSourceProcessedMessage)
+    if (const auto nextFocusedIsland = GetNextFocusedIsland(msg))
     {
-      break;
+        WINRT_VERIFY(!nextFocusedIsland.HasFocus());
+        const auto previousFocusedWindow = ::GetFocus();
+        RECT rect = {};
+        WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));
+        const auto nativeIsland = nextFocusedIsland.as<IDesktopWindowXamlSourceNative>();
+        HWND islandWnd = nullptr;
+        winrt::check_hresult(nativeIsland->get_WindowHandle(&islandWnd));
+        POINT pt = { rect.left, rect.top };
+        SIZE size = { rect.right - rect.left, rect.bottom - rect.top };
+        ::ScreenToClient(islandWnd, &pt);
+        const auto hintRect = winrt::Windows::Foundation::Rect({ static_cast<float>(pt.x), static_cast<float>(pt.y), static_cast<float>(size.cx), static_cast<float>(size.cy) });
+        const auto reason = GetReasonFromKey(msg->wParam);
+        const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(reason, hintRect);
+        lastFocusRequestId = request.CorrelationId();
+        const auto result = nextFocusedIsland.NavigateFocus(request);
+        return result.WasFocusMoved();
     }
-  }
-  if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
-  {
-    TranslateMessage(&msg);
-    DispatchMessage(&msg);
-  }
+    else
+    {
+        const bool islandIsFocused = GetFocusedIsland() != nullptr;
+        byte keyboardState[256] = {};
+        WINRT_VERIFY(::GetKeyboardState(keyboardState));
+        const bool isMenuModifier = keyboardState[VK_MENU] & 0x80;
+        if (islandIsFocused && !isMenuModifier)
+        {
+            return false;
+        }
+        const bool isDialogMessage = !!IsDialogMessage(m_hMainWnd, msg);
+        return isDialogMessage;
+    }
 }
+
+int DesktopWindow::MessageLoop(HACCEL hAccelTable)
+{
+    MSG msg = {};
+    HRESULT hr = S_OK;
+    while (GetMessage(&msg, nullptr, 0, 0))
+    {
+        const bool xamlSourceProcessedMessage = FilterMessage(&msg);
+        if (!xamlSourceProcessedMessage && !TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
+        {
+            if (!NavigateFocus(&msg))
+            {
+                TranslateMessage(&msg);
+                DispatchMessage(&msg);
+            }
+        }
+    }
+
+    return (int)msg.wParam;
+}
+```
+Dealing with TAB navigation between multiple islands and multiple Win32 elements
+```
+void DesktopWindow::OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource const& sender, winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSourceTakeFocusRequestedEventArgs const& args)
+{
+    if (args.Request().CorrelationId() != lastFocusRequestId)
+    {
+        const auto reason = args.Request().Reason();
+        const BOOL previous =
+            (reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::First ||
+                reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Down ||
+                reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
+
+        const auto nativeXamlSource = sender.as<IDesktopWindowXamlSourceNative>();
+        HWND senderHwnd = nullptr;
+        winrt::check_hresult(nativeXamlSource->get_WindowHandle(&senderHwnd));
+
+        MSG msg = {};
+        msg.hwnd = senderHwnd;
+        msg.message = WM_KEYDOWN;
+        msg.wParam = GetKeyFromReason(reason);
+        if (!NavigateFocus(&msg))
+        {
+            const auto nextElement = ::GetNextDlgTabItem(m_hMainWnd, senderHwnd, previous);
+            ::SetFocus(nextElement);
+        }
+    }
+    else
+    {
+        const auto request = winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationRequest(winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Restore);
+        lastFocusRequestId = request.CorrelationId();
+        sender.NavigateFocus(request);
+    }
+}
+HWND DesktopWindow::CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows::UI::Xaml::UIElement content)
+{
+...
+    winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource desktopSource;
+    desktopSource.TakeFocusRequested({ this, &DesktopWindow::OnTakeFocusRequested });
+...
+}
+
 ```
 
 ## <a name="Resources"/> Generation of WinRT resources for Win32 apps
