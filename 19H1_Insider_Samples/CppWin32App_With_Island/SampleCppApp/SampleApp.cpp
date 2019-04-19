@@ -13,6 +13,12 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 struct MyWindow : DesktopWindowT<MyWindow>
 {
+    HWND hButton1 = nullptr;
+    HWND hButton2 = nullptr;
+    HWND hWndXamlIsland = nullptr;
+    HWND hWndXamlButton1 = nullptr;
+    winrt::MyApp::MainUserControl mainUserControl = nullptr;
+
     HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
     {
         hInst = hInstance; // Store instance handle in our global variable
@@ -61,13 +67,8 @@ struct MyWindow : DesktopWindowT<MyWindow>
 
     LRESULT MessageHandler(UINT const message, WPARAM const wParam, LPARAM const lParam) noexcept
     {
-        static HWND hButton1 = nullptr;
         const static WPARAM IDM_ButtonID1 = 0x1001;
         const static WPARAM IDM_ButtonID2 = 0x1002;
-        static HWND hButton2 = nullptr;
-        static HWND hWndXamlIsland = nullptr;
-        static HWND hWndXamlButton1 = nullptr;
-        static winrt::MyApp::MainUserControl mainUserControl(nullptr);
         static float dpi = 0;
         HRESULT hr = S_OK;
 
@@ -88,6 +89,7 @@ struct MyWindow : DesktopWindowT<MyWindow>
             const auto bt1 = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::Button>(IDR_XAML_BUTTON1);
             bt1.Height(ButtonHeight / dpi);
             bt1.Width(ButtonWidth / dpi);
+            bt1.Click({ this, &MyWindow::OnXamlButtonClick });
             hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_TABSTOP, bt1);
 
             mainUserControl = winrt::MyApp::MainUserControl();
@@ -159,6 +161,11 @@ struct MyWindow : DesktopWindowT<MyWindow>
             return base_type::MessageHandler(message, wParam, lParam);
         }
         return base_type::MessageHandler(message, wParam, lParam);
+    }
+
+    void OnXamlButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
+    {
+        mainUserControl.MyProperty(winrt::hstring(L"Xaml K Button 1"));
     }
 };
 
