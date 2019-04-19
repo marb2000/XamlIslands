@@ -11,35 +11,9 @@ HINSTANCE hInst = nullptr; // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
-struct MyWindow : DesktopWindowT<MyWindow>
+class MyWindow : public DesktopWindowT<MyWindow>
 {
-    HWND hButton1 = nullptr;
-    HWND hButton2 = nullptr;
-    HWND hWndXamlIsland = nullptr;
-    HWND hWndXamlButton1 = nullptr;
-    winrt::MyApp::MainUserControl mainUserControl = nullptr;
-
-    HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
-    {
-        hInst = hInstance; // Store instance handle in our global variable
-        HWND hMainWnd = CreateWindow(
-            szWindowClass,
-            szTitle,
-            WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
-            nullptr, nullptr, hInstance, this);
-
-        if (!hMainWnd)
-        {
-            winrt::check_hresult(E_FAIL);
-        }
-
-        ShowWindow(hMainWnd, nCmdShow);
-        UpdateWindow(hMainWnd);
-        SetFocus(hMainWnd);
-        return hMainWnd;
-    }
-
+public:
     MyWindow(HINSTANCE hInstance, int nCmdShow) noexcept
     {
         LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -65,12 +39,61 @@ struct MyWindow : DesktopWindowT<MyWindow>
         WINRT_ASSERT(m_hMainWnd);
     }
 
+    LRESULT MessageHandler(UINT const message, WPARAM const wParam, LPARAM const lParam) noexcept
+    {
+        HRESULT hr = S_OK;
+
+        switch (message)
+        {
+            HANDLE_MSG(m_hMainWnd, WM_CREATE, OnCreate);
+            HANDLE_MSG(m_hMainWnd, WM_COMMAND, OnCommand);
+            HANDLE_MSG(m_hMainWnd, WM_PAINT, OnPaint);
+            HANDLE_MSG(m_hMainWnd, WM_DESTROY, OnDestroy);
+            HANDLE_MSG(m_hMainWnd, WM_SIZE, OnResize);
+        default:
+            return base_type::MessageHandler(message, wParam, lParam);
+        }
+
+        return base_type::MessageHandler(message, wParam, lParam);
+    }
+
+private:
+
+    HWND m_hButton1 = nullptr;
+    HWND m_hButton2 = nullptr;
+    HWND m_hWndXamlIsland = nullptr;
+    HWND m_hWndXamlButton1 = nullptr;
+    winrt::MyApp::MainUserControl m_mainUserControl = nullptr;
+    winrt::Windows::UI::Xaml::Controls::Button m_xamlBt1 = nullptr;
+    winrt::Windows::UI::Xaml::Controls::Button::Click_revoker m_xamlBt1ClickEventRevoker;
+
+    HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
+    {
+        hInst = hInstance; // Store instance handle in our global variable
+        HWND hMainWnd = CreateWindow(
+            szWindowClass,
+            szTitle,
+            WS_OVERLAPPEDWINDOW,
+            CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
+            nullptr, nullptr, hInstance, this);
+
+        if (!hMainWnd)
+        {
+            winrt::check_hresult(E_FAIL);
+        }
+
+        ShowWindow(hMainWnd, nCmdShow);
+        UpdateWindow(hMainWnd);
+        SetFocus(hMainWnd);
+        return hMainWnd;
+    }
+
     const static WPARAM IDM_ButtonID1 = 0x1001;
     const static WPARAM IDM_ButtonID2 = 0x1002;
 
     bool OnCreate(HWND, LPCREATESTRUCT)
     {
-        hButton1 = CreateWindow(TEXT("button"), TEXT("Button &1"),
+        m_hButton1 = CreateWindow(TEXT("button"), TEXT("Button &1"),
             WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
             (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
             ButtonWidth, ButtonHeight,
@@ -80,16 +103,16 @@ struct MyWindow : DesktopWindowT<MyWindow>
         winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(m_hMainWnd, 0), &scaleFactor));
         const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
 
-        const auto bt1 = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::Button>(IDR_XAML_BUTTON1);
-        bt1.Height(ButtonHeight / dpi);
-        bt1.Width(ButtonWidth / dpi);
-        bt1.Click({ this, &MyWindow::OnXamlButtonClick });
-        hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_TABSTOP, bt1);
+        m_xamlBt1 = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::Button>(IDR_XAML_BUTTON1);
+        m_xamlBt1.Height(ButtonHeight / dpi);
+        m_xamlBt1.Width(ButtonWidth / dpi);
+        m_xamlBt1ClickEventRevoker = m_xamlBt1.Click(winrt::auto_revoke, { this, &MyWindow::OnXamlButtonClick });
+        m_hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_TABSTOP, m_xamlBt1);
 
-        mainUserControl = winrt::MyApp::MainUserControl();
-        hWndXamlIsland = CreateDesktopWindowsXamlSource(WS_TABSTOP, mainUserControl);
+        m_mainUserControl = winrt::MyApp::MainUserControl();
+        m_hWndXamlIsland = CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl);
 
-        hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
+        m_hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
             WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
             (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
             ButtonWidth, ButtonHeight,
@@ -110,10 +133,10 @@ struct MyWindow : DesktopWindowT<MyWindow>
             break;
         case IDM_ButtonID1:
         case IDM_ButtonID2:
-            if (mainUserControl)
+            if (m_mainUserControl)
             {
                 const auto string = (id == IDM_ButtonID1) ? winrt::hstring(L"Native button 1") : winrt::hstring(L"Native button 2");
-                mainUserControl.MyProperty(string);
+                m_mainUserControl.MyProperty(string);
             }
             break;
         }
@@ -129,11 +152,16 @@ struct MyWindow : DesktopWindowT<MyWindow>
 
     void OnDestroy(HWND hwnd)
     {
-        DestroyWindow(hButton1);
-        hButton1 = nullptr;
+        DestroyWindow(m_hButton1);
+        m_hButton1 = nullptr;
 
-        DestroyWindow(hButton2);
-        hButton2 = nullptr;
+        DestroyWindow(m_hButton2);
+        m_hButton2 = nullptr;
+
+        if (m_xamlBt1ClickEventRevoker)
+        {
+            m_xamlBt1ClickEventRevoker.revoke();
+        }
 
         base_type::OnDestroy(hwnd);
     }
@@ -144,33 +172,15 @@ struct MyWindow : DesktopWindowT<MyWindow>
         const auto newWidth = cx;
         const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
         const auto islandWidth = newWidth - (ButtonMargin * 2);
-        SetWindowPos(hButton1, 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(hWndXamlButton1, hButton1, newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(hWndXamlIsland, hWndXamlButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
-        SetWindowPos(hButton2, hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-    }
-
-    LRESULT MessageHandler(UINT const message, WPARAM const wParam, LPARAM const lParam) noexcept
-    {
-        HRESULT hr = S_OK;
-
-        switch (message)
-        {
-            HANDLE_MSG(m_hMainWnd, WM_CREATE, OnCreate);
-            HANDLE_MSG(m_hMainWnd, WM_COMMAND, OnCommand);
-            HANDLE_MSG(m_hMainWnd, WM_PAINT, OnPaint);
-            HANDLE_MSG(m_hMainWnd, WM_DESTROY, OnDestroy);
-            HANDLE_MSG(m_hMainWnd, WM_SIZE, OnResize);
-        default:
-            return base_type::MessageHandler(message, wParam, lParam);
-        }
-
-        return base_type::MessageHandler(message, wParam, lParam);
+        SetWindowPos(m_hButton1, 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hWndXamlButton1, m_hButton1, newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hWndXamlIsland, m_hWndXamlButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hButton2, m_hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
     }
 
     void OnXamlButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
     {
-        mainUserControl.MyProperty(winrt::hstring(L"Xaml K Button 1"));
+        m_mainUserControl.MyProperty(winrt::hstring(L"Xaml K Button 1"));
     }
 };
 
