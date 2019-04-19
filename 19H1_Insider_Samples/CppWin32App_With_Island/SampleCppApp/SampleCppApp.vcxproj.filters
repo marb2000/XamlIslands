@@ -68,4 +68,7 @@
   <ItemGroup>
     <Manifest Include="Application.manifest" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Button1.xaml" />
+  </ItemGroup>
 </Project>

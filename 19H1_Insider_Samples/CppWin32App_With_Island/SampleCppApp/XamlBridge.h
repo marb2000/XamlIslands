@@ -5,6 +5,7 @@
 #include <winrt/Windows.Foundation.h>
 #include <winrt/Windows.Foundation.Collections.h>
 #include <winrt/Windows.UI.Xaml.Hosting.h>
+#include <winrt/Windows.UI.Xaml.Markup.h>
 #include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
 
 class DesktopWindow
@@ -86,3 +87,11 @@ private:
     HWND m_hwndLastFocus = nullptr;
 };
 
+winrt::Windows::UI::Xaml::UIElement LoadXamlControl(uint32_t id);
+
+template<typename T>
+T LoadXamlControl(uint32_t id)
+{
+    const auto uiElement = LoadXamlControl(id);
+    return uiElement.as<T>();
+}

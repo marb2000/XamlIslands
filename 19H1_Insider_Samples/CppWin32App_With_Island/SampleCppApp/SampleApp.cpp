@@ -85,12 +85,9 @@ struct MyWindow : DesktopWindowT<MyWindow>
             winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(m_hMainWnd, 0), &scaleFactor));
             const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
 
-            winrt::Windows::UI::Xaml::Controls::TextBlock txt;
-            txt.Text(winrt::hstring(L"Xbt1"));
-            winrt::Windows::UI::Xaml::Controls::Button bt1;
+            const auto bt1 = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::Button>(IDR_XAML_BUTTON1);
             bt1.Height(ButtonHeight / dpi);
             bt1.Width(ButtonWidth / dpi);
-            bt1.Content(txt);
             hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_TABSTOP, bt1);
 
             mainUserControl = winrt::MyApp::MainUserControl();

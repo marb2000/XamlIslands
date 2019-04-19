@@ -253,6 +253,9 @@
     <None Include="packages.config" />
     <None Include="ReadMe.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Button1.xaml" />
+  </ItemGroup>
   <Import Project="..\Microsoft.VCLibs.Win32.targets" />
   <Import Project="..\Microsoft.WinRT.Win32.targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -252,3 +252,21 @@ void DesktopWindow::OnDestroy()
     }
     m_xamlSources.clear();
 }
+
+winrt::Windows::UI::Xaml::UIElement LoadXamlControl(uint32_t id)
+{
+    auto rc = ::FindResource(nullptr, MAKEINTRESOURCE(id), MAKEINTRESOURCE(XAMLRESOURCE));
+    if (!rc)
+    {
+        winrt::check_hresult(HRESULT_FROM_WIN32(GetLastError()));
+    }
+    HGLOBAL rcData = ::LoadResource(nullptr, rc);
+    if (!rcData)
+    {
+        winrt::check_hresult(HRESULT_FROM_WIN32(GetLastError()));
+    }
+    auto pData = static_cast<wchar_t*>(::LockResource(rcData));
+    auto content = winrt::Windows::UI::Xaml::Markup::XamlReader::Load(winrt::get_abi(pData));
+    auto uiElement = content.as<winrt::Windows::UI::Xaml::UIElement>();
+    return uiElement;
+}
