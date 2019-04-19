@@ -19,10 +19,9 @@
         <Button x:Name="Button3" Click="Button_Click">Button 3</Button>
         <local:InternalUserControl x:Name="internalUserControl" />
         <ComboBox x:Name="comboBox" SelectedIndex="1">
-            <ComboBoxItem>Item1</ComboBoxItem>
-            <ComboBoxItem>Item2</ComboBoxItem>
-            <ComboBoxItem>Item3</ComboBoxItem>
+            <ComboBoxItem Content="Item1"/>
+            <ComboBoxItem Content="Item2"/>
+            <ComboBoxItem Content="Item3"/>
         </ComboBox>
-        <!--<muxc:ColorPicker />-->
     </StackPanel>
 </UserControl>
