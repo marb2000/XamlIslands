@@ -244,7 +244,7 @@ HWND DesktopWindow::CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows
     return hWndXamlIsland;
 }
 
-void DesktopWindow::OnDestroy()
+void DesktopWindow::ClearXamlIslands()
 {
     for (auto xamlSource : m_xamlSources)
     {

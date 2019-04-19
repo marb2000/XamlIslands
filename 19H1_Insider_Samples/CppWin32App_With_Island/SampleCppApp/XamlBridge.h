@@ -7,6 +7,7 @@
 #include <winrt/Windows.UI.Xaml.Hosting.h>
 #include <winrt/Windows.UI.Xaml.Markup.h>
 #include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
+#include <windowsx.h>
 
 class DesktopWindow
 {
@@ -20,7 +21,7 @@ private:
     bool NavigateFocus(MSG* msg);
 protected:
     HWND CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows::UI::Xaml::UIElement content);
-    void OnDestroy();
+    void ClearXamlIslands();
     HWND m_hMainWnd = nullptr;
 private:
     winrt::guid lastFocusRequestId;
@@ -58,27 +59,36 @@ protected:
     {
         switch (message)
         {
-        case WM_DESTROY:
-            OnDestroy();
-            PostQuitMessage(0);
-            return 0;
-        case WM_SETFOCUS:
-            if (m_hwndLastFocus) {
-                SetFocus(m_hwndLastFocus);
-            }
-            break;
-        case WM_ACTIVATE:
-            if (wParam == WA_INACTIVE)
-            {
-                m_hwndLastFocus = GetFocus();
-            }
-            break;
+            HANDLE_MSG(m_hMainWnd, WM_DESTROY, OnDestroy);
+            HANDLE_MSG(m_hMainWnd, WM_ACTIVATE, OnActivate);
+            HANDLE_MSG(m_hMainWnd, WM_SETFOCUS, OnSetFocus);
         }
-
         return DefWindowProc(m_hMainWnd, message, wParam, lParam);
     }
 
+    void OnDestroy(HWND)
+    {
+        ClearXamlIslands();
+        PostQuitMessage(0);
+    }
+
 private:
+
+    void OnActivate(HWND, UINT state, HWND hwndActDeact, BOOL fMinimized)
+    {
+        if (state == WA_INACTIVE)
+        {
+            m_hwndLastFocus = GetFocus();
+        }
+    }
+
+    void OnSetFocus(HWND, HWND hwndOldFocus)
+    {
+        if (m_hwndLastFocus) {
+            SetFocus(m_hwndLastFocus);
+        }
+    }
+
     static T* GetThisFromHandle(HWND const window) noexcept
     {
         return reinterpret_cast<T*>(GetWindowLongPtr(window, GWLP_USERDATA));
