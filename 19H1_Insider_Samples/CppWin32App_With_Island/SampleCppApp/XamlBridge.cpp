@@ -237,7 +237,7 @@ HWND DesktopWindow::CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows
 
     desktopSource.Content(content);
 
-    m_takeFocusEventRevokers.push_back(desktopSource.TakeFocusRequested(winrt::auto_revoke, { this, &DesktopWindow::OnTakeFocusRequested }));
+    desktopSource.TakeFocusRequested({ this, &DesktopWindow::OnTakeFocusRequested });
 
     m_xamlSources.push_back(desktopSource);
 
@@ -246,12 +246,6 @@ HWND DesktopWindow::CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows
 
 void DesktopWindow::ClearXamlIslands()
 {
-    for (auto& takeFocusRevoker : m_takeFocusEventRevokers)
-    {
-        takeFocusRevoker.revoke();
-    }
-    m_takeFocusEventRevokers.clear();
-
     for (auto xamlSource : m_xamlSources)
     {
         xamlSource.Close();

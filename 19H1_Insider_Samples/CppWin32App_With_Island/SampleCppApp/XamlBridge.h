@@ -25,7 +25,6 @@ protected:
     HWND m_hMainWnd = nullptr;
 private:
     winrt::guid lastFocusRequestId;
-    std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource::TakeFocusRequested_revoker> m_takeFocusEventRevokers;
     std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> m_xamlSources;
 };
 
