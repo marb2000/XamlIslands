@@ -16,6 +16,8 @@
 
 #define XAMLRESOURCE  256
 
+#define IDR_XAML_BUTTON1               200
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED

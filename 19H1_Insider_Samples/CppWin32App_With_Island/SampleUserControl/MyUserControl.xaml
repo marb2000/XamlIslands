@@ -11,9 +11,17 @@
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
         <TextBox x:Name="Text1" Text="Text"></TextBox>
         <Button x:Name="Button1" Click="Button_Click">Button 1</Button>
-        <Button x:Name="Button2" Click="Button_Click">Button 2</Button>
+        <Button x:Name="GotoLine" Click="Button_Click" Content="GotoLine">
+            <Button.KeyboardAccelerators>
+                <KeyboardAccelerator Key="G" Modifiers="Control" />
+            </Button.KeyboardAccelerators>
+        </Button>
         <Button x:Name="Button3" Click="Button_Click">Button 3</Button>
         <local:InternalUserControl x:Name="internalUserControl" />
-        <!--<muxc:ColorPicker />-->
+        <ComboBox x:Name="comboBox" SelectedIndex="1">
+            <ComboBoxItem Content="Item1"/>
+            <ComboBoxItem Content="Item2"/>
+            <ComboBoxItem Content="Item3"/>
+        </ComboBox>
     </StackPanel>
 </UserControl>
