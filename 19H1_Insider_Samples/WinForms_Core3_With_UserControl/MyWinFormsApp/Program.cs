@@ -14,6 +14,8 @@ namespace MyWinFormsApp
         [STAThread]
         static void Main()
         {
+            System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(Microsoft.Toolkit.Forms.UI.XamlHost.WindowsXamlHostBase).TypeHandle);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
