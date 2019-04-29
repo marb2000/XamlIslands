@@ -39,7 +39,7 @@
                 <Rectangle StrokeThickness="1" Grid.Column="2" Stroke="Black" Fill="White" />
                 <TextBlock Grid.Column="3" Text="UWP" />
             </Grid>
-            <Button Content="WPF button" HorizontalAlignment="Center" Click="Button_Click" Margin="20" Padding="20"/>
+            <Button Content="WPF button" HorizontalAlignment="Center" Margin="20" Padding="20"/>
         </StackPanel>
         <xamlhost:WindowsXamlHost Grid.Row="1" InitialTypeName="ManagedWinRT.MyUserControl1" />
     </Grid>

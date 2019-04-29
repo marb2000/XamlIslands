@@ -35,8 +35,8 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>2af8c227-efd7-4991-8649-d222a9a02520</ProjectGuid>
-    <TargetPlatformVersion>10.0.18334.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.18334.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>Win10Package_TemporaryKey.pfx</PackageCertificateKeyFile>
     <EntryPointProjectUniqueName>..\WPFCore3App\WPFCore3App.csproj</EntryPointProjectUniqueName>
