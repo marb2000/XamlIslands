@@ -23,6 +23,16 @@
   <ItemGroup>
     <Folder Include="MyUWPLib\" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="..\MyUWPLib\Assets\**" LinkBase="Assets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  
+   <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Forms.UI.XamlHost" Version="6.0.0-preview4" />

@@ -22,7 +22,7 @@ namespace MyWinFormsApp
             //this.windowsXamlHost1.InitialTypeName = "Windows.UI.Xaml.Controls.TextBox";
             //this.windowsXamlHost1.InitialTypeName = "Windows.UI.Xaml.Controls.ColorPicker";
             //this.windowsXamlHost1.InitialTypeName = "MyUWPLib.MyColorPicker";
-            this.windowsXamlHost1.InitialTypeName = "MyUWPLib.MyUserControl1";
+            this.windowsXamlHost1.InitialTypeName = "MyUWPLib.MainPage";
         }
     }
 }

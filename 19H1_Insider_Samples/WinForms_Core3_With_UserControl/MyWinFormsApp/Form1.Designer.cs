@@ -46,10 +46,10 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 600);
             this.Controls.Add(this.windowsXamlHost1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "WinForms .Net Core 3 and Xaml Islands";
             this.ResumeLayout(false);
 
         }

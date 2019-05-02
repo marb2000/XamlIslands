@@ -14,6 +14,7 @@ namespace MyWinFormsApp
         [STAThread]
         static void Main()
         {
+            //This is a workaround for making work the Preview 4
             System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(Microsoft.Toolkit.Forms.UI.XamlHost.WindowsXamlHostBase).TypeHandle);
 
             Application.EnableVisualStyles();
