@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Wpf.UI.XamlHost;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,25 +13,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Windows.Media.Core;
+using Windows.UI.Xaml.Controls;
 
 namespace MyCoreConsole
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //await CountDevices();
-                      
-        }
-
-       
     }
 }

@@ -7,7 +7,7 @@
         xmlns:xamlhost="clr-namespace:Microsoft.Toolkit.Wpf.UI.XamlHost;assembly=Microsoft.Toolkit.Wpf.UI.XamlHost"
         mc:Ignorable="d"
         Title="WPF Core 3 with Xaml Islands">
-    <Grid>
+    <StackPanel>
         <xamlhost:WindowsXamlHost InitialTypeName="MyUWPLib.MainPage" />
-    </Grid>
+    </StackPanel>
 </Window>
