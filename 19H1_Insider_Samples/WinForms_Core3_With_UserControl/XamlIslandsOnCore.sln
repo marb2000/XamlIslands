@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyUWPLib", "MyUWPLib\MyUWPL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyWinFormsApp.core", "MyWinFormsApp\MyWinFormsApp.core.csproj", "{CB401B65-BF61-49C2-B771-51A35EFFFF30}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WPFCore3App", "WPFCore3App\WPFCore3App.csproj", "{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,26 @@ Global
 		{CB401B65-BF61-49C2-B771-51A35EFFFF30}.Release|x64.Build.0 = Release|x64
 		{CB401B65-BF61-49C2-B771-51A35EFFFF30}.Release|x86.ActiveCfg = Release|x86
 		{CB401B65-BF61-49C2-B771-51A35EFFFF30}.Release|x86.Build.0 = Release|x86
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|ARM.Build.0 = Debug|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|ARM64.ActiveCfg = Debug|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|ARM64.Build.0 = Debug|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|x64.ActiveCfg = Debug|x64
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|x64.Build.0 = Debug|x64
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|x86.ActiveCfg = Debug|x86
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Debug|x86.Build.0 = Debug|x86
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|ARM.ActiveCfg = Release|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|ARM.Build.0 = Release|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|ARM64.ActiveCfg = Release|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|ARM64.Build.0 = Release|Any CPU
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|x64.ActiveCfg = Release|x64
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|x64.Build.0 = Release|x64
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|x86.ActiveCfg = Release|x86
+		{D6FE6B5F-5162-4B9F-94B6-7D02BBBA3469}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
