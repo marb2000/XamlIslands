@@ -1,19 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace MyUWPLib
 {
@@ -22,20 +9,23 @@ namespace MyUWPLib
         public MainPage()
         {
             this.InitializeComponent();
-            contentFrame.Navigate(typeof(WelcomePage),null);
+            contentFrame.Navigate(typeof(WelcomePage), null);
         }
 
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            FrameNavigationOptions navOptions = new FrameNavigationOptions();
-            navOptions.TransitionInfoOverride = args.RecommendedNavigationTransitionInfo;
+            if (args.IsSettingsInvoked)
+            {
+                contentFrame.Navigate(typeof(SettingsPage));
+                return;
+            }
 
             Type pageType = null;
-            NavigationViewItem nvi = args.InvokedItemContainer as NavigationViewItem;
-            if (nvi != null)
+            NavigationViewItem navViewItem = args.InvokedItemContainer as NavigationViewItem;
+            if (navViewItem != null)
             {
 
-                switch (nvi.Tag)
+                switch (navViewItem.Tag)
                 {
                     case "WelcomePage":
                         pageType = typeof(WelcomePage);
@@ -74,10 +64,16 @@ namespace MyUWPLib
                 }
                 if (pageType != null)
                 {
-                    contentFrame.NavigateToType(pageType, null, navOptions);
+                    contentFrame.Navigate(pageType);
                 }
             }
-            
+
+        }
+
+        private void NavView_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            if (contentFrame.CanGoBack)
+                contentFrame.GoBack();
         }
     }
 }

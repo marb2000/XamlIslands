@@ -14,11 +14,13 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-
-        <NavigationView Grid.Row="1" x:Name="nvSample" 
-                        IsSettingsVisible="False"
-                        IsBackButtonVisible="Collapsed"
-                        PaneDisplayMode="Top" ItemInvoked="NavView_ItemInvoked">
+        <NavigationView Grid.Row="1" 
+                        x:Name="navView" 
+                        BackRequested="NavView_BackRequested"
+                        IsBackEnabled="{x:Bind contentFrame.CanGoBack, Mode=OneWay}"
+                        IsBackButtonVisible="Auto"
+                        PaneDisplayMode="Top" 
+                        ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem  Content="Welcome" Tag="WelcomePage" />
                 <NavigationViewItem  Content="Basic Input" Tag="BasicInputPage" />

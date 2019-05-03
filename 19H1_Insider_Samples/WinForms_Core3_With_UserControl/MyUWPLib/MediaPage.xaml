@@ -16,18 +16,19 @@
         <Image HorizontalAlignment="Left" Stretch="None" Height="200" Width="200" Source="ms-appx:///Assets/SampleMedia/valley.jpg" />
 
         <TextBlock Text="InkCanvas" Style="{StaticResource SubtitleTextBlockStyle}"/>
-        <Border BorderThickness="1" BorderBrush="Black">
-            <InkCanvas x:Name="inkCanvas" Width="200" Height="200"/>
+        <Border BorderThickness="1" Background="White" BorderBrush="Black" Width="300" Height="200" >
+            <InkCanvas x:Name="inkCanvas" />
         </Border>
 
         <TextBlock Text="ColorPicker" Style="{StaticResource SubtitleTextBlockStyle}"/>
-        <ColorPicker HorizontalAlignment="Left"  />
+        <ColorPicker HorizontalAlignment="Left" />
 
-        <!--<TextBlock Text="MediaPlayerElement"  />
-        <MediaPlayerElement Source="/Assets/SampleMedia/fishes.wmv"
-                    MaxWidth="400"
+        <TextBlock Text="MediaPlayerElement" />
+        <MediaPlayerElement Source="ms-appx:///Assets/SampleMedia/fishes.wmv"
+                    Width="300"
+                    Height="300"        
                     AutoPlay="False"
-                    AreTransportControlsEnabled="True" />-->
+                    AreTransportControlsEnabled="True" />
 
     </StackPanel>
 </Page>
