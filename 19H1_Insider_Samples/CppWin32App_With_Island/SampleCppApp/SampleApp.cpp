@@ -3,6 +3,7 @@
 #include "SampleApp.h"
 #include "XamlBridge.h"
 #include <ShellScalingApi.h>
+#include <Dwmapi.h>
 
 #define MAX_LOADSTRING 100
 
@@ -29,7 +30,7 @@ public:
         wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SAMPLECPPAPP));
         wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
         wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-        wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
+        //wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
         wcex.lpszClassName = szWindowClass;
         wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
         WINRT_VERIFY(RegisterClassEx(&wcex));
@@ -50,6 +51,8 @@ public:
             HANDLE_MSG(m_hMainWnd, WM_PAINT, OnPaint);
             HANDLE_MSG(m_hMainWnd, WM_DESTROY, OnDestroy);
             HANDLE_MSG(m_hMainWnd, WM_SIZE, OnResize);
+            //HANDLE_MSG(m_hMainWnd, WM_NCHITTEST, OnNCHitTest);
+            //HANDLE_MSG(m_hMainWnd, WM_NCCALCSIZE, OnNCCalcSize);
         default:
             return base_type::MessageHandler(message, wParam, lParam);
         }
@@ -74,6 +77,7 @@ private:
             szWindowClass,
             szTitle,
             WS_OVERLAPPEDWINDOW,
+            //WS_OVERLAPPED | WS_SIZEBOX | WS_SYSMENU,
             CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
             nullptr, nullptr, hInstance, this);
 
@@ -91,13 +95,34 @@ private:
     const static WPARAM IDM_ButtonID1 = 0x1001;
     const static WPARAM IDM_ButtonID2 = 0x1002;
 
+    int OnNCCalcSize(HWND hwnd, BOOL fCalcValidRects, NCCALCSIZE_PARAMS* lpcsp)
+    {
+        if (fCalcValidRects)
+        {
+            const auto PROPOSED = lpcsp->rgrc[0];
+            const auto BEFORE = lpcsp->rgrc[1];
+
+            // We need to call the default to have cascade and tile windows
+            // working
+            // (https://github.com/rossy/borderless-window/blob/master/borderless-window.c#L239),
+            // but we need to provide the proposed original value as suggested in
+            // https://blogs.msdn.microsoft.com/wpfsdk/2008/09/08/custom-window-chrome-in-wpf/
+            DefWindowProcW(hwnd, WM_NCCALCSIZE, true, reinterpret_cast<LPARAM>(lpcsp));
+
+            lpcsp->rgrc[0] = PROPOSED;
+            lpcsp->rgrc[1] = BEFORE;
+            return true;
+        }
+        return DefWindowProcW(hwnd, WM_NCCALCSIZE, true, reinterpret_cast<LPARAM>(lpcsp));
+    }
+
     bool OnCreate(HWND, LPCREATESTRUCT)
     {
-        m_hButton1 = CreateWindow(TEXT("button"), TEXT("Button &1"),
-            WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
-            (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
-            ButtonWidth, ButtonHeight,
-            m_hMainWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
+        //m_hButton1 = CreateWindow(TEXT("button"), TEXT("Button &1"),
+        //    WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
+        //    (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
+        //    ButtonWidth, ButtonHeight,
+        //    m_hMainWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
 
         DEVICE_SCALE_FACTOR scaleFactor = {};
         winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(m_hMainWnd, 0), &scaleFactor));
@@ -107,16 +132,16 @@ private:
         m_xamlBt1.Height(ButtonHeight / dpi);
         m_xamlBt1.Width(ButtonWidth / dpi);
         m_xamlBt1ClickEventRevoker = m_xamlBt1.Click(winrt::auto_revoke, { this, &MyWindow::OnXamlButtonClick });
-        m_hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_TABSTOP, m_xamlBt1);
+        m_hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZE | WS_VISIBLE, m_xamlBt1);
 
         m_mainUserControl = winrt::MyApp::MainUserControl();
-        m_hWndXamlIsland = CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl);
+        m_hWndXamlIsland = CreateDesktopWindowsXamlSource(/*WS_SYSMENU | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_MAXIMIZE |*/ WS_TABSTOP | WS_VISIBLE, m_mainUserControl);
 
-        m_hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
-            WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
-            (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
-            ButtonWidth, ButtonHeight,
-            m_hMainWnd, (HMENU)IDM_ButtonID2, hInst, NULL);
+        //m_hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
+        //    WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
+        //    (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
+        //    ButtonWidth, ButtonHeight,
+        //    m_hMainWnd, (HMENU)IDM_ButtonID2, hInst, NULL);
 
         return true;
     }
@@ -166,16 +191,28 @@ private:
         base_type::OnDestroy(hwnd);
     }
 
-    void OnResize(HWND, UINT state, int cx, int cy)
+    void OnResize(HWND hWnd, UINT state, int cx, int cy)
     {
         const auto newHeight = cy;
         const auto newWidth = cx;
         const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
         const auto islandWidth = newWidth - (ButtonMargin * 2);
-        SetWindowPos(m_hButton1, 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hWndXamlButton1, m_hButton1, newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hWndXamlIsland, m_hWndXamlButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hButton2, m_hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        //SetWindowPos(m_hButton1, 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        //SetWindowPos(m_hWndXamlButton1, m_hButton1, newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        //SetWindowPos(m_hWndXamlIsland, m_hWndXamlButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+        //SetWindowPos(m_hButton2, m_hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+
+        //MARGINS margins = {0,0,100,0};
+        //MARGINS margins = { -1 };
+        //winrt::check_hresult(DwmExtendFrameIntoClientArea(hWnd, &margins));
+
+        //DEVICE_SCALE_FACTOR scaleFactor = {};
+        //winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(m_hMainWnd, 0), &scaleFactor));
+        //const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
+        //m_mainUserControl.Height(newHeight / dpi);
+        //m_mainUserControl.Width(newWidth / dpi);
+        SetWindowPos(m_hWndXamlButton1, NULL, newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hWndXamlIsland, NULL, -0, -0, newWidth, newHeight, SWP_SHOWWINDOW);
     }
 
     void OnXamlButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
