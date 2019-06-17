@@ -8,6 +8,7 @@
 #include <winrt/Windows.UI.Xaml.Markup.h>
 #include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
 #include <windowsx.h>
+#include <wil/resource.h>
 
 class DesktopWindow
 {
@@ -22,8 +23,24 @@ private:
 protected:
     HWND CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows::UI::Xaml::UIElement content);
     void ClearXamlIslands();
-    HWND m_hMainWnd = nullptr;
+
+    HWND GetHandle() const
+    {
+        return m_hMainWnd.get();
+    }
+
+    static void OnNCCreate(HWND const window, LPARAM const lparam) noexcept
+    {
+        auto cs = reinterpret_cast<CREATESTRUCT*>(lparam);
+        auto that = static_cast<DesktopWindow*>(cs->lpCreateParams);
+        WINRT_ASSERT(that);
+        WINRT_ASSERT(!that->GetHandle());
+        that->m_hMainWnd = wil::unique_hwnd(window);
+        SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(that));
+    }
+
 private:
+    wil::unique_hwnd m_hMainWnd = nullptr;
     winrt::guid lastFocusRequestId;
     std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource::TakeFocusRequested_revoker> m_takeFocusEventRevokers;
     std::vector<winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource> m_xamlSources;
@@ -41,12 +58,7 @@ protected:
 
         if (WM_NCCREATE == message)
         {
-            auto cs = reinterpret_cast<CREATESTRUCT*>(lparam);
-            T* that = static_cast<T*>(cs->lpCreateParams);
-            WINRT_ASSERT(that);
-            WINRT_ASSERT(!that->m_hMainWnd);
-            that->m_hMainWnd = window;
-            SetWindowLongPtr(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(that));
+            DesktopWindow::OnNCCreate(window, lparam);
         }
         else if (T * that = GetThisFromHandle(window))
         {
@@ -60,11 +72,11 @@ protected:
     {
         switch (message)
         {
-            HANDLE_MSG(m_hMainWnd, WM_DESTROY, OnDestroy);
-            HANDLE_MSG(m_hMainWnd, WM_ACTIVATE, OnActivate);
-            HANDLE_MSG(m_hMainWnd, WM_SETFOCUS, OnSetFocus);
+            HANDLE_MSG(GetHandle(), WM_DESTROY, OnDestroy);
+            HANDLE_MSG(GetHandle(), WM_ACTIVATE, OnActivate);
+            HANDLE_MSG(GetHandle(), WM_SETFOCUS, OnSetFocus);
         }
-        return DefWindowProc(m_hMainWnd, message, wParam, lParam);
+        return DefWindowProc(GetHandle(), message, wParam, lParam);
     }
 
     void OnDestroy(HWND)
