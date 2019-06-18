@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.190408.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.190408.1\build\native\Microsoft.Windows.CppWinRT.props')" />
-  <Import Project="packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.props')" />
+  <Import Project="..\SampleUserControl\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\SampleUserControl\packages\Microsoft.Windows.CppWinRT.1.0.190205.2\build\native\Microsoft.Windows.CppWinRT.props')" />
   <PropertyGroup Label="Globals">
     <CppWinRTEnabled>true</CppWinRTEnabled>
     <MinimalCoreWin>true</MinimalCoreWin>
-    <ProjectGuid>{b6b66dba-c720-4407-b490-6ae3fc2870fc}</ProjectGuid>
-    <ProjectName>SampleUserControl</ProjectName>
-    <RootNamespace>SampleUserControl</RootNamespace>
+    <ProjectGuid>{015a0047-772d-4f1a-88c9-45c18f0adfb6}</ProjectGuid>
+    <ProjectName>Microsoft.UI.Xaml.Markup</ProjectName>
+    <RootNamespace>Microsoft.UI.Xaml.Markup</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
     <AppContainerApplication>true</AppContainerApplication>
@@ -84,7 +84,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
-      <ModuleDefinitionFile>SampleUserControl.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Microsoft.UI.Xaml.Markup.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
@@ -93,12 +93,15 @@
     </ClCompile>
     <Link>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">WindowsApp.lib;Kernel32.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">WindowsApp.lib;Kernel32.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">WindowsApp.lib;Kernel32.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
@@ -107,61 +110,39 @@
     </ClCompile>
     <Link>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">WindowsApp.lib;Kernel32.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">WindowsApp.lib;Kernel32.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Link>
       <OutputFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies Condition="'$(Configuration)|$(Platform)'=='Release|x64'">WindowsApp.lib;Kernel32.lib;User32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="InternalUserControl.h">
-      <DependentUpon>InternalUserControl.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </ClInclude>
-    <ClInclude Include="MyUserControl.h">
-      <DependentUpon>MyUserControl.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="XamlApplication.h">
+      <DependentUpon>XamlApplication.idl</DependentUpon>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InternalUserControl.cpp">
-      <DependentUpon>InternalUserControl.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </ClCompile>
-    <ClCompile Include="MyUserControl.cpp">
-      <DependentUpon>MyUserControl.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="XamlApplication.cpp">
+      <DependentUpon>XamlApplication.idl</DependentUpon>
     </ClCompile>
     <ClCompile Include="$(GeneratedFilesDir)module.g.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Midl Include="InternalUserControl.idl">
-      <DependentUpon>InternalUserControl.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Midl>
-    <Midl Include="MyUserControl.idl">
-      <DependentUpon>MyUserControl.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Midl>
+    <Midl Include="XamlApplication.idl" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Microsoft.UI.Xaml.Markup.def" />
     <None Include="packages.config" />
     <None Include="ReadMe.md" />
-    <None Include="SampleUserControl.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="InternalUserControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MyUserControl.xaml">
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,15 +8,17 @@ using namespace Windows::UI::Xaml;
 namespace winrt::MyApp::implementation
 {
     App::App()
+        : App(winrt::MyApp::XamlMetaDataProvider())
     {
-        Initialize();
+    }
 
-        AddRef();
-        m_inner.as<::IUnknown>()->Release();
+    App::App(Windows::UI::Xaml::Markup::IXamlMetadataProvider const& parentProvider)
+        : base_type(parentProvider)
+    {
+        Init();
     }
 
     App::~App()
     {
-        Close();
     }
 }

@@ -1,10 +1,8 @@
 #include "pch.h"
-
 #include "framework.h"
 #include "SampleApp.h"
 #include "XamlBridge.h"
 #include <ShellScalingApi.h>
-#include <winrt/Microsoft.Toolkit.Win32.UI.XamlHost.h>
 
 #define MAX_LOADSTRING 100
 
@@ -35,10 +33,10 @@ public:
         wcex.lpszClassName = szWindowClass;
         wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
         WINRT_VERIFY(RegisterClassEx(&wcex));
-        WINRT_ASSERT(!GetHandle());
+        WINRT_ASSERT(!m_hMainWnd);
 
-        const auto wnd = InitInstance(hInstance, nCmdShow);
-        WINRT_ASSERT(wnd);
+        m_hMainWnd = InitInstance(hInstance, nCmdShow);
+        WINRT_ASSERT(m_hMainWnd);
     }
 
     LRESULT MessageHandler(UINT const message, WPARAM const wParam, LPARAM const lParam) noexcept
@@ -47,10 +45,11 @@ public:
 
         switch (message)
         {
-            HANDLE_MSG(GetHandle(), WM_CREATE, OnCreate);
-            HANDLE_MSG(GetHandle(), WM_COMMAND, OnCommand);
-            HANDLE_MSG(GetHandle(), WM_DESTROY, OnDestroy);
-            HANDLE_MSG(GetHandle(), WM_SIZE, OnResize);
+            HANDLE_MSG(m_hMainWnd, WM_CREATE, OnCreate);
+            HANDLE_MSG(m_hMainWnd, WM_COMMAND, OnCommand);
+            HANDLE_MSG(m_hMainWnd, WM_PAINT, OnPaint);
+            HANDLE_MSG(m_hMainWnd, WM_DESTROY, OnDestroy);
+            HANDLE_MSG(m_hMainWnd, WM_SIZE, OnResize);
         default:
             return base_type::MessageHandler(message, wParam, lParam);
         }
@@ -60,10 +59,10 @@ public:
 
 private:
 
-    wil::unique_hwnd m_hButton1 = nullptr;
-    wil::unique_hwnd m_hButton2 = nullptr;
-    wil::unique_hwnd m_hWndXamlIsland = nullptr;
-    wil::unique_hwnd m_hWndXamlButton1 = nullptr;
+    HWND m_hButton1 = nullptr;
+    HWND m_hButton2 = nullptr;
+    HWND m_hWndXamlIsland = nullptr;
+    HWND m_hWndXamlButton1 = nullptr;
     winrt::MyApp::MainUserControl m_mainUserControl = nullptr;
     winrt::Windows::UI::Xaml::Controls::Button m_xamlBt1 = nullptr;
     winrt::Windows::UI::Xaml::Controls::Button::Click_revoker m_xamlBt1ClickEventRevoker;
@@ -94,30 +93,30 @@ private:
 
     bool OnCreate(HWND, LPCREATESTRUCT)
     {
-        m_hButton1 = wil::unique_hwnd(CreateWindow(TEXT("button"), TEXT("Button &1"),
+        m_hButton1 = CreateWindow(TEXT("button"), TEXT("Button &1"),
             WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
             (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
             ButtonWidth, ButtonHeight,
-            GetHandle(), (HMENU)IDM_ButtonID1, hInst, NULL));
+            m_hMainWnd, (HMENU)IDM_ButtonID1, hInst, NULL);
 
         DEVICE_SCALE_FACTOR scaleFactor = {};
-        winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(GetHandle(), 0), &scaleFactor));
+        winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(m_hMainWnd, 0), &scaleFactor));
         const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
 
         m_xamlBt1 = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::Button>(IDR_XAML_BUTTON1);
         m_xamlBt1.Height(ButtonHeight / dpi);
         m_xamlBt1.Width(ButtonWidth / dpi);
         m_xamlBt1ClickEventRevoker = m_xamlBt1.Click(winrt::auto_revoke, { this, &MyWindow::OnXamlButtonClick });
-        m_hWndXamlButton1 = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_xamlBt1));
+        m_hWndXamlButton1 = CreateDesktopWindowsXamlSource(WS_TABSTOP, m_xamlBt1);
 
         m_mainUserControl = winrt::MyApp::MainUserControl();
-        m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl));
+        m_hWndXamlIsland = CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl);
 
-        m_hButton2 = wil::unique_hwnd(CreateWindow(TEXT("button"), TEXT("Button &2"),
+        m_hButton2 = CreateWindow(TEXT("button"), TEXT("Button &2"),
             WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
             (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
             ButtonWidth, ButtonHeight,
-            GetHandle(), (HMENU)IDM_ButtonID2, hInst, NULL));
+            m_hMainWnd, (HMENU)IDM_ButtonID2, hInst, NULL);
 
         return true;
     }
@@ -127,10 +126,10 @@ private:
         switch (id)
         {
         case IDM_ABOUT:
-            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), GetHandle(), About);
+            DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), m_hMainWnd, About);
             break;
         case IDM_EXIT:
-            PostQuitMessage(0);
+            DestroyWindow(m_hMainWnd);
             break;
         case IDM_ButtonID1:
         case IDM_ButtonID2:
@@ -143,8 +142,22 @@ private:
         }
     }
 
+    void OnPaint(HWND)
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(m_hMainWnd, &ps);
+        // TODO: Add any drawing code that uses hdc here...
+        EndPaint(m_hMainWnd, &ps);
+    }
+
     void OnDestroy(HWND hwnd)
     {
+        DestroyWindow(m_hButton1);
+        m_hButton1 = nullptr;
+
+        DestroyWindow(m_hButton2);
+        m_hButton2 = nullptr;
+
         if (m_xamlBt1ClickEventRevoker)
         {
             m_xamlBt1ClickEventRevoker.revoke();
@@ -159,10 +172,10 @@ private:
         const auto newWidth = cx;
         const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
         const auto islandWidth = newWidth - (ButtonMargin * 2);
-        SetWindowPos(m_hButton1.get(), 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hWndXamlButton1.get(), m_hButton1.get(), newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hWndXamlIsland.get(), m_hWndXamlButton1.get(), 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hButton2.get(), m_hWndXamlIsland.get(), (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hButton1, 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hWndXamlButton1, m_hButton1, newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hWndXamlIsland, m_hWndXamlButton1, 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
+        SetWindowPos(m_hButton2, m_hWndXamlIsland, (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
     }
 
     void OnXamlButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
@@ -188,7 +201,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     app.Close();
     app = nullptr;
-
     return retValue;
 }
 

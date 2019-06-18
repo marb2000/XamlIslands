@@ -71,7 +71,7 @@ winrt::Windows::UI::Xaml::Hosting::DesktopWindowXamlSource DesktopWindow::GetNex
                     reason == winrt::Windows::UI::Xaml::Hosting::XamlSourceFocusNavigationReason::Right) ? false : true;
 
             const auto currentFocusedWindow = ::GetFocus();
-            const auto nextElement = ::GetNextDlgTabItem(m_hMainWnd.get(), currentFocusedWindow, previous);
+            const auto nextElement = ::GetNextDlgTabItem(m_hMainWnd, currentFocusedWindow, previous);
             for (auto xamlSource : m_xamlSources)
             {
                 const auto nativeIsland = xamlSource.as<IDesktopWindowXamlSourceNative>();
@@ -131,7 +131,7 @@ bool DesktopWindow::NavigateFocus(MSG* msg)
         {
             return false;
         }
-        const bool isDialogMessage = !!IsDialogMessage(m_hMainWnd.get(), msg);
+        const bool isDialogMessage = !!IsDialogMessage(m_hMainWnd, msg);
         return isDialogMessage;
     }
 }
@@ -204,7 +204,7 @@ void DesktopWindow::OnTakeFocusRequested(winrt::Windows::UI::Xaml::Hosting::Desk
         msg.wParam = GetKeyFromReason(reason);
         if (!NavigateFocus(&msg))
         {
-            const auto nextElement = ::GetNextDlgTabItem(m_hMainWnd.get(), senderHwnd, previous);
+            const auto nextElement = ::GetNextDlgTabItem(m_hMainWnd, senderHwnd, previous);
             ::SetFocus(nextElement);
         }
     }
@@ -224,7 +224,7 @@ HWND DesktopWindow::CreateDesktopWindowsXamlSource(DWORD dwStyle, winrt::Windows
 
     auto interop = desktopSource.as<IDesktopWindowXamlSourceNative>();
     // Parent the DesktopWindowXamlSource object to current window
-    hr = interop->AttachToWindow(m_hMainWnd.get());
+    hr = interop->AttachToWindow(m_hMainWnd);
     winrt::check_hresult(hr);
 
     // Get the new child window's hwnd 
