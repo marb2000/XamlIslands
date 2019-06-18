@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+    <RuntimeIdentifiers>win-x64;win-x86</RuntimeIdentifiers>
+    <UseWPF>true</UseWPF>
+    <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
+    <ApplicationManifest>MyApp.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Shared_Components\Managed_WinRT_Comp\Managed_WinRT_Comp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Managed_WinRT_Comp\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Shared_Components\Managed_WinRT_Comp\bin\$(PlatformName)\$(ConfigurationName)\**\*.xbf"
+             LinkBase="Managed_WinRT_Comp">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Assets\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Shared_Components\Managed_WinRT_Comp\Assets\**" LinkBase="Assets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".\Debug\Native_SwapChainPanel_Comp\Native_SwapChainPanel_Comp.dll">
+      <Link>Native_SwapChainPanel_Comp.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
