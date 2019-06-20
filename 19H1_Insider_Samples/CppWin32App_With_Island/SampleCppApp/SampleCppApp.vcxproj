@@ -253,10 +253,6 @@
   <ItemGroup>
     <Page Include="Button1.xaml" />
   </ItemGroup>
-  <PropertyGroup>
-    <XamlApp-Platform Condition="'$(Platform)' == 'Win32'">x86</XamlApp-Platform>
-    <XamlApp-Platform Condition="'$(Platform)' != 'Win32'">$(Platform)</XamlApp-Platform>
-  </PropertyGroup>
   <Import Project="..\Microsoft.WinRT.Win32.targets" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
