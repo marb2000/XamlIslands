@@ -228,10 +228,6 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <PropertyGroup>
-    <XamlApp-Platform Condition="'$(Platform)' == 'Win32'">x86</XamlApp-Platform>
-    <XamlApp-Platform Condition="'$(Platform)' != 'Win32'">$(Platform)</XamlApp-Platform>
-  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets" Condition="Exists('..\packages\Microsoft.VCRTForwarders.140.1.0.0-rc\build\native\Microsoft.VCRTForwarders.140.targets')" />
