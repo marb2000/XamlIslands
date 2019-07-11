@@ -1,0 +1,15 @@
+
+
+BUG: WinMD files are not copied 
+Workaround:
+Copy *.winmd files from the bin\x86\Debug folder to bin\x86\Debug\AppX\WPF_Core3_App
+You can do something at PostBuild something like: copy $(TargetDir)*.winmd $(TargetPath)\, But it is no working :(
+
+BUG: PRI with resources in 3rd party control are no generated right
+Workaround:
+Move into the solution folder, for instance, C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Samples\WPF_Packaging_Project
+
+
+makepri createconfig /cf WPF_Core3_App.cf /dq es-ES_en-US
+makepri new /pr . /cf WPF_Core3_App.cf.xml /of resources.pri /mn "C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Samples\WPF_Packaging_Project\Package.appxmanifest"
+makepri dump /if resources.pri /of resources.pri.xml

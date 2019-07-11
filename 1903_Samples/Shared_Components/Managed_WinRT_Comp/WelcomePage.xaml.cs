@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -24,7 +27,31 @@ namespace Samples.ManagedWinRT
     {
         public WelcomePage()
         {
+
             this.InitializeComponent();
+
+            //var map = ResourceManager.Current.MainResourceMap.GetSubtree("Managed_WinRT_Comp/Resources");
+            //string text = map.GetValue("WelcomeHeader/Text").ValueAsString;
+            //HeaderTB.Text = text;
+
+            //var resourceLoader = ResourceLoader.GetForCurrentView("Managed_WinRT_Comp/Resources");
+            //string text2 = resourceLoader.GetString("WelcomeHeader/Text");
+            //HeaderTB.Text = text2;
+            ResourceLoader resourceLoader = null;
+            string resourcesPath = "Managed_WinRT_Comp/Resources";
+            try
+            {
+                resourceLoader = ResourceLoader.GetForViewIndependentUse(resourcesPath);
+            }
+            catch
+            {
+                Debug.WriteLine($"Resources no found {resourcesPath}");
+            }
+            if (resourceLoader != null)
+            {
+                WelcomeDescriptionTB.Text = resourceLoader.GetString("WelcomeDescription/Text");
+            }
+
         }
     }
 }

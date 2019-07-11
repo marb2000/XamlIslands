@@ -8,6 +8,7 @@
     <UseWPF>true</UseWPF>
     <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
     <ApplicationManifest>MyApp.manifest</ApplicationManifest>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,8 +23,7 @@
     <Folder Include="Managed_WinRT_Comp\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Shared_Components\Managed_WinRT_Comp\bin\$(PlatformName)\$(ConfigurationName)\**\*.xbf"
-             LinkBase="Managed_WinRT_Comp">
+    <Content Include="..\Shared_Components\Managed_WinRT_Comp\bin\$(PlatformName)\$(ConfigurationName)\**\*.xbf" LinkBase="Managed_WinRT_Comp">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -43,5 +43,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="C:\&quot;Program Files (x86)&quot;\&quot;Windows Kits&quot;\10\bin\10.0.18362.0\x86\makepri new /o /pr $(SolutionDir) /cf $(SolutionDir)config.xml /of $(TargetDir)resources.pri" />
+  </Target>
 
 </Project>

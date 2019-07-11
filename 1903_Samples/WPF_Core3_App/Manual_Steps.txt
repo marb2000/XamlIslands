@@ -1,0 +1,29 @@
+
+When using resources for unpackaged apps: 
+
+ 1- Unpackaged apps will use the OS Setting of Window Display Language. Remember that UWP apps use the Preferred Language Setting.
+ 2- Create the PRI file. Unpackaged apps just only support one big PRI file, and this file should be created using MAKEPRI tool.
+	2.1 Open the Developer Command Prompt
+	2.2 Navigate into the project foldercd: For instance, C:\repos\XamlIslands\1903_Samples\WPF_Core3_App
+	2.3 Create a Config File: makepri createconfig /cf config /dq en-us_es-es /o
+		This generates a config.xml file
+	2.4 Edit config.xml files and remove the <packaging> section
+	2.5 Create the PRI file: makepri new /pr . /cf config.xml /of resources.pri
+		2.5.1 [Optional] if you want to make sure that PRI was created properly, dump it into a XML:
+				makepri dump /if resources.pri /of resources.pri.xml
+				And open it, for instance with VS Code typing in the CMD: code resources.pri.xml
+				At the end of the doc, you will see the localized Strings
+	2.6 Move this resources.pri file in the same folder of the .EXE and replace the existing one. Eg.: C:\repos\XamlIslands\1903_Samples\WPF_Core3_App\bin\x86\Debug\netcoreapp3.0
+  3- Run the app, and you should see how the app resolve the resources.
+
+
+
+You can create a script like this into the Post Build Event: 
+C:\"Program Files (x86)"\"Windows Kits"\10\bin\10.0.18362.0\x86\makepri new /o /pr $(SolutionDir) /cf $(SolutionDir)config.xml /of $(TargetDir)resources.pri
+
+To access to the resources you can do it by code (using ResourceLoader.GetForViewIndependentUse):
+       var resourceLoader = ResourceLoader.GetForViewIndependentUse("Managed_WinRT_Comp/Resources");
+            WelcomeDescriptionTB.Text = resourceLoader.GetString("WelcomeDescription/Text"); 
+
+Or via markup (using x:Uid="WelcomeHeader" ):
+<TextBlock x:Uid="WelcomeHeader" x:Name="HeaderTB" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" FontSize="30" />
