@@ -45,20 +45,16 @@
       <Platform>AnyCPU</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <PropertyGroup Label="Configuration">
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup>
     <WapProjPath Condition="'$(WapProjPath)'==''">$(MSBuildExtensionsPath)\Microsoft\DesktopBridge\</WapProjPath>
   </PropertyGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
-    <ProjectGuid>6ed4df50-6646-40f6-b489-1fc6e4c6b6a0</ProjectGuid>
+    <ProjectGuid>5a482e5f-a2f2-4666-82e3-e3aedf3dc02f</ProjectGuid>
     <TargetPlatformVersion>10.0.18362.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.18362.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <EntryPointProjectUniqueName>..\WPF_Core3_App\WPF_Core3_App.csproj</EntryPointProjectUniqueName>
+    <EntryPointProjectUniqueName>..\WinForms_Core3_App\WinForms_Core3_App.csproj</EntryPointProjectUniqueName>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -77,16 +73,13 @@
     <Content Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\WPF_Core3_App\WPF_Core3_App.csproj">
+    <ProjectReference Include="..\WinForms_Core3_App\WinForms_Core3_App.csproj">
       <DesktopBridgeSelfContained>False</DesktopBridgeSelfContained>
       <DesktopBridgeIdentifier>
       </DesktopBridgeIdentifier>
       <Properties>DesktopBridgeSelfContained=%(DesktopBridgeSelfContained);DesktopBridgeIdentifier=%(DesktopBridgeIdentifier)</Properties>
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="WPF_Packaging_Bugs.txt" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>
