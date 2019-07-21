@@ -9,8 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <StackPanel HorizontalAlignment="Center" Spacing="10" Padding="20" VerticalAlignment="Center">
-        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="This is a big Xaml 🏝" FontSize="30" />
+        <TextBlock x:Uid="WelcomeHeader" x:Name="HeaderTB" HorizontalAlignment="Center" TextWrapping="Wrap" Text="" FontSize="30" />
         <TextBlock HorizontalAlignment="Center" Margin="15" TextWrapping="Wrap" Text="😍❤💋🌹🎉😎�🐱‍👤" FontSize="16" />
-        <TextBlock HorizontalAlignment="Center" TextWrapping="WrapWholeWords" Margin="10" Text="Navigate across the different pages to see more Xaml controls." FontSize="16" />
+        <TextBlock x:Name="WelcomeDescriptionTB" HorizontalAlignment="Center" TextWrapping="WrapWholeWords" Margin="10" Text="" FontSize="16" />
     </StackPanel>
 </Page>
