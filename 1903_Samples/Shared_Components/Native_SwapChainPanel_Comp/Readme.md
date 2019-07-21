@@ -1,0 +1,1 @@
+This project is a WinRT component written in C++/WinRT. This type of projects is called Native WinRT Component. It is an example of how to use SwapChainPanel. 

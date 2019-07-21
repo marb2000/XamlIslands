@@ -84,7 +84,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Bugs.txt" />
+    <None Include="WPF_Packaging_Bugs.txt" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

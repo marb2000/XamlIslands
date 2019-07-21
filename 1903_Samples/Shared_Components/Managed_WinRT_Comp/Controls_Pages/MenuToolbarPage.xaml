@@ -22,10 +22,10 @@
 
     <StackPanel HorizontalAlignment="Center" Spacing="10" Padding="20">
         <TextBlock Text="CommandBar" Style="{StaticResource SubtitleTextBlockStyle}" />
-        <CommandBar HorizontalAlignment="Left" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
-            <AppBarButton Icon="Add" Label="Add"/>
-            <AppBarButton Icon="ReShare" Label="Share"/>
-            <AppBarButton Icon="Edit" Label="Edit"/>
+        <CommandBar AccessKey="M" HorizontalAlignment="Left" Background="Transparent" IsOpen="False" DefaultLabelPosition="Right">
+            <AppBarButton AccessKey="A" Icon="Add" Label="Add"/>
+            <AppBarButton AccessKey="R" Icon="ReShare" Label="Share"/>
+            <AppBarButton AccessKey="E" Icon="Edit" Label="Edit"/>
             <CommandBar.SecondaryCommands>
                 <AppBarButton Icon="Setting" Label="Settings"/>
             </CommandBar.SecondaryCommands>
