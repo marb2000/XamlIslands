@@ -1,1 +1,0 @@
-﻿This project is a UWP app that hosts the Managed_WinRT_Comp. If you run this app, you can check whether your WinRT Components are working as expected in a UWP environment.

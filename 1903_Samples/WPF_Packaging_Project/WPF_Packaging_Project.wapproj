@@ -74,7 +74,6 @@
     <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Images\StoreLogo.png" />
     <Content Include="Images\Wide310x150Logo.scale-200.png" />
-    <Content Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WPF_Core3_App\WPF_Core3_App.csproj">
@@ -84,9 +83,6 @@
       <Properties>DesktopBridgeSelfContained=%(DesktopBridgeSelfContained);DesktopBridgeIdentifier=%(DesktopBridgeIdentifier)</Properties>
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="WPF_Packaging_Bugs.txt" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>
