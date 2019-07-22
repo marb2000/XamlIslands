@@ -12,7 +12,7 @@ To test the samples, I recommend the following developer environment:
 
 3. [.NET Core 3 Preview](https://dotnet.microsoft.com/download/dotnet-core/3.0). Install both versions: x64 and x86. 
 
-If you want to give us very early feedback, report a bug, tell us whether these samples are useful, etc.,  please, send an email to __xamlIslandsfeedback @ microsoft . com__, my engineering team will receive it. 
+If you want to give us very early feedback, report a bug, tell us whether these samples are useful, etc.,  please, send an email to __xamlIslandsfeedback @ microsoft.com__, my engineering team will receive it. 
 
 ## Samples
 
@@ -26,7 +26,7 @@ If you want to give us very early feedback, report a bug, tell us whether these 
 * [WPF_Packaging_Project](/1903_Samples/WPF_Packaging_Project/) - Packaged version of the WPF sample. 
   * Read this [doc](/1903_Samples/WnForms_and_WPF_Readme.md) for intructions.
 * [CppWinRT_Win32_App](/1903_Samples/CppWinRT_Win32_App/). Unpackaged complex C++/WinRT Win32 app: This sample demonstrates how to consume native 3rd party controls.
-  * Read this [doc](/1903_Samples/CppWinRT_Win32_App/Readme.md) for intructions.
+  * Read this [doc](/1903_Samples/CppWinRT_Win32_App/ReadMe.md) for intructions.
 
 
 
