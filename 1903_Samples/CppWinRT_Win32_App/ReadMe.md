@@ -12,7 +12,7 @@ This is a complex native C++/WinRT sample to validate several features of XAML I
 
 This is how looks like this sample:
 
-![Screenshoot](/1903_Samples/CppWin32App_With_Island/Screenshoot.PNG)
+![Screenshoot](/1903_Samples/CppWinRT_Win32_App/Screenshoot.PNG)
 ## Projects in the solution:
 
 * [Main Win32 Windows Application](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/ReadMe.md)
@@ -153,7 +153,7 @@ In a UWP App, this only happens when the Appx is generated. However, for Win32 A
 ## <a name="AppObject"> Use of 3rd party controls </a>
 
 Using 3rd party control objects require:
-1. Having a consolidated [resources file](/ReadMe.md#Resources)
+1. Having a consolidated [resources file](#Resources)
 2. A custom application object that:
    1. Registers the Xaml metedata providers.
    2. Initializes Xaml by calling [InitializeForCurrentThread](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.windowsxamlmanager.initializeforcurrentthread)
