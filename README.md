@@ -16,7 +16,7 @@ If you want to give us very early feedback, report a bug, tell us whether these 
 
 ## Samples
 
-* [CppWinRT_Win32_SimpleApp](/1903_Samples/CppWinRT_Win32_SimpleApp/CppWinRT_Win32_SimpleApp/)  - Unpackaged simple C++/WinRT Win32 app. A very simple project that showcases how to use the OS API DesktopWindowXamlSource to create a XAML Island.
+* [CppWinRT_Win32_SimpleApp](/1903_Samples/CppWinRT_Win32_SimpleApp/)  - Unpackaged simple C++/WinRT Win32 app. A very simple project that showcases how to use the OS API DesktopWindowXamlSource to create a XAML Island.
 * [WinForms_Core3_App](/1903_Samples/WinForms_Core3_App/) - Unpackaged WinForms .NET Core 3 app that consumes a managed and native 3rd WinRT components. These WinRT components are in the Shared_Components project.
 * [WinForms_Packaging_Project](/1903_Samples/WinForms_Packaging_Project/) - Packaged version of the WinForms sample.
 * [WPF_Core3_App](/1903_Samples/WPF_Core3_App/) - Unpackaged WPF .NET Core 3 app that consumes a managed and native 3rd WinRT components.These WinRT components are in the Shared_Components project.

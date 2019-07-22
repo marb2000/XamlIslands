@@ -12,17 +12,17 @@ This is a complex native C++/WinRT sample to validate several features of XAML I
 
 This is how looks like this sample:
 
-![Screenshoot](/19H1_Insider_Samples/CppWin32App_With_Island/Screenshoot.PNG)
+![Screenshoot](/1903_Samples/CppWin32App_With_Island/Screenshoot.PNG)
 ## Projects in the solution:
 
-* [Main Win32 Windows Application](/SampleCppApp/ReadMe.md)
-* [UWP Application project](/MyApp/ReadMe.md)
-* [Sample 3rd party control](/SampleUserControl/ReadMe.md)
+* [Main Win32 Windows Application](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/ReadMe.md)
+* [UWP Application project](/1903_Samples/CppWinRT_Win32_App//MyApp/ReadMe.md)
+* [Sample 3rd party control](/1903_Samples/CppWinRT_Win32_App/SampleUserControl/ReadMe.md)
 
 
 ## <a name="Keyboard"/> How to implement  the Keyboard input </a>
 
-This is an [implementation](/SampleCppApp/SampleApp.cpp#L47-L74) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
+This is an [implementation](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/SampleApp.cpp#L47-L74) of Win32 message loop for an application that contains a set of instances of [DesktopWindowXamlSource](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.desktopwindowxamlsource)
 
 ```C
 bool DesktopWindow::NavigateFocus(MSG* msg)
@@ -131,8 +131,8 @@ This is performed by the tool MakePri.exe.
 In a UWP App, this only happens when the Appx is generated. However, for Win32 Apps you need to do the following steps:
 1. Create a new Blank UWP App
 2. Change the output type to be a Dynamic link dll.
-3. Change the [AppxPackage](/MyApp/Package.appxmanifest#L20) to deploy a dummy exe.
-4. Change these [properties](/MyApp/MyApp.vcxproj#L18) in your project:
+3. Change the [AppxPackage](/1903_Samples/CppWinRT_Win32_App/MyApp/Package.appxmanifest#L20) to deploy a dummy exe.
+4. Change these [properties](/1903_Samples/CppWinRT_Win32_App/MyApp/MyApp.vcxproj#L18) in your project:
 ```xml
   <PropertyGroup Label="Globals">
     <WindowsAppContainer>true</WindowsAppContainer>
@@ -141,14 +141,14 @@ In a UWP App, this only happens when the Appx is generated. However, for Win32 A
     <AppxPackage>true</AppxPackage>
   </PropertyGroup>
 ```
-5. In your [main Win32 project](/SampleCppApp/SampleCppApp.vcxproj#L248), make sure you deploy the file resources.pri to your output directory:
+5. In your [main Win32 project](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/SampleCppApp.vcxproj#L248), make sure you deploy the file resources.pri to your output directory:
 ```xml
     <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\resources.pri">
       <DeploymentContent>true</DeploymentContent>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </NativeReferenceFile>
 ```
-6. Make sure to create a build dependency between your [main Win32 project](/SampleCppApp/SampleCppApp.vcxproj) and the [UWP App project](/MyApp/MyApp.vcxproj)
+6. Make sure to create a build dependency between your [main Win32 project](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/SampleCppApp.vcxproj) and the [UWP App project](/1903_Samples/CppWinRT_Win32_App/MyApp/MyApp.vcxproj)
 
 ## <a name="AppObject"> Use of 3rd party controls </a>
 
@@ -157,10 +157,10 @@ Using 3rd party control objects require:
 2. A custom application object that:
    1. Registers the Xaml metedata providers.
    2. Initializes Xaml by calling [InitializeForCurrentThread](https://docs.microsoft.com/en-us/uwp/api/windows.ui.xaml.hosting.windowsxamlmanager.initializeforcurrentthread)
-   2. Provide [WinRT registration](/ReadMe.md#WinRT_Registration) of activatable classes.
+   2. Provide [WinRT registration](#WinRT_Registration) of activatable classes.
 
 
-Make sure to [deploy](/SampleCppApp/SampleCppApp.vcxproj#L232-L247) all Xaml compiler output from your App in your Win32 app project:
+Make sure to [deploy](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/SampleCppApp.vcxproj#L232-L247) all XAML compiler output from your App in your Win32 app project:
 ```xml
     <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\Microsoft.UI.Xaml.Markup\Microsoft.UI.Xaml.Markup.dll">
       <DeploymentContent>true</DeploymentContent>
@@ -186,7 +186,7 @@ The Visual C++ Runtime Libraries are required to execute native applications. In
 
 To make it work is needed to deploy the VC Libs to the same folder where the Win32 executable file is deployed.
 
-This is performed using the following [MSBuild code](/Microsoft.VCLibs.Win32.targets):
+This is performed using the following [MSBuild code](/1903_Samples/CppWinRT_Win32_App/Microsoft.VCLibs.Win32.targets):
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -261,7 +261,7 @@ For example:
 
 It is recommended to separate each manifest file per component and have multiple manifest files:
 
-* [MyApp](/MyApp/MyApp.manifest)
-* [Microsoft UI Xaml](SampleCppApp/Microsoft.UI.Xaml.manifest)
-* [Sample User Control](SampleUserControl/SampleUserControl.manifest)
+* [MyApp](/1903_Samples/CppWinRT_Win32_App/MyApp/MyApp.manifest)
+* [Microsoft UI Xaml](/1903_Samples/CppWinRT_Win32_App/SampleCppApp/Microsoft.UI.Xaml.manifest)
+* [Sample User Control](/1903_Samples/CppWinRT_Win32_App/SampleUserControl/SampleUserControl.manifest)
 
