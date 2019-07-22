@@ -2,8 +2,22 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Target Name="CustomBuild" AfterTargets="AfterBuild">
-    <!-- Bug: Copy the WinMD Files within the exe file -->
-    <Exec Command="XCopy &quot;$(TargetDir)Appx&quot;\*.winmd  &quot;$(TargetDir)Appx\$(SolutionName)&quot;\ /Y /F" />
+    <!-- This is used for .NET Core 3 packaged scenarios -->
+    <Error Text="Hello"/>
+  </Target>
+
+  <Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
+    <!-- Bug: WinMD Files are not deployed within the exe file. Flatten the package structure fix it -->
+    
+    <ItemGroup>
+      <!-- Stomp all "SourceProject" values for all incoming dependencies to flatten the package. -->
+      <_TemporaryFilteredWapProjOutput Include="@(_FilteredNonWapProjProjectOutput)" />
+      <_FilteredNonWapProjProjectOutput Remove="@(_TemporaryFilteredWapProjOutput)" />
+      <_FilteredNonWapProjProjectOutput Include="@(_TemporaryFilteredWapProjOutput)">
+        <!-- Blank the SourceProject here to vend all files into the root of the package. -->
+        <SourceProject></SourceProject>
+      </_FilteredNonWapProjProjectOutput>
+    </ItemGroup>
   </Target>
 
   <Target Name="GeneratePRIFileForUnpackagedApps" AfterTargets="CustomBuild">
@@ -12,9 +26,9 @@
       <PRILanguages>x-generate</PRILanguages>
       <MakePRIPath>&quot;$(MSBuildProgramFiles32)\Windows Kits&quot;\10\bin\10.0.18362.0\x86\</MakePRIPath>
       <ConfigPRIFile>&quot;$(TargetDir)config.xml&quot;</ConfigPRIFile>
-      <OutputPRIFolder>&quot;$(TargetDir)Appx\$(SolutionName)\resources.pri&quot;</OutputPRIFolder>
-      <ProjectRootPRI>&quot;$(TargetDir)\Appx\.&quot;</ProjectRootPRI>
-      <PackageManifestPath>$(ProjectDir)\Package.appxmanifest</PackageManifestPath>
+      <OutputPRIFolder>&quot;$(TargetDir)resources.pri&quot;</OutputPRIFolder>
+      <ProjectRootPRI>&quot;$(TargetDir).&quot;</ProjectRootPRI>
+      <PackageManifestPath>$(ProjectDir)Package.appxmanifest</PackageManifestPath>
     </PropertyGroup>
 
     <!-- Create the config PRI File -->

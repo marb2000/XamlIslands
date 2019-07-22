@@ -1,11 +1,11 @@
-﻿# 3rd party UWP XAML WinRT components in WinForms/WPF .NET Core 3 apps 
+﻿# XAML Islands v1 in WinForms/WPF .NET Core 3 apps 
 
-Consuming 3rd part UWP Xaml WinRT Components is an expected supported scenario. However, Visual Studio toolset for Xaml Islands v1 is still in development. It is necessary to address several steps to make your WPF/WinForms .NET Core 3 app works.
+These .NET Core 3 samples demonstrate how to use 3rd party WinRT components from a WinForms/WPF app. Consuming 3rd part UWP Xaml WinRT Components is an expected supported scenario. However, Visual Studio toolset for XAML Islands v1 is still in development. It is necessary to address several steps to make your WPF/WinForms .NET Core 3 app works.
 
 In the WPF and WinForms .NET Core 3 apps, the UI is only UWP XAML, and we didn't add any WPF/WinForms controls for simplicity's sake. 
 
 ## WPF
-In the WPF app, the MainWindow.xaml file contains the instance of the WindowsXamlHost control. This control is a NET wrapper for the Operating System APIs that implement the Xaml Islands.
+In the WPF app, the MainWindow.xaml file contains the instance of the WindowsXamlHost control. This control is a NET wrapper for the Operating System APIs that implement the XAML Islands.
 ```XML
 <StackPanel>
     <xamlhost:WindowsXamlHost InitialTypeName="Samples.ManagedWinRT.MainPage" />
@@ -37,7 +37,7 @@ In the WPF app, the MainWindow.xaml file contains the instance of the WindowsXam
 ...
  ```
  
- In the MainForm.cs file, the Initial type of the Xaml Island is set:
+ In the MainForm.cs file, the Initial type of the XAML Island is set:
 
  ```C#
 public MainForm()
@@ -57,7 +57,7 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
  
  There are several steps that you need to do to make work your WinForms/WPF project:
 
-  1. To run Xaml Islands is required to specify the max version tested property to at least 18362. In this sample, MyApp.manifest file is the app manifest, and it contains:
+  1. To run XAML Islands is required to specify the max version tested property to at least 18362. In this sample, MyApp.manifest file is the app manifest, and it contains:
 
   ```xml
    <maxversiontested Id="10.0.18362.0"/>
@@ -148,19 +148,19 @@ makepri createconfig /cf config.xml /dq x-generate /o
 makepri new /pr . /cf config.xml /of resources.pri
 ```
 
-1. [Optional] if you want to make sure that created PRI is right, dump it into a XML file and open it. You will see the localized strings at the end of the doc:
+   1. __Optional__: If you want to make sure that created PRI is right, dump it into a XML file and open it. You will see the localized strings at the end of the doc:
 
-```				
-makepri dump /if resources.pri /of resources.pri.xml
-```
+      ```				
+      makepri dump /if resources.pri /of resources.pri.xml
+      ```
 
-7. Move the resources.pri file in the same folder of the .EXE and replace the existing one.
+6. Move the resources.pri file in the same folder of the .EXE and replace the existing one.
 
 ```
 C:\repos\XamlIslands\1903_Samples\WPF_Core3_App\bin\x86\Debug\netcoreapp3.0
 ```
 
-8. Run the app. You should see how the app resolve the resources.
+7. Run the app. You should see how the app resolve the resources.
    
 
 ## Packaging Projects
@@ -169,22 +169,36 @@ The WinForms/WPF Packaging Projects samples create an MSIX package that allow th
 
 When you are running your WinForms/WPF app from a MSIX package, some behaviors of the WinRT APIs could change. For example, the localization mechanism. Unpackaged apps use the OS Setting of Window Display Language; however, packaged apps use the Preferred Language Setting.
 
-## Fix localization issues 
 
+### Copy WinMD files in the output folder 
+
+The Windows Packaging Project doesn't copy the WinMD files to the right output folder for .NET Core 3 apps. It copies these files into the root folder that contains the app files structure. 
+
+You can copy your WinMD files manually close to your EXE. This should fix this the issue. 
+
+Another way to fix it is applying the workaround described in point 6 at [Package a desktop app from source code using Visual Studio](https://docs.microsoft.com/en-us/windows/msix/desktop/desktop-to-uwp-packaging-dot-net#create-a-package).
+
+```xml
+<!-- Stomp the path to application executable. This task will copy the main exe to the appx root folder. -->
+<Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
+  <ItemGroup>
+    <!-- Stomp all "SourceProject" values for all incoming dependencies to flatten the package. -->
+    <_TemporaryFilteredWapProjOutput Include="@(_FilteredNonWapProjProjectOutput)" />
+    <_FilteredNonWapProjProjectOutput Remove="@(_TemporaryFilteredWapProjOutput)" />
+    <_FilteredNonWapProjProjectOutput Include="@(_TemporaryFilteredWapProjOutput)">
+      <!-- Blank the SourceProject here to vend all files into the root of the package. -->
+      <SourceProject></SourceProject>
+    </_FilteredNonWapProjProjectOutput>
+  </ItemGroup>
+</Target>
+```
+
+This task was included on the __Directory.Build.targets__ in the sample.
+
+### Fix localization issues 
 As it was described before, you require to have a resources.PRI file with the localized content. You can use MakePRI for generating the PRI files. For WPF/WinForms packaged apps, you also need to specify the __package manifest__. For example, Package.appxmanifest file. 
 
 >Specify the package manifest is not necessary for unpackaged apps.
 
 To simplify this process, the sample is using the __Directory.Build.targets__ MSBuild target file that contains these tasks. 
-
-
-## Fix lack of the WinMd files in the output folder 
-
-Besides creating the PRI files, these MSBuild tasks workaround a second issue with the "winmd" files. These files are no copied to the right output folder. The tasks included on the _Directory.Build.targets__ do it for you:
-
-```xml
-<Exec Command="XCopy &quot;$(TargetDir)Appx&quot;\*.winmd  &quot;$(TargetDir)Appx\$(SolutionName)&quot;\ /Y /F" />
-```
-
-
  
