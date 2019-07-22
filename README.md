@@ -18,10 +18,15 @@ If you want to give us very early feedback, report a bug, tell us whether these 
 
 * [CppWinRT_Win32_SimpleApp](/1903_Samples/CppWinRT_Win32_SimpleApp/)  - Unpackaged simple C++/WinRT Win32 app. A very simple project that showcases how to use the OS API DesktopWindowXamlSource to create a XAML Island.
 * [WinForms_Core3_App](/1903_Samples/WinForms_Core3_App/) - Unpackaged WinForms .NET Core 3 app that consumes a managed and native 3rd WinRT components. These WinRT components are in the Shared_Components project.
+  * Read this [doc](/1903_Samples/WnForms_and_WPF_Readme.md) for intructions.
 * [WinForms_Packaging_Project](/1903_Samples/WinForms_Packaging_Project/) - Packaged version of the WinForms sample.
+  * Read this [doc](/1903_Samples/WnForms_and_WPF_Readme.md) for intructions.
 * [WPF_Core3_App](/1903_Samples/WPF_Core3_App/) - Unpackaged WPF .NET Core 3 app that consumes a managed and native 3rd WinRT components.These WinRT components are in the Shared_Components project.
+  * Read this [doc](/1903_Samples/WnForms_and_WPF_Readme.md) for intructions.
 * [WPF_Packaging_Project](/1903_Samples/WPF_Packaging_Project/) - Packaged version of the WPF sample. 
+  * Read this [doc](/1903_Samples/WnForms_and_WPF_Readme.md) for intructions.
 * [CppWinRT_Win32_App](/1903_Samples/CppWinRT_Win32_App/). Unpackaged complex C++/WinRT Win32 app: This sample demonstrates how to consume native 3rd party controls.
+  * Read this [doc](/1903_Samples/CppWinRT_Win32_App/Readme.md) for intructions.
 
 
 
