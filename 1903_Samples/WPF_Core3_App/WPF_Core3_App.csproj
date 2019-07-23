@@ -11,7 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls" Version="5.1.1" />
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview6.4" />
   </ItemGroup>
 
