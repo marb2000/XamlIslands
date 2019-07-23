@@ -3,7 +3,6 @@
 
   <Target Name="CustomBuild" AfterTargets="AfterBuild">
     <!-- This is used for .NET Core 3 packaged scenarios -->
-    <Error Text="Hello"/>
   </Target>
 
   <Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
