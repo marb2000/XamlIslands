@@ -96,7 +96,9 @@ To consume Managed WinRT components in Xaml Islands, you need to build your proj
   ```
 
 
-  5. Visual Studio is not copying the libraries (*.dll files) of the Native WinRT components in the right folder. You have to copy to the output folder as well. For example:
+  5. When Visual Studio builds a Native WinRT Component, it generates, at least, the WinMD and the DLL files. 
+  In the case of Native components, WinMD files are pure metadata and the dll contains the implementation. In the case of managed WinRT components, WinMD files include MSIL code, just like traditional CLR assemblies do.
+  Visual Studio is not copying the libraries (*.dll files) of the Native WinRT components in the right folder. __You need to copy this DLL to the output folder__ as well. For example:
   ```xml
    <ItemGroup>
     <Content Include=".\Debug\Native_SwapChainPanel_Comp\Native_SwapChainPanel_Comp.dll">
@@ -105,7 +107,7 @@ To consume Managed WinRT components in Xaml Islands, you need to build your proj
     </Content>
   </ItemGroup>
   ```
-  6. When using Native WinRT Components in unpackaged applications, your WPF app needs to deploy the Visual C++ Runtime Forwarders for running correctly. The Microsoft VCRTForwarders Nuget packaged contains it. Add the latest version to your project:
+  6. When using Native WinRT Components in unpackaged applications, your WinFomrs/WPF app needs to deploy the Visual C++ Runtime Forwarders for running correctly. The __Microsoft VCRTForwarders Nuget packaged__ contains these libraries. Add the latest version to your project:
 
 ```xml
   <ItemGroup>
@@ -204,6 +206,9 @@ This task was included on the __Directory.Build.targets__ in the sample.
 
 ### Fix localization issues 
 As it was described before, you require to have a resources.PRI file with the localized content. You can use MakePRI for generating the PRI files. For WPF/WinForms packaged apps, you also need to specify the __package manifest__. For example, Package.appxmanifest file. 
+```bash
+makepri new /pr . /cf config.xml /of resources.pri /mn Package.appxmanifest
+```
 
 >Specify the package manifest is not necessary for unpackaged apps.
 
