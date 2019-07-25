@@ -52,18 +52,26 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
 
 
  ## Required steps to make this work
-
- >These steps are tedious. Fortunately, the samples contain the "Directory.Build.targets" MSBuild tasks that do it automatically for you. Continue reading this long section if you are still insterested about how this work.
  
  There are several steps that you need to do to make work your WinForms/WPF project:
 
-  1. To run XAML Islands is required to specify the max version tested property to at least 18362. In this sample, MyApp.manifest file is the app manifest, and it contains:
+  1. To run XAML Islands is required to specify the max version tested property to at least 18362 in your WinForms/WPF app. In this sample, MyApp.manifest file is the app manifest, and it contains:
 
   ```xml
    <maxversiontested Id="10.0.18362.0"/>
    ```
 
- 2. Copy all the XBF files used by the WinRT components that you want to use into the output directory. The XBF files are the binary compilation of the markup Xaml files. You can do it manually, but in this sample what I did was 1) to create a folder on the project, 2) add the files to it, 3) copy it to the output directory.
+2. Change the managed WinRT Component. It is called "managed" because it is using C# and requires a .NET runtime to run the code. Notice that UWP apps use  the __.NET Native__ implementation in Release mode and a sort of __.NET Core__ implementation for Debug mode.
+To consume Managed WinRT components in Xaml Islands, you need to build your project with two options deactivated. Please, __modify your csproj project file and insert this property group__. Alternatively, you can add it to a _Directory.Build.props_ file:
+
+    ```xml
+    <PropertyGroup>
+      <EnableTypeInfoReflection>false</EnableTypeInfoReflection>
+      <EnableXBindDiagnostics>false</EnableXBindDiagnostics>
+    </PropertyGroup>
+    ```
+
+ 3. Copy all the XBF files used by the WinRT components that you want to use into the output directory. The XBF files are the binary compilation of the markup Xaml files. You can do it manually, but in this sample what I did was 1) to create a folder on the project, 2) add the files to it, 3) copy it to the output directory.
 
 ```xml
  <ItemGroup>
@@ -75,7 +83,7 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
     </Content>
   </ItemGroup>
   ```
-3. Copy all  the resources (images, videos, etc.) used by the WinRT components that you want to use into the output directory
+4. Copy all  the resources (images, videos, etc.) used by the WinRT components that you want to use into the output directory
 ```xml
   <ItemGroup>
     <Folder Include="Assets\" />
@@ -88,7 +96,7 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
   ```
 
 
-  4. Visual Studio is not copying the libraries (*.dll files) of the Native WinRT components in the right folder. You have to copy to the output folder as well. For example:
+  5. Visual Studio is not copying the libraries (*.dll files) of the Native WinRT components in the right folder. You have to copy to the output folder as well. For example:
   ```xml
    <ItemGroup>
     <Content Include=".\Debug\Native_SwapChainPanel_Comp\Native_SwapChainPanel_Comp.dll">
@@ -97,7 +105,7 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
     </Content>
   </ItemGroup>
   ```
-  5. When using Native WinRT Components in unpackaged applications, your WPF app needs to deploy the Visual C++ Runtime Forwarders for running correctly. The Microsoft VCRTForwarders Nuget packaged contains it. Add the latest version to your project:
+  6. When using Native WinRT Components in unpackaged applications, your WPF app needs to deploy the Visual C++ Runtime Forwarders for running correctly. The Microsoft VCRTForwarders Nuget packaged contains it. Add the latest version to your project:
 
 ```xml
   <ItemGroup>
@@ -105,7 +113,7 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
   </ItemGroup>
 ```
 
-6. For using Native WinRT Components, you need to register witch libraries (*.dll) contains the class implementation and the methods.  You need to use the [Registration-Free COM Interop mechanism](https://blogs.windows.com/windowsdeveloper/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components/#Ttthb9vgHSs8G8YA.97) into your application manifest. For example, in the sample,  the MyApp.manifest file contains:  
+7. For using Native WinRT Components, you need to register witch libraries (*.dll) contains the class implementation and the methods.  You need to use the [Registration-Free COM Interop mechanism](https://blogs.windows.com/windowsdeveloper/2019/04/30/enhancing-non-packaged-desktop-apps-using-windows-runtime-components/#Ttthb9vgHSs8G8YA.97) into your application manifest. For example, in the sample,  the MyApp.manifest file contains:  
 
 ```xml
   <file name="Native_SwapChainPanel_Comp.dll">
@@ -122,10 +130,9 @@ This control is on the [Microsoft.Toolkit.Forms.UI.XamlHost Nuget Packaged](http
   
 ## Support language localization
 
-WinRT Components use the resw files to localize strings. 
->Follow the [guidelines](https://docs.microsoft.com/en-us/windows/uwp/app-resources/localize-strings-ui-manifest) for generating the localization correctly.  
+ >These steps are tedious. Fortunately, the samples contain the "Directory.Build.targets" MSBuild tasks that do it automatically for you. Continue reading this long section if you are still insterested about how this work.
 
-The resw file contents are included into just one PRI file (resources.PRI) at build time. Your WinForms/WPF app uses this PRI file to load the resources at runtime.
+WinRT Components use the resw files to localize strings. You should follow the [guidelines](https://docs.microsoft.com/en-us/windows/uwp/app-resources/localize-strings-ui-manifest) for generating the localization correctly.  The content of these resw files isincluded into just one PRI file (resources.PRI) at build time. Your WinForms/WPF app uses this PRI file to load the resources at runtime.
 
 >Note that __unpackaged UWP Xaml apps__ use the OS Setting of Window Display Language and __packaged UWP XAML apps__ use the Preferred Language Setting.
 
