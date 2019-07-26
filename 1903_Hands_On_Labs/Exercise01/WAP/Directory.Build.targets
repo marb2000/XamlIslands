@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
+
+    <MSBuild Projects="@(ProjectReference)" Properties="Configuration=$(Configuration);Platform=$(Platform)">
+      <Output TaskParameter="TargetOutputs" ItemName="BuildOutputPaths"/>
+    </MSBuild>
+    <CreateItem Include="%(BuildOutputPaths.RelativeDir)**\*.xbf" AdditionalMetadata="SourceProject=;">
+      <Output ItemName="_FilteredNonWapProjProjectOutput" TaskParameter="Include"/>
+    </CreateItem>
+
+    <!-- Bug: WinMD Files are not deployed within the exe file. Flatten the package structure fix it -->
+
+    <ItemGroup>
+      <!-- Stomp all "SourceProject" values for all incoming dependencies to flatten the package. -->
+      <_TemporaryFilteredWapProjOutput Include="@(_FilteredNonWapProjProjectOutput)" />
+      <_FilteredNonWapProjProjectOutput Remove="@(_TemporaryFilteredWapProjOutput)" />
+      <_FilteredNonWapProjProjectOutput Include="@(_TemporaryFilteredWapProjOutput)">
+        <!-- Blank the SourceProject here to vend all files into the root of the package. -->
+        <SourceProject></SourceProject>
+      </_FilteredNonWapProjProjectOutput>
+    </ItemGroup>
+  </Target>
+
+</Project>
+
+
