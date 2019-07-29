@@ -45,6 +45,14 @@ Get-ChildItem .\ -include bin,obj -Recurse | foreach ($_) { remove-item $_.fulln
 
 > Be careful where you execute this script given it deletes all the bin and obj folder of the directory and subdirectories.  
 
+## Native C++/WinRT Samples
+In Microsoft argot, __Native applications__ reference to all these apps that after compilation generates binary code. On the other hand, Managed applications are these apps that after compilation generates an intermediary language that is interpreted (or even compiled into binary) at runtime. These __Managed applications__ require an additional framework that does this work on runtime, sort of a virtual machine. For simplicity's sake, in these docs and examples, we will call Native to the C++ apps and Managed to C# because the latter requires .NET.
+
+These samples use __C++/WinRT__ for Native applications. If you want to know more about C++/WinRT I recommend to see this short [video](https://www.youtube.com/watch?time_continue=8&v=TLSul1XxppA) and this [Microsoft Build session](https://mybuild.techcommunity.microsoft.com/sessions/77016?source=sessions#top-anchor). Also, visit the MSDN docs for [C++/WinRT](https://docs.microsoft.com/en-us/windows/uwp/cpp-and-winrt-apis/).
+
+You don't need to install anything else to run the Native samples. C++/WinRT tools are deployed into your project via NuGet. However, if you want to author C++/WinRT apps, it is highly recommended to install the [Visual Studio project templates](https://marketplace.visualstudio.com/items?itemName=CppWinRTTeam.cppwinrt101804264).
+
+
 ## Feedback
 
 If you want to give us very early feedback, report a bug, tell us whether these samples are useful, etc.,  please, send an email to __xamlIslandsfeedback @ microsoft.com__, my engineering team will receive it. 
