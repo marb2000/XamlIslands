@@ -3,7 +3,7 @@
 ## Adding the WindowsXamlHost to your WPF app
 1. Create a WPF App (.NET Core), for instance WPF_XAMLIslands_v1.
 
-2. Add the latest preview of the [Microsoft.Toolkit.Wpf.UI.XamlHost](https://www.nuget.org/packages/Microsoft.Toolkit.Wpf.UI.XamlHost/6.0.0-preview6.4?_src=template) NuGet Package to the WPF app.
+2. Add the latest preview of the [Microsoft.Toolkit.Wpf.UI.XamlHost](https://www.nuget.org/packages/Microsoft.Toolkit.Wpf.UI.XamlHost/6.0.0-preview7?_src=template) NuGet Package to the WPF app.
 
 3. Add the namespace of the Microsoft.Toolkit.Wpf.UI.XamlHost library into the MainWindow:
 ```xml
@@ -29,7 +29,7 @@ To consume WinRT XAML components is required to have an Application object. The 
 1. Add to your Solution a Blank App (Universal Windows) project. You can called CustomXamlApplication, for example.
 2. Select Build 18362 for Target version and Minimun version. 
 
-3. Add the [Microsoft.Toolkit.Win32.UI.XamlApplication](https://www.nuget.org/packages/Microsoft.Toolkit.Win32.UI.XamlApplication/6.0.0-preview6.4?_src=template) NuGet package to this UWP XAML app.
+3. Add the [Microsoft.Toolkit.Win32.UI.XamlApplication](https://www.nuget.org/packages/Microsoft.Toolkit.Win32.UI.XamlApplication/6.0.0-preview7?_src=template) NuGet package to this UWP XAML app.
 
 4. Into the App.xaml file, add the namespace:
 ```xml
@@ -60,6 +60,11 @@ namespace CustomXamlApplication
     }
 }
 ```
+ This project is a UAP app that generates a EXE, and we did it because the UWP Blank Application generates an Application object a setup the XAML compiler to generates the types of this project and its dependencies. To generates libreray, a WinMD File, you should change the type of the this project. So unload the project and edit it. Change the OutputType property, that has AppContainerExe value, for Library.   
+```xml
+<OutputType>Library</OutputType>
+```
+8. Load the UWP project again.
 ### Testing that everything is still OK 
 
 1. In the MainPage.xaml of the UWP app, add this code:
@@ -85,47 +90,63 @@ namespace CustomXamlApplication
 
 5. Press F5. __[BUG: It doesn't work]__
 
-### The Hack
+## Adding the Windows Application Packaging Project
+1. Add a new Windows Windows Application Packaging Project to the solution. You can name it WAP, for instance. 
 
-1. Add new file to the project and name it __Directory.Build.targets__. 
+2. Select Build 18362 for Target version and Minimun version.
 
->__Note:__ Unfortunately, Visual Studio doesn't allow you to create text files in the WAP project. One alternative is open NotePad and save the file into the Project Folder. Then press "Show all Files" in the solution Explorer Toolbar to see all the files in the folder. After that you can right click over the file and selct "include in  project".
+3. In the Applications section, add a reference to the WPF App.
 
+4. Set this WAP project as the Startup project.
+
+5. Press F5. __[BUG: It doesn't work. Apply the following hack]__
+
+### The Hack for making work WAP with XAML Islands
+
+1. Unload the WAP project.
+2. Remove the import:
 ```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 
+```
+3. Add the following MSBuild tasks:
+```xml
+ <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs,Version=14.0">
+      <TargetedSDKConfiguration Condition="'$(Configuration)'!='Debug'">Retail</TargetedSDKConfiguration>
+      <TargetedSDKConfiguration Condition="'$(Configuration)'=='Debug'">Debug</TargetedSDKConfiguration>
+      <TargetedSDKArchitecture>$(PlatformShortName)</TargetedSDKArchitecture>
+      <Implicit>true</Implicit>
+    </SDKReference>
+  </ItemGroup>
+  
+  <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
+  
   <Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
-
-    <MSBuild Projects="@(ProjectReference)" Properties="Configuration=$(Configuration);Platform=$(Platform)">
-      <Output TaskParameter="TargetOutputs" ItemName="BuildOutputPaths"/>
-    </MSBuild>
-    <CreateItem Include="%(BuildOutputPaths.RelativeDir)**\*.xbf" AdditionalMetadata="SourceProject=;">
-      <Output ItemName="_FilteredNonWapProjProjectOutput" TaskParameter="Include"/>
-    </CreateItem>
-
-    <!-- Bug: WinMD Files are not deployed within the exe file. Flatten the package structure fix it -->
-
     <ItemGroup>
-      <!-- Stomp all "SourceProject" values for all incoming dependencies to flatten the package. -->
       <_TemporaryFilteredWapProjOutput Include="@(_FilteredNonWapProjProjectOutput)" />
       <_FilteredNonWapProjProjectOutput Remove="@(_TemporaryFilteredWapProjOutput)" />
       <_FilteredNonWapProjProjectOutput Include="@(_TemporaryFilteredWapProjOutput)">
-        <!-- Blank the SourceProject here to vend all files into the root of the package. -->
-        <SourceProject></SourceProject>
+        <SourceProject>
+        </SourceProject>
       </_FilteredNonWapProjProjectOutput>
     </ItemGroup>
   </Target>
-
-</Project>
 ```
+4. Copy the __Splashscreen.png__ file into the project. select teh file SplashScreen.scale-200.png. 
+5. Press Ctrl+C, Ctrl+V. 
+6. Rename the copy to SplashScreen.png 
+
+Press F5. It should work.
+
 
 ## Adding an additional controls
-1. Add a new Class Library (Universal Windows)
+1. Add a new Class Library (Universal Windows) project to the solution. Let's call it MyClassLibrary.
+2. Select Build 18362 for both Target version and Minimun version.
 
-2. Remove the Class1.cs file
+3. Remove the Class1.cs file
 
-3. Add a new Xaml User Control item. In this case, WelcomePage.xaml and paste:
+4. Add a new Xaml User Control item. Right click on the project, Add new Item, and Select User Control. Name it WelcomePage.xaml and paste:
 ```xml
     <Grid>
         <StackPanel HorizontalAlignment="Center" Spacing="10" Padding="20" VerticalAlignment="Center">
@@ -139,7 +160,12 @@ namespace CustomXamlApplication
 ```xml
  <xaml:WindowsXamlHost InitialTypeName="MyClassLibrary.WelcomePage" />
 ```
-5. Press F5, __[BUG: It doesn't work]__
+5. The UWP XAML Application needs to reference this Class Library. In the CustomXamlApplication project, add a reference to MyClassLibrary project. 
+6. Press F5, It should work.
+
+### Testing in Unpackaged scenario
+1. Select the WPF_XAMLIslands_v1 project as Startup project.
+2. Press F5 __[BUG: The app crash]__ 
 
 
 
