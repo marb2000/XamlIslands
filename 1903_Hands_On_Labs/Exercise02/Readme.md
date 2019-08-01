@@ -148,13 +148,22 @@ namespace CustomXamlApplication
 
 Press F5. It should work.
 
-## Adding an additional controls
-1. Add a new Class Library (Universal Windows) project to the solution. Let's call it MyClassLibrary.
+## Adding a Managed Class Library
+1. Add a new Managed Class Library (Universal Windows) project to the solution. Let's call it MyClassLibrary. 
+    >  It is called "Managed" because the library is using C# and requires a .NET Runtime to run the code. Notice that UWP apps use the .NET Native implementation in Release mode and a sort of .NET Core implementation for Debug mode. 
 2. Select Build 18362 for both Target version and Minimun version.
 
-3. Remove the Class1.cs file
+3. To consume Managed WinRT components in XAML Islands, you need to build your library with two options deactivated.  Unload the project, modify insert the following property group, and load the project again: 
+```xml
+<PropertyGroup>
+  <EnableTypeInfoReflection>false</EnableTypeInfoReflection>
+  <EnableXBindDiagnostics>false</EnableXBindDiagnostics>
+</PropertyGroup>
+```
 
-4. Add a new Xaml User Control item. Right click on the project, Add new Item, and Select User Control. Name it WelcomePage.xaml and paste:
+4. Remove the Class1.cs file
+
+5. Add a new Xaml User Control item. Right click on the project, Add new Item, and Select User Control. Name it WelcomePage.xaml and paste:
 ```xml
     <Grid>
         <StackPanel HorizontalAlignment="Center" Spacing="10" Padding="20" VerticalAlignment="Center">
@@ -164,49 +173,13 @@ Press F5. It should work.
         </StackPanel>
     </Grid>
 ```
-4. In the WinForms app, add a reference to the MyClassLibrary. And modify the Form1.cs
+6. In the WinForms app, add a reference to the MyClassLibrary. And modify the Form1.cs
 ```cs
    this.windowsXamlHost.InitialTypeName = "MyClassLibrary.WelcomePage";
 ```
-5. The UWP XAML Application needs to reference this Class Library. In the CustomXamlApplication project, add a reference to MyClassLibrary project. 
-6. Press F5, It should work
+7. The UWP XAML Application needs to reference this Class Library. In the CustomXamlApplication project, add a reference to MyClassLibrary project. 
+8. Press F5, It should work
 
 ### Testing in Unpackaged scenario
 1. Select the WinForms_XAMLIslands_v1 project as Startup project.
-2. Press F5 __[BUG: ]__
-```
-System.AggregateException
-  HResult=0x80131500
-  Message=One or more errors occurred. (The process has no package identity. (0x80073D54))
-  Source=System.Private.CoreLib
-  StackTrace:
-   at System.Threading.Tasks.Task.ThrowIfExceptional(Boolean includeTaskCanceledExceptions)
-   at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
-   at System.Threading.Tasks.Task`1.get_Result()
-   at Microsoft.UI.Xaml.Markup.ReflectionXamlMetadataProvider.PopulateAssemblies()
-   at Microsoft.UI.Xaml.Markup.ReflectionXamlMetadataProvider..ctor()
-   at MyClassLibrary.MyClassLibrary_XamlTypeInfo.XamlTypeInfoProvider.get_Provider() in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\MyClassLibrary\obj\x64\Debug\XamlTypeInfo.g.cs:line 71
-   at MyClassLibrary.MyClassLibrary_XamlTypeInfo.XamlTypeInfoProvider.GetXamlTypeByName(String typeName) in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\MyClassLibrary\obj\x64\Debug\XamlTypeInfo.g.cs:line 84
-   at MyClassLibrary.MyClassLibrary_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(String fullName) in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\MyClassLibrary\obj\x64\Debug\XamlTypeInfo.g.cs:line 48
-   at CustomXamlApplication.CustomXamlApplication_XamlTypeInfo.XamlTypeInfoProvider.CheckOtherMetadataProvidersForName(String typeName) in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\CustomXamlApplication\obj\x64\Debug\XamlTypeInfo.g.cs:line 373
-   at CustomXamlApplication.CustomXamlApplication_XamlTypeInfo.XamlTypeInfoProvider.GetXamlTypeByName(String typeName) in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\CustomXamlApplication\obj\x64\Debug\XamlTypeInfo.g.cs:line 172
-   at CustomXamlApplication.CustomXamlApplication_XamlTypeInfo.XamlMetaDataProvider.GetXamlType(String fullName) in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\CustomXamlApplication\obj\x64\Debug\XamlTypeInfo.g.cs:line 100
-   at CustomXamlApplication.App.GetXamlType(String fullName) in C:\Users\miguelrb.REDMOND\source\repos\XamlIslands\1903_Hands_On_Labs\Exercise02\WinForms_XAMLIslands_v1\CustomXamlApplication\obj\x64\Debug\XamlTypeInfo.g.cs:line 49
-   at Microsoft.Toolkit.Win32.UI.XamlHost.UWPTypeFactory.CreateXamlContentByType(String xamlTypeName)
-   at Microsoft.Toolkit.Forms.UI.XamlHost.WindowsXamlHost.OnHandleCreated(EventArgs e)
-   at System.Windows.Forms.Control.WmCreate(Message& m)
-   at System.Windows.Forms.Control.WndProc(Message& m)
-   at System.Windows.Forms.ScrollableControl.WndProc(Message& m)
-   at System.Windows.Forms.ContainerControl.WndProc(Message& m)
-   at Microsoft.Toolkit.Forms.UI.XamlHost.WindowsXamlHostBase.WndProc(Message& m)
-   at System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
-   at System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
-   at System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
-
-Inner Exception 1:
-InvalidOperationException: The process has no package identity. (0x80073D54)
-
-```
-
-
-
+2. Press F5. You should see the Welcome page. 

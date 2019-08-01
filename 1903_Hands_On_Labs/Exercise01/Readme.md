@@ -139,14 +139,22 @@ namespace CustomXamlApplication
 
 Press F5. It should work.
 
-
-## Adding an additional controls
-1. Add a new Class Library (Universal Windows) project to the solution. Let's call it MyClassLibrary.
+## Adding a Managed Class Library
+1. Add a new Managed Class Library (Universal Windows) project to the solution. Let's call it MyClassLibrary. 
+    >  It is called "Managed" because the library is using C# and requires a .NET Runtime to run the code. Notice that UWP apps use the .NET Native implementation in Release mode and a sort of .NET Core implementation for Debug mode. 
 2. Select Build 18362 for both Target version and Minimun version.
 
-3. Remove the Class1.cs file
+3. To consume Managed WinRT components in XAML Islands, you need to build your library with two options deactivated.  Unload the project, modify insert the following property group, and load the project again: 
+```xml
+<PropertyGroup>
+  <EnableTypeInfoReflection>false</EnableTypeInfoReflection>
+  <EnableXBindDiagnostics>false</EnableXBindDiagnostics>
+</PropertyGroup>
+```
 
-4. Add a new Xaml User Control item. Right click on the project, Add new Item, and Select User Control. Name it WelcomePage.xaml and paste:
+4. Remove the Class1.cs file
+
+5. Add a new Xaml User Control item. Right click on the project, Add new Item, and Select User Control. Name it WelcomePage.xaml and paste:
 ```xml
     <Grid>
         <StackPanel HorizontalAlignment="Center" Spacing="10" Padding="20" VerticalAlignment="Center">
@@ -161,11 +169,11 @@ Press F5. It should work.
  <xaml:WindowsXamlHost InitialTypeName="MyClassLibrary.WelcomePage" />
 ```
 5. The UWP XAML Application needs to reference this Class Library. In the CustomXamlApplication project, add a reference to MyClassLibrary project. 
-6. Press F5, It should work.
+6. Press F5, You should see the Welcome page.
 
 ### Testing in Unpackaged scenario
 1. Select the WPF_XAMLIslands_v1 project as Startup project.
-2. Press F5 __[BUG: The app crash]__ 
+2. Press F5. You should see the Welcome page.
 
 
 
