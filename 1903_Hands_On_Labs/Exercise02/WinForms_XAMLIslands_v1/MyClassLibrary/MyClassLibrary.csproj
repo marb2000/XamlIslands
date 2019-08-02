@@ -134,6 +134,9 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.8</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.2.190702001-prerelease</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="WelcomePage.xaml">

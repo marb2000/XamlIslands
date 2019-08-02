@@ -60,12 +60,9 @@ namespace CustomXamlApplication
     }
 }
 ```
- This project is a UAP app that generates a EXE, and we did it because the UWP Blank Application generates an Application object a setup the XAML compiler to generates the types of this project and its dependencies. To generates libreray, a WinMD File, you should change the type of the this project. So unload the project and edit it. Change the OutputType property, that has AppContainerExe value, for Library.   
-```xml
-<OutputType>Library</OutputType>
-```
-8. Load the UWP project again.
-### Testing that everything is still OK 
+ This project is a UWP app that generates an EXE, although this EXE is not the Main EXE of your app. This project comes with an Application object, and it sets up the XAML compiler to generate the underlying classes that define the types of your WinRT objects, among other things.
+
+### Testing that everything is working
 
 1. In the MainPage.xaml of the UWP app, add this code:
 ```xml
@@ -173,7 +170,40 @@ Press F5. It should work.
 
 ### Testing in Unpackaged scenario
 1. Select the WPF_XAMLIslands_v1 project as Startup project.
-2. Press F5. You should see the Welcome page.
+2. Press F5. You should see the Welcome Page
+
+## Adding WinUI conrtrols
+
+The Windows UI Library (WinUI) is a library tha contains the latest Windows 10 native controls and Fluent styles for your applications. You use the WinUI Library into your app yu should do several steps:
+
+1. Add the __Prerelease WinUI Library__ into the XAML Application project (CustomXamlApplication is this sample). The NuGet packaged that contains the library is [Microsoftl.UI.Xaml](https://www.nuget.org/packages/Microsoft.UI.Xaml/2.1.190606001?_src=template0. You should include the prereleases NuGet Packages.
+
+2. In the App.xaml add the WinUI styles 
+```xml
+    <Application.Resources>
+        <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+    </Application.Resources>
+```
+
+3. Let's use a WinUI control. Add the WinUI Library NuGet Package to the MyClassLibrary project as well.
+
+4. Add the WinUI namespace to the WelcomePage.xaml
+```xaml
+    xmlns:winui="using:Microsoft.UI.Xaml.Controls"
+```
+4. Add the RatingControl into the WelcomePage.xaml. It is recommended add it after the last element of the StackPanel
+
+```xml
+
+   <StackPanel HorizontalAlignment="Center" Spacing="10" Padding="20" VerticalAlignment="Center">
+            ...
+            <!-- WinUI control -->
+            <winui:RatingControl />
+    </StackPanel>
+ ```
+ 5. Run it! You will see the Rating Control in the Welcome page.
+
+
 
 
 
