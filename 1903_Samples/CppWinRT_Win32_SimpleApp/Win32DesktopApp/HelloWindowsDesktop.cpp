@@ -7,6 +7,7 @@
 #include <windows.ui.xaml.hosting.desktopwindowxamlsource.h>
 #include <winrt/windows.ui.xaml.controls.h>
 #include <winrt/Windows.ui.xaml.media.h>
+#include <winrt/Windows.Foundation.Collections.h>
 
 using namespace winrt;
 using namespace Windows::UI;
@@ -92,7 +93,7 @@ int CALLBACK WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 	tb.HorizontalAlignment(Windows::UI::Xaml::HorizontalAlignment::Center);
 	tb.FontSize(48);
 
-	xamlContainer.Children().Append(tb);
+    xamlContainer.Children().Append(tb);
 	xamlContainer.UpdateLayout();
 	desktopSource.Content(xamlContainer);
 	
