@@ -14,7 +14,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MyApp", "MyApp\MyApp.vcxpro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68E27BA4-AB10-440A-ADCE-03B06460F382}"
 	ProjectSection(SolutionItems) = preProject
-		Microsoft.WinRT.Win32.targets = Microsoft.WinRT.Win32.targets
 		ReadMe.md = ReadMe.md
 		Screenshoot.PNG = Screenshoot.PNG
 		Solution.props = Solution.props
