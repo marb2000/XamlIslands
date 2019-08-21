@@ -101,16 +101,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\SplashScreen.png" />
-    <Content Include="Images\SplashScreen.scale-200.png" />
-    <Content Include="Images\LockScreenLogo.scale-200.png" />
-    <Content Include="Images\Square150x150Logo.scale-200.png" />
-    <Content Include="Images\Square44x44Logo.scale-200.png" />
-    <Content Include="Images\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Images\StoreLogo.png" />
-    <Content Include="Images\Wide310x150Logo.scale-200.png" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\WinForms_XAMLIslands_v1\WinForms_XAMLIslands_v1.csproj">
       <SkipGetTargetFrameworkProperties>True</SkipGetTargetFrameworkProperties>
     </ProjectReference>
@@ -122,6 +112,35 @@
       <TargetedSDKArchitecture>$(PlatformShortName)</TargetedSDKArchitecture>
       <Implicit>true</Implicit>
     </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\CustomXamlApplication\Images\LockScreenLogo.scale-200.png">
+      <Link>Images\LockScreenLogo.scale-200.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\SplashScreen.png">
+      <Link>Images\SplashScreen.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\SplashScreen.scale-200.png">
+      <Link>Images\SplashScreen.scale-200.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\Square150x150Logo.scale-200.png">
+      <Link>Images\Square150x150Logo.scale-200.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\Square44x44Logo.scale-200.png">
+      <Link>Images\Square44x44Logo.scale-200.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\Square44x44Logo.targetsize-24_altform-unplated.png">
+      <Link>Images\Square44x44Logo.targetsize-24_altform-unplated.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\StoreLogo.png">
+      <Link>Images\StoreLogo.png</Link>
+    </Content>
+    <Content Include="..\CustomXamlApplication\Images\Wide310x150Logo.scale-200.png">
+      <Link>Images\Wide310x150Logo.scale-200.png</Link>
+    </Content>
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
   <Target Name="_StompSourceProjectForWapProject" BeforeTargets="_ConvertItems">
