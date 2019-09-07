@@ -1,0 +1,40 @@
+﻿<Page
+    x:Class="AppUIBasics.ControlPages.PersonPicturePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppUIBasics"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel>
+        <local:ControlExample x:Name="Example1" HeaderText="Select different looks for the person picture.">
+
+            <local:ControlExample.Example>
+                <PersonPicture x:Name="personPicture" Height="300"
+                VerticalAlignment="Top"
+                ProfilePicture="{Binding IsChecked, ElementName=ProfileImageRadio, Converter={StaticResource booleanToValueConverter}, ConverterParameter='https://docs.microsoft.com/windows/uwp/contacts-and-calendar/images/shoulder-tap-static-payload.png'}"
+                DisplayName="{x:Bind DisplayNameRadio.IsChecked, Mode=OneWay, Converter={StaticResource booleanToValueConverter}, ConverterParameter='Jane Doe'}"
+                Initials="{x:Bind InitialsRadio.IsChecked, Mode=OneWay, Converter={StaticResource booleanToValueConverter}, ConverterParameter='SB'}" />
+            </local:ControlExample.Example>
+
+            <local:ControlExample.Options>
+                <StackPanel>
+                    <RadioButton x:Name="ProfileImageRadio" GroupName="Profile" Content="Profile Image" IsChecked="True" />
+                    <RadioButton x:Name="DisplayNameRadio" GroupName="Profile" Content="Display Name" />
+                    <RadioButton x:Name="InitialsRadio" GroupName="Profile" Content="Initials" />
+                </StackPanel>
+            </local:ControlExample.Options>
+            <local:ControlExample.Xaml>
+                <x:String>
+                    &lt;PersonPicture $(ProfilePicture)$(DisplayName)$(Initials) /&gt;
+                </x:String>
+            </local:ControlExample.Xaml>
+            <local:ControlExample.Substitutions>
+                <local:ControlExampleSubstitution Key="ProfilePicture" IsEnabled="{x:Bind ProfileImageRadio.IsChecked.Value, Mode=OneWay}" Value="ProfilePicture=&quot;https://docs.microsoft.com/windows/uwp/contacts-and-calendar/images/shoulder-tap-static-payload.png&quot;" />
+                <local:ControlExampleSubstitution Key="DisplayName" IsEnabled="{x:Bind DisplayNameRadio.IsChecked.Value, Mode=OneWay}" Value="DisplayName=&quot;Jane Doe&quot;" />
+                <local:ControlExampleSubstitution Key="Initials" IsEnabled="{x:Bind InitialsRadio.IsChecked.Value, Mode=OneWay}" Value="Initials=&quot;SB&quot;" />
+            </local:ControlExample.Substitutions>
+        </local:ControlExample>
+    </StackPanel>
+</Page>
