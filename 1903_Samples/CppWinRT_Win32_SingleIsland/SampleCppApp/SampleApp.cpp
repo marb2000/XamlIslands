@@ -41,6 +41,9 @@ public:
         WINRT_ASSERT(wnd);
     }
 
+#define HANDLE_WM_EXITSIZEMOVE(hwnd, wParam, lParam, fn) \
+    ((fn)((hwnd), (UINT)(wParam), (int)(short)LOWORD(lParam), (int)(short)HIWORD(lParam)), 0L)
+
     LRESULT MessageHandler(UINT const message, WPARAM const wParam, LPARAM const lParam) noexcept
     {
         HRESULT hr = S_OK;
@@ -50,7 +53,8 @@ public:
             HANDLE_MSG(GetHandle(), WM_CREATE, OnCreate);
             HANDLE_MSG(GetHandle(), WM_COMMAND, OnCommand);
             HANDLE_MSG(GetHandle(), WM_DESTROY, OnDestroy);
-            HANDLE_MSG(GetHandle(), WM_SIZE, OnResize);
+            //HANDLE_MSG(GetHandle(), WM_SIZE, OnResize);
+            HANDLE_MSG(GetHandle(), WM_EXITSIZEMOVE, OnResize);
         default:
             return base_type::MessageHandler(message, wParam, lParam);
         }
@@ -95,9 +99,22 @@ private:
         return true;
     }
 
+
     void OnXamlLayoutUpdated(winrt::Windows::Foundation::IInspectable const&, winrt::Windows::Foundation::IInspectable const&)
     {
-        m_parentLayout = true;
+        if (m_parentLayout)
+        {
+            return;
+        }
+
+        const auto dispatcher = winrt::Windows::System::DispatcherQueue::GetForCurrentThread();
+        m_parentLayout = dispatcher.TryEnqueue(winrt::Windows::System::DispatcherQueuePriority::Low, { this, &MyWindow::OnSizeXamlContentToParent });
+    }
+
+    void OnSizeXamlContentToParent()
+    {
+        //ASSERT(m_parentLayout);
+
         m_layoutUpdatedToken.revoke();
         auto reenableLayoutUpdatedHandler = wil::scope_exit_log(WI_DIAGNOSTICS_INFO, [&]()
             {
@@ -126,7 +143,9 @@ private:
         RECT windowRect = { };
         ::GetWindowRect(GetHandle(), &windowRect);
         //::AdjustWindowRectExForDpi(&windowRect, 0 /*dwStyle*/, TRUE /*bMenu*/, 0 /*dwExStyle*/, winDpi);
-        //THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, windowRect.left, windowRect.top, windowRect.right, windowRect.bottom, SWP_NOACTIVATE));
+        //THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, windowRect.left, windowRect.top, windowRect.right, windowRect.bottom, SWP_NOMOVE, SWP_NOACTIVATE));
+        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, physicalWidth, physicalHeight, SWP_NOMOVE | SWP_NOACTIVATE));
+        SetWindowPos(m_hWndXamlIsland.get(), NULL, 0, 0, physicalWidth, physicalHeight, SWP_SHOWWINDOW);
     }
 
     void OnCommand(HWND, int id, HWND hwndCtl, UINT codeNotify)
@@ -163,8 +182,7 @@ private:
 
         const auto newHeight = cy;
         const auto newWidth = cx;
-        //SetWindowPos(m_hWndXamlIsland.get(), NULL, 0, 0, newWidth, newHeight, SWP_SHOWWINDOW);
-        //SetWindowPos(m_hWndXamlIsland.get(), NULL, 80, 50, 400, 600, SWP_SHOWWINDOW);
+        SetWindowPos(m_hWndXamlIsland.get(), NULL, 0, 0, newWidth, newHeight, SWP_SHOWWINDOW);
     }
 };
 
