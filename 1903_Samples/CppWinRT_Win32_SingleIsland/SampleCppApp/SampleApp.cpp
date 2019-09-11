@@ -60,13 +60,10 @@ public:
 
 private:
 
-    wil::unique_hwnd m_hButton1 = nullptr;
-    wil::unique_hwnd m_hButton2 = nullptr;
+    bool m_parentLayout = false;
     wil::unique_hwnd m_hWndXamlIsland = nullptr;
-    wil::unique_hwnd m_hWndXamlButton1 = nullptr;
     winrt::MyApp::MainUserControl m_mainUserControl = nullptr;
-    winrt::Windows::UI::Xaml::Controls::Button m_xamlBt1 = nullptr;
-    winrt::Windows::UI::Xaml::Controls::Button::Click_revoker m_xamlBt1ClickEventRevoker;
+    winrt::Windows::UI::Xaml::FrameworkElement::LayoutUpdated_revoker m_layoutUpdatedToken{};
 
     HWND InitInstance(HINSTANCE hInstance, int nCmdShow)
     {
@@ -89,37 +86,47 @@ private:
         return hMainWnd;
     }
 
-    const static WPARAM IDM_ButtonID1 = 0x1001;
-    const static WPARAM IDM_ButtonID2 = 0x1002;
-
     bool OnCreate(HWND, LPCREATESTRUCT)
     {
-        m_hButton1 = wil::unique_hwnd(CreateWindow(TEXT("button"), TEXT("Button &1"),
-            WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
-            (ButtonMargin + InitialWidth - ButtonWidth) / 2, ButtonMargin,
-            ButtonWidth, ButtonHeight,
-            GetHandle(), (HMENU)IDM_ButtonID1, hInst, NULL));
+        m_mainUserControl = winrt::MyApp::MainUserControl();
+        m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl));
+        m_layoutUpdatedToken = m_mainUserControl.LayoutUpdated(winrt::auto_revoke, { this, &MyWindow::OnXamlLayoutUpdated });
+
+        return true;
+    }
+
+    void OnXamlLayoutUpdated(winrt::Windows::Foundation::IInspectable const&, winrt::Windows::Foundation::IInspectable const&)
+    {
+        m_parentLayout = true;
+        m_layoutUpdatedToken.revoke();
+        auto reenableLayoutUpdatedHandler = wil::scope_exit_log(WI_DIAGNOSTICS_INFO, [&]()
+            {
+                m_layoutUpdatedToken = m_mainUserControl.LayoutUpdated(winrt::auto_revoke, { this, &MyWindow::OnXamlLayoutUpdated });
+                m_parentLayout = false;
+            });
+
+        winrt::Windows::Foundation::Size currentSize(5000, 5000);
+        m_mainUserControl.Measure(currentSize);
+        auto size = m_mainUserControl.DesiredSize();
+
+        // Ok, a bit of an explanation before the next line. The call to Measure will turn on Xaml's "dirty" flag,
+        // which means the LayoutUpdated event will be triggered on the next tick. We don't want that.
+        // By calling UpdateLayout while the token is nullified, it will clear the flag and we won't get another call here
+        // because of the Measure.
+        m_mainUserControl.UpdateLayout();
 
         DEVICE_SCALE_FACTOR scaleFactor = {};
         winrt::check_hresult(GetScaleFactorForMonitor(MonitorFromWindow(GetHandle(), 0), &scaleFactor));
         const auto dpi = static_cast<int>(scaleFactor) / 100.0f;
+        const int physicalWidth = static_cast<int>((size.Width * dpi) + 0.5f);
+        const int physicalHeight = static_cast<int>((size.Height * dpi) + 0.5f);
 
-        m_xamlBt1 = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::Button>(IDR_XAML_BUTTON1);
-        m_xamlBt1.Height(ButtonHeight / dpi);
-        m_xamlBt1.Width(ButtonWidth / dpi);
-        m_xamlBt1ClickEventRevoker = m_xamlBt1.Click(winrt::auto_revoke, { this, &MyWindow::OnXamlButtonClick });
-        m_hWndXamlButton1 = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_xamlBt1));
-
-        m_mainUserControl = winrt::MyApp::MainUserControl();
-        m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl));
-
-        m_hButton2 = wil::unique_hwnd(CreateWindow(TEXT("button"), TEXT("Button &2"),
-            WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
-            (ButtonMargin + InitialWidth - ButtonWidth) / 2, InitialHeight - ButtonMargin - ButtonHeight,
-            ButtonWidth, ButtonHeight,
-            GetHandle(), (HMENU)IDM_ButtonID2, hInst, NULL));
-
-        return true;
+        const auto winDpi = ::GetDpiForWindow(GetHandle());
+        //RECT windowRect = { 0 , 0 , physicalWidth, physicalHeight };
+        RECT windowRect = { };
+        ::GetWindowRect(GetHandle(), &windowRect);
+        //::AdjustWindowRectExForDpi(&windowRect, 0 /*dwStyle*/, TRUE /*bMenu*/, 0 /*dwExStyle*/, winDpi);
+        //THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, windowRect.left, windowRect.top, windowRect.right, windowRect.bottom, SWP_NOACTIVATE));
     }
 
     void OnCommand(HWND, int id, HWND hwndCtl, UINT codeNotify)
@@ -132,42 +139,32 @@ private:
         case IDM_EXIT:
             PostQuitMessage(0);
             break;
-        case IDM_ButtonID1:
-        case IDM_ButtonID2:
-            if (m_mainUserControl)
-            {
-                const auto string = (id == IDM_ButtonID1) ? winrt::hstring(L"Native button 1") : winrt::hstring(L"Native button 2");
-                m_mainUserControl.MyProperty(string);
-            }
-            break;
         }
     }
 
     void OnDestroy(HWND hwnd)
     {
-        if (m_xamlBt1ClickEventRevoker)
-        {
-            m_xamlBt1ClickEventRevoker.revoke();
-        }
-
         base_type::OnDestroy(hwnd);
     }
 
     void OnResize(HWND, UINT state, int cx, int cy)
     {
+        if (m_parentLayout)
+        {
+            // We can't change while we are also changing the parent window
+            return;
+        }
+
+        m_layoutUpdatedToken.revoke();
+        auto reenableLayoutUpdatedHandler = wil::scope_exit_log(WI_DIAGNOSTICS_INFO, [&]()
+            {
+                m_layoutUpdatedToken = m_mainUserControl.LayoutUpdated(winrt::auto_revoke, { this, &MyWindow::OnXamlLayoutUpdated });
+            });
+
         const auto newHeight = cy;
         const auto newWidth = cx;
-        const auto islandHeight = newHeight - (ButtonHeight * 2) - ButtonMargin;
-        const auto islandWidth = newWidth - (ButtonMargin * 2);
-        SetWindowPos(m_hButton1.get(), 0, ButtonWidth * 2, ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hWndXamlButton1.get(), m_hButton1.get(), newWidth - (ButtonWidth * 2), ButtonMargin, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hWndXamlIsland.get(), m_hWndXamlButton1.get(), 0, XamlIslandMargin, islandWidth, islandHeight, SWP_SHOWWINDOW);
-        SetWindowPos(m_hButton2.get(), m_hWndXamlIsland.get(), (ButtonMargin + newWidth - ButtonWidth) / 2, newHeight - ButtonMargin - ButtonHeight, ButtonWidth, ButtonHeight, SWP_SHOWWINDOW);
-    }
-
-    void OnXamlButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
-    {
-        m_mainUserControl.MyProperty(winrt::hstring(L"Xaml K Button 1"));
+        //SetWindowPos(m_hWndXamlIsland.get(), NULL, 0, 0, newWidth, newHeight, SWP_SHOWWINDOW);
+        //SetWindowPos(m_hWndXamlIsland.get(), NULL, 80, 50, 400, 600, SWP_SHOWWINDOW);
     }
 };
 
@@ -178,8 +175,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
-
-    ::MessageBox(NULL, L"Press ENTER to continue", L"Debug", 0);
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
     winrt::MyApp::App app;
