@@ -1,4 +1,4 @@
-# Native C++/WinRT Win32 Sample
+# Native C++/WinRT Win32 Sample with auto resize single Island
 
 ## Overview
 
