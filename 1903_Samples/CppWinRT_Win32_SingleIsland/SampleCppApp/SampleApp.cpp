@@ -31,7 +31,7 @@ public:
         wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SAMPLECPPAPP));
         wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
         wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-        wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
+        //wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
         wcex.lpszClassName = szWindowClass;
         wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
         WINRT_VERIFY(RegisterClassEx(&wcex));
@@ -53,8 +53,6 @@ public:
             HANDLE_MSG(GetHandle(), WM_CREATE, OnCreate);
             HANDLE_MSG(GetHandle(), WM_COMMAND, OnCommand);
             HANDLE_MSG(GetHandle(), WM_DESTROY, OnDestroy);
-            //HANDLE_MSG(GetHandle(), WM_SIZE, OnResize);
-            HANDLE_MSG(GetHandle(), WM_EXITSIZEMOVE, OnResize);
         default:
             return base_type::MessageHandler(message, wParam, lParam);
         }
@@ -75,7 +73,7 @@ private:
         HWND hMainWnd = CreateWindow(
             szWindowClass,
             szTitle,
-            WS_OVERLAPPEDWINDOW,
+            WS_CAPTION | WS_SYSMENU | /* WS_THICKFRAME |*/ WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
             nullptr, nullptr, hInstance, this);
 
@@ -164,25 +162,6 @@ private:
     void OnDestroy(HWND hwnd)
     {
         base_type::OnDestroy(hwnd);
-    }
-
-    void OnResize(HWND, UINT state, int cx, int cy)
-    {
-        if (m_parentLayout)
-        {
-            // We can't change while we are also changing the parent window
-            return;
-        }
-
-        m_layoutUpdatedToken.revoke();
-        auto reenableLayoutUpdatedHandler = wil::scope_exit_log(WI_DIAGNOSTICS_INFO, [&]()
-            {
-                m_layoutUpdatedToken = m_mainUserControl.LayoutUpdated(winrt::auto_revoke, { this, &MyWindow::OnXamlLayoutUpdated });
-            });
-
-        const auto newHeight = cy;
-        const auto newWidth = cx;
-        SetWindowPos(m_hWndXamlIsland.get(), NULL, 0, 0, newWidth, newHeight, SWP_SHOWWINDOW);
     }
 };
 
