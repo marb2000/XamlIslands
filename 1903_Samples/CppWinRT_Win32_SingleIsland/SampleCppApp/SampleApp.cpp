@@ -30,7 +30,8 @@ public:
         wcex.hInstance = hInstance;
         wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SAMPLECPPAPP));
         wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        //wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        wcex.hbrBackground = (HBRUSH)(COLOR_GRAYTEXT + 1);
         //wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
         wcex.lpszClassName = szWindowClass;
         wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
@@ -91,7 +92,7 @@ private:
     bool OnCreate(HWND, LPCREATESTRUCT)
     {
         m_mainUserControl = winrt::MyApp::MainUserControl();
-        m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl));
+        m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(0 /*| WS_THICKFRAME*/, m_mainUserControl));
         m_layoutUpdatedToken = m_mainUserControl.LayoutUpdated(winrt::auto_revoke, { this, &MyWindow::OnXamlLayoutUpdated });
 
         return true;
@@ -136,14 +137,9 @@ private:
         const int physicalWidth = static_cast<int>((size.Width * dpi) + 0.5f);
         const int physicalHeight = static_cast<int>((size.Height * dpi) + 0.5f);
 
-        const auto winDpi = ::GetDpiForWindow(GetHandle());
-        //RECT windowRect = { 0 , 0 , physicalWidth, physicalHeight };
-        RECT windowRect = { };
-        ::GetWindowRect(GetHandle(), &windowRect);
-        //::AdjustWindowRectExForDpi(&windowRect, 0 /*dwStyle*/, TRUE /*bMenu*/, 0 /*dwExStyle*/, winDpi);
-        //THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, windowRect.left, windowRect.top, windowRect.right, windowRect.bottom, SWP_NOMOVE, SWP_NOACTIVATE));
-        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, physicalWidth, physicalHeight, SWP_NOMOVE | SWP_NOACTIVATE));
-        SetWindowPos(m_hWndXamlIsland.get(), NULL, 0, 0, physicalWidth, physicalHeight, SWP_SHOWWINDOW);
+        const int margin = static_cast<int>((40.0f * dpi) + 0.5f);
+        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, physicalWidth + (margin * 2), physicalHeight + (margin * 2), SWP_NOMOVE | SWP_NOACTIVATE));
+        THROW_LAST_ERROR_IF(!SetWindowPos(m_hWndXamlIsland.get(), NULL, margin, margin, physicalWidth, physicalHeight, SWP_SHOWWINDOW));
     }
 
     void OnCommand(HWND, int id, HWND hwndCtl, UINT codeNotify)
