@@ -9,7 +9,8 @@
     mc:Ignorable="d">
 
     <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <TextBox x:Name="Text1" Text="Text"></TextBox>
+        <TextBox x:Name="Text1" Text="Text" ></TextBox>
+        <RichEditBox></RichEditBox>
         <Button x:Name="Button1" Click="Button_Click">Button 1</Button>
         <Button x:Name="GotoLine" Click="Button_Click" Content="GotoLine">
             <Button.KeyboardAccelerators>

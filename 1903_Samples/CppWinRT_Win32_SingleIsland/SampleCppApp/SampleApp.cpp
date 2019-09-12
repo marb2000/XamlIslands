@@ -74,7 +74,7 @@ private:
         HWND hMainWnd = CreateWindow(
             szWindowClass,
             szTitle,
-            WS_CAPTION | WS_SYSMENU | /* WS_THICKFRAME |*/ WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
+            WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX,
             CW_USEDEFAULT, CW_USEDEFAULT, InitialWidth, InitialHeight,
             nullptr, nullptr, hInstance, this);
 
