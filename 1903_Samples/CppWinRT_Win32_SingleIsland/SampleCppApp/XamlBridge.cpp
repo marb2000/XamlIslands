@@ -104,7 +104,6 @@ bool DesktopWindow::NavigateFocus(MSG* msg)
 {
     if (const auto nextFocusedIsland = GetNextFocusedIsland(msg))
     {
-        WINRT_VERIFY(!nextFocusedIsland.HasFocus());
         const auto previousFocusedWindow = ::GetFocus();
         RECT rect = {};
         WINRT_VERIFY(::GetWindowRect(previousFocusedWindow, &rect));

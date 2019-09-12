@@ -32,7 +32,7 @@ public:
         wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
         //wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
         wcex.hbrBackground = (HBRUSH)(COLOR_GRAYTEXT + 1);
-        //wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
+        wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SAMPLECPPAPP);
         wcex.lpszClassName = szWindowClass;
         wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
         WINRT_VERIFY(RegisterClassEx(&wcex));
@@ -110,6 +110,16 @@ private:
         m_parentLayout = dispatcher.TryEnqueue(winrt::Windows::System::DispatcherQueuePriority::Low, { this, &MyWindow::OnSizeXamlContentToParent });
     }
 
+
+    // If you prefer no mergin, then:
+    //const winrt::Windows::UI::Xaml::Thickness IslandMargin = { }
+    const winrt::Windows::UI::Xaml::Thickness IslandMargin = {
+        40.0f /*Left*/,
+        10.0f /*Top*/,
+        40.0f /*Right*/,
+        0.0f /*Bottom*/
+    };
+
     void OnSizeXamlContentToParent()
     {
         //ASSERT(m_parentLayout);
@@ -137,9 +147,29 @@ private:
         const int physicalWidth = static_cast<int>((size.Width * dpi) + 0.5f);
         const int physicalHeight = static_cast<int>((size.Height * dpi) + 0.5f);
 
-        const int margin = static_cast<int>((40.0f * dpi) + 0.5f);
-        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, physicalWidth + (margin * 2), physicalHeight + (margin * 2), SWP_NOMOVE | SWP_NOACTIVATE));
-        THROW_LAST_ERROR_IF(!SetWindowPos(m_hWndXamlIsland.get(), NULL, margin, margin, physicalWidth, physicalHeight, SWP_SHOWWINDOW));
+        const int marginLeft = static_cast<int>((IslandMargin.Left * dpi) + 0.5f);
+        const int marginRight = static_cast<int>((IslandMargin.Right * dpi) + 0.5f);
+        const int marginTop = static_cast<int>((IslandMargin.Top * dpi) + 0.5f);
+        const int marginBottom = static_cast<int>((IslandMargin.Bottom * dpi) + 0.5f);
+
+        RECT windowRect = {};
+        THROW_LAST_ERROR_IF(!::GetWindowRect(GetHandle(), &windowRect));
+        const auto windowHeight = windowRect.bottom - windowRect.top;
+        const auto windowWidth = windowRect.right - windowRect.left;
+
+        RECT clientRect = {};
+        THROW_LAST_ERROR_IF(!::GetClientRect(GetHandle(), &clientRect));
+        const auto clientHeight = clientRect.bottom - clientRect.top;
+        const auto clientWidth = clientRect.right - clientRect.left;
+
+        const auto nonClientHeight = windowHeight - clientHeight;
+        const auto nonClientWidth = windowWidth - clientWidth;
+
+        const auto parentWindowWidth = physicalWidth + marginLeft + marginRight + nonClientWidth;
+        const auto parentWindowHeight = physicalHeight + marginTop + marginBottom + nonClientHeight;
+        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, parentWindowWidth, parentWindowHeight, SWP_NOMOVE | SWP_NOACTIVATE));
+
+        THROW_LAST_ERROR_IF(!::SetWindowPos(m_hWndXamlIsland.get(), NULL, marginLeft, marginTop, physicalWidth, physicalHeight, SWP_SHOWWINDOW));
     }
 
     void OnCommand(HWND, int id, HWND hwndCtl, UINT codeNotify)
