@@ -1,8 +1,9 @@
-# Unpackaged native C++/WinRT Win32 Sample
+# Native C++/WinRT Win32 Sample
 
 ## Overview
 
-This is a complex native C++/WinRT sample to validate several features of XAML Islands v1. 
+This is a complex native C++/WinRT sample to validate several features of XAML Islands v1.
+If difers from CppWinRT_Win32_App in that it show case a sinle Island that can resize itself and also resize its parent window.
 
 * [How to use the Keyboard input](#Keyboard)
 * [Generatie WinRT resources for Win32 apps](#Resources)
