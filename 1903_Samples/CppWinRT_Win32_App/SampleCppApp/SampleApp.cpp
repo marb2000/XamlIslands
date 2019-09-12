@@ -179,6 +179,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
+    ::MessageBox(NULL, L"Press ENTER to continue", L"Debug", 0);
+
     winrt::init_apartment(winrt::apartment_type::single_threaded);
     winrt::MyApp::App app;
 
