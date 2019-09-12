@@ -54,6 +54,7 @@ public:
             HANDLE_MSG(GetHandle(), WM_CREATE, OnCreate);
             HANDLE_MSG(GetHandle(), WM_COMMAND, OnCommand);
             HANDLE_MSG(GetHandle(), WM_DESTROY, OnDestroy);
+            HANDLE_MSG(GetHandle(), WM_EXITSIZEMOVE, OnResize);
         default:
             return base_type::MessageHandler(message, wParam, lParam);
         }
@@ -98,6 +99,23 @@ private:
         return true;
     }
 
+    void OnResize(HWND, UINT state, int cx, int cy)
+    {
+        if (m_parentLayout)
+        {
+            // We can't change while we are also changing the parent window
+            return;
+        }
+
+        m_layoutUpdatedToken.revoke();
+        auto reenableLayoutUpdatedHandler = wil::scope_exit_log(WI_DIAGNOSTICS_INFO, [&]()
+            {
+                m_layoutUpdatedToken = m_mainUserControl.LayoutUpdated(winrt::auto_revoke, { this, &MyWindow::OnXamlLayoutUpdated });
+            });
+
+        // Change layout properties of the Xaml Island here
+        // Do not call ::SetWindowPos, it will be called as a response to UpdateLayout
+    }
 
     void OnXamlLayoutUpdated(winrt::Windows::Foundation::IInspectable const&, winrt::Windows::Foundation::IInspectable const&)
     {
@@ -167,9 +185,10 @@ private:
 
         const auto parentWindowWidth = physicalWidth + marginLeft + marginRight + nonClientWidth;
         const auto parentWindowHeight = physicalHeight + marginTop + marginBottom + nonClientHeight;
-        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, parentWindowWidth, parentWindowHeight, SWP_NOMOVE | SWP_NOACTIVATE));
-
         THROW_LAST_ERROR_IF(!::SetWindowPos(m_hWndXamlIsland.get(), NULL, marginLeft, marginTop, physicalWidth, physicalHeight, SWP_SHOWWINDOW));
+
+        // Comment this line to NOT force a size on the main window
+        THROW_LAST_ERROR_IF(!::SetWindowPos(GetHandle(), nullptr, 0, 0, parentWindowWidth, parentWindowHeight, SWP_NOMOVE | SWP_NOACTIVATE));
     }
 
     void OnCommand(HWND, int id, HWND hwndCtl, UINT codeNotify)
