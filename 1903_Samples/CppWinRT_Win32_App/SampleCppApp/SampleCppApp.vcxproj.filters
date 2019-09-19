@@ -63,12 +63,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <AppxManifest Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\AppxManifest.xml" />
-  </ItemGroup>
-  <ItemGroup>
     <Manifest Include="Application.manifest" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Button1.xaml" />
+    <Page Include="UserControl.xaml" />
   </ItemGroup>
 </Project>

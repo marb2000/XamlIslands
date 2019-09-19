@@ -17,6 +17,7 @@
 #define XAMLRESOURCE  256
 
 #define IDR_XAML_BUTTON1               200
+#define IDR_XAML_USRCTRL               201
 
 // Next default values for new objects
 // 

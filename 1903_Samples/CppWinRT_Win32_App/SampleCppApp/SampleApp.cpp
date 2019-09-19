@@ -4,7 +4,9 @@
 #include "SampleApp.h"
 #include "XamlBridge.h"
 #include <ShellScalingApi.h>
+#ifndef __SIMPLE_ISLAND__
 #include <winrt/Microsoft.Toolkit.Win32.UI.XamlHost.h>
+#endif
 
 #define MAX_LOADSTRING 100
 
@@ -64,7 +66,11 @@ private:
     wil::unique_hwnd m_hButton2 = nullptr;
     wil::unique_hwnd m_hWndXamlIsland = nullptr;
     wil::unique_hwnd m_hWndXamlButton1 = nullptr;
+#ifndef __SIMPLE_ISLAND__
     winrt::MyApp::MainUserControl m_mainUserControl = nullptr;
+#else
+    winrt::Windows::UI::Xaml::Controls::UserControl m_mainUserControl = nullptr;
+#endif
     winrt::Windows::UI::Xaml::Controls::Button m_xamlBt1 = nullptr;
     winrt::Windows::UI::Xaml::Controls::Button::Click_revoker m_xamlBt1ClickEventRevoker;
 
@@ -110,8 +116,13 @@ private:
         m_xamlBt1ClickEventRevoker = m_xamlBt1.Click(winrt::auto_revoke, { this, &MyWindow::OnXamlButtonClick });
         m_hWndXamlButton1 = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_xamlBt1));
 
+#ifndef __SIMPLE_ISLAND__
         m_mainUserControl = winrt::MyApp::MainUserControl();
         m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl));
+#else
+        m_mainUserControl = LoadXamlControl<winrt::Windows::UI::Xaml::Controls::UserControl>(IDR_XAML_USRCTRL);
+        m_hWndXamlIsland = wil::unique_hwnd(CreateDesktopWindowsXamlSource(WS_TABSTOP, m_mainUserControl));
+#endif
 
         m_hButton2 = wil::unique_hwnd(CreateWindow(TEXT("button"), TEXT("Button &2"),
             WS_VISIBLE | WS_CHILD | BS_PUSHBUTTON | WS_TABSTOP,
@@ -134,11 +145,13 @@ private:
             break;
         case IDM_ButtonID1:
         case IDM_ButtonID2:
+#ifndef __SIMPLE_ISLAND__
             if (m_mainUserControl)
             {
                 const auto string = (id == IDM_ButtonID1) ? winrt::hstring(L"Native button 1") : winrt::hstring(L"Native button 2");
                 m_mainUserControl.MyProperty(string);
             }
+#endif
             break;
         }
     }
@@ -167,7 +180,9 @@ private:
 
     void OnXamlButtonClick(winrt::Windows::Foundation::IInspectable const& sender, winrt::Windows::UI::Xaml::RoutedEventArgs const&)
     {
+#ifndef __SIMPLE_ISLAND__
         m_mainUserControl.MyProperty(winrt::hstring(L"Xaml K Button 1"));
+#endif
     }
 };
 
@@ -182,14 +197,20 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     ::MessageBox(NULL, L"Press ENTER to continue", L"Debug", 0);
 
     winrt::init_apartment(winrt::apartment_type::single_threaded);
+#ifndef __SIMPLE_ISLAND__
     winrt::MyApp::App app;
+#else
+    const auto mgr = winrt::Windows::UI::Xaml::Hosting::WindowsXamlManager::InitializeForCurrentThread();
+#endif
 
     MyWindow myWindow(hInstance, nCmdShow);
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SAMPLECPPAPP));
     int retValue = myWindow.MessageLoop(hAccelTable);
 
+#ifndef __SIMPLE_ISLAND__
     app.Close();
     app = nullptr;
+#endif
 
     return retValue;
 }
