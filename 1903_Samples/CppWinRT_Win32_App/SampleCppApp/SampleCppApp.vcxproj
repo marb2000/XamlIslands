@@ -244,6 +244,9 @@
     <Manifest Include="Application.manifest" />
   </ItemGroup>
   <ItemGroup Condition="'$(SimpleIsland)'!='true'">
+    <ProjectReference Include="..\MyApp\MyApp.vcxproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(SimpleIsland)'!='true'">
     <AppxManifest Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\$(AppProjectName)\AppxManifest.xml" />
     <NativeReferenceFile Include="$(SolutionDir)\bin\$(Platform)\$(Configuration)\SampleUserControl\SampleUserControl.dll">
       <DeploymentContent>true</DeploymentContent>
