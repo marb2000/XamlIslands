@@ -11,11 +11,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="$(NuGetPackageFolders)\microsoft.ui.xaml\2.1.190319001-prerelease\runtimes\win10-x64\native\Microsoft.UI.Xaml\Assets\NoiseAsset_256x256_PNG.png"
+       Link="Microsoft.UI.Xaml\Assets\NoiseAsset_256x256_PNG.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview9.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyClassLibrary\MyClassLibrary.csproj" />
     <ProjectReference Include="..\XamlApplication\CustomXamlApplication.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Microsoft.UI.Xaml\Assets\" />
   </ItemGroup>
 
 </Project>
