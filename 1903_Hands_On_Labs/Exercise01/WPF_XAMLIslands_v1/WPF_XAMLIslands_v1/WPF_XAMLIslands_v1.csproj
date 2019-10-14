@@ -4,16 +4,24 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
     <StartupObject>WPF_XAMLIslands_v1.Program</StartupObject>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
   </PropertyGroup>
+
+  <!-- Workaround: Metadata item TargetPath does not include relative folder Microsoft.UI.Xaml\Assets -->
+  <ItemGroup>
+    <Content Include="Microsoft.UI.Xaml\Assets\NoiseAsset_256X256_PNG.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- Workaround: end -->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview9.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MyClassLibrary\MyClassLibrary.csproj" />
     <ProjectReference Include="..\XamlApplication\CustomXamlApplication.csproj" />
   </ItemGroup>
 

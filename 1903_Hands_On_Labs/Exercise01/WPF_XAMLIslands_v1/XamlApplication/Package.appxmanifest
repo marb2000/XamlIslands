@@ -16,7 +16,7 @@
   <Properties>
     <DisplayName>XamlApplication</DisplayName>
     <PublisherDisplayName>miguelrb</PublisherDisplayName>
-    <Logo>Assets\StoreLogo.png</Logo>
+    <Logo>Images\StoreLogo.png</Logo>
   </Properties>
 
   <Dependencies>
@@ -33,12 +33,12 @@
       EntryPoint="XamlApplication.App">
       <uap:VisualElements
         DisplayName="XamlApplication"
-        Square150x150Logo="Assets\Square150x150Logo.png"
-        Square44x44Logo="Assets\Square44x44Logo.png"
+        Square150x150Logo="Images\Square150x150Logo.png"
+        Square44x44Logo="Images\Square44x44Logo.png"
         Description="XamlApplication"
         BackgroundColor="transparent">
-        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
-        <uap:SplashScreen Image="Assets\SplashScreen.png" />
+        <uap:DefaultTile Wide310x150Logo="Images\Wide310x150Logo.png"/>
+        <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
