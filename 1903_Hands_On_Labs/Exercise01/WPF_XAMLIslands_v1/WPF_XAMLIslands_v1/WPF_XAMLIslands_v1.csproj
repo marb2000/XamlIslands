@@ -6,16 +6,9 @@
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <StartupObject>WPF_XAMLIslands_v1.Program</StartupObject>
-    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x64;win10-x86</RuntimeIdentifiers>
+    <AssetTargetFallback>uap10.0.18362</AssetTargetFallback>
   </PropertyGroup>
-
-  <!-- Workaround: Metadata item TargetPath does not include relative folder Microsoft.UI.Xaml\Assets -->
-  <ItemGroup>
-    <Content Include="Microsoft.UI.Xaml\Assets\NoiseAsset_256X256_PNG.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <!-- Workaround: end -->
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Toolkit.Wpf.UI.XamlHost" Version="6.0.0-preview9.1" />

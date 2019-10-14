@@ -33,13 +33,13 @@
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\WPF_XAMLIslands_v1\WPF_XAMLIslands_v1.csproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
-    <PackageCertificateThumbprint>014184FB6BCA23F2DE5D6E745E3E9CC9DF9D256B</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>6ABF7736DF2AE0133EED51EF00F22A7AB4E177B7</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppInstallerUri>https://mydomain.windows.net/</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <PackageCertificateKeyFile>WAP_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>F:\Repos\XamlIslands\1903_Hands_On_Labs\Exercise01\WPF_XAMLIslands_v1\WAP\WAP_TemporaryKey.pfx</PackageCertificateKeyFile>
     <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <ItemGroup>
