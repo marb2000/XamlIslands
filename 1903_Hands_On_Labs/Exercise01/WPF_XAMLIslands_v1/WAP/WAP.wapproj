@@ -35,7 +35,7 @@
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
     <PackageCertificateThumbprint>6ABF7736DF2AE0133EED51EF00F22A7AB4E177B7</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppInstallerUri>https://mydomain.windows.net/</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
