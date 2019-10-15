@@ -9,7 +9,7 @@
   <Identity
     Name="9ae57c32-31f7-4607-99be-ccd9413dc309"
     Publisher="CN=Microsoft"
-    Version="1.0.1.0" />
+    Version="1.0.3.0" />
 
   <Properties>
     <DisplayName>WAP</DisplayName>
