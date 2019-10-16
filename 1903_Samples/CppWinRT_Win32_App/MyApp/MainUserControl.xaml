@@ -4,7 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:MyApp"
     xmlns:my="using:SampleUserControl"
-    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"    
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:managed="using:ManagedSampleControl"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     XYFocusKeyboardNavigation="Enabled"
@@ -13,5 +14,6 @@
     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" XYFocusKeyboardNavigation="Enabled">
         <my:MyUserControl MyProperty="Hello from Xaml!" XYFocusKeyboardNavigation="Enabled" x:Name="userControl"/>
         <muxc:ColorPicker XYFocusKeyboardNavigation="Enabled" />
+        <managed:ManagedUserControl />
     </StackPanel>
 </UserControl>

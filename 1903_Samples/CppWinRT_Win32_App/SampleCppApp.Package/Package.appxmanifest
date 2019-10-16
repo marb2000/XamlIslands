@@ -8,8 +8,8 @@
 
   <Identity
     Name="99def245-f2b3-46c8-9d9d-2f4780e9e424"
-    Publisher="CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US"
-    Version="1.0.11.0" />
+    Publisher="CN=Microsoft"
+    Version="1.0.13.0" />
 
   <Properties>
     <DisplayName>SampleCppApp.Package</DisplayName>

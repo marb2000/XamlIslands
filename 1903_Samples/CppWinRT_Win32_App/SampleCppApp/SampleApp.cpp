@@ -181,6 +181,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     ::MessageBox(NULL, L"Press ENTER to continue", L"Debug", 0);
 
+    //auto hModule1 = ::LoadLibraryExW(L"clrhost.dll", NULL, LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+    //auto hModule2 = ::LoadLibraryExW(L"mscoree.dll", NULL, LOAD_LIBRARY_SEARCH_DEFAULT_DIRS);
+
     winrt::init_apartment(winrt::apartment_type::single_threaded);
     winrt::MyApp::App app;
 

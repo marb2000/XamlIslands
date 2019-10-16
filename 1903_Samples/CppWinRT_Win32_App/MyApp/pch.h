@@ -20,3 +20,5 @@
 #include <winrt/Microsoft.UI.Xaml.Controls.Primitives.h>
 #include <winrt/Microsoft.UI.Xaml.XamlTypeInfo.h>
 #include <winrt/SampleUserControl.h>
+#include <winrt/ManagedSampleControl.h>
+#include <winrt/ManagedSampleControl.ManagedSampleControl_XamlTypeInfo.h>

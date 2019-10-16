@@ -141,6 +141,9 @@
     <ApplicationDefinition Include="App.xaml">
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <ProjectReference Include="..\ManagedSampleControl\ManagedSampleControl.csproj">
+      <Project>{f325caee-0653-4b2d-91fc-096407584215}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\SampleUserControl\SampleUserControl.vcxproj">
       <Project>{b6b66dba-c720-4407-b490-6ae3fc2870fc}</Project>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>

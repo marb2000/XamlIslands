@@ -33,13 +33,14 @@
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <EntryPointProjectUniqueName>..\SampleCppApp\SampleCppApp.vcxproj</EntryPointProjectUniqueName>
     <GenerateAppInstallerFile>True</GenerateAppInstallerFile>
-    <PackageCertificateThumbprint>71E165FEBF46280B0AC777550DC048C4E70F6F68</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>514695747FE219D42D63CCDC8337D3FC169AAD1F</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
     <AppxBundlePlatforms>x86</AppxBundlePlatforms>
     <AppInstallerUri>https://appconsultrealestate.z6.web.core.windows.net/</AppInstallerUri>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <PackageCertificateKeyFile>F:\Repos\XamlIslands\1903_Samples\CppWinRT_Win32_App\SampleCppApp.Package\SampleCppApp.Package_TemporaryKey.pfx</PackageCertificateKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
     <AppxBundle>Always</AppxBundle>
@@ -65,10 +66,17 @@
     <Content Include="..\MyApp\Images\*.png">
       <Link>Images\%(Filename)%(Extension)</Link>
     </Content>
+    <None Include="SampleCppApp.Package_TemporaryKey.pfx" />
     <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs,Version=14.0">
+      <TargetedSDKConfiguration Condition="'$(Configuration)'!='Debug'">Retail</TargetedSDKConfiguration>
+      <TargetedSDKConfiguration Condition="'$(Configuration)'=='Debug'">Debug</TargetedSDKConfiguration>
+      <TargetedSDKArchitecture>$(PlatformShortName)</TargetedSDKArchitecture>
+      <Implicit>true</Implicit>
+    </SDKReference>
+    <SDKReference Include="Microsoft.NET.CoreRuntime,Version=1.1">
       <TargetedSDKConfiguration Condition="'$(Configuration)'!='Debug'">Retail</TargetedSDKConfiguration>
       <TargetedSDKConfiguration Condition="'$(Configuration)'=='Debug'">Debug</TargetedSDKConfiguration>
       <TargetedSDKArchitecture>$(PlatformShortName)</TargetedSDKArchitecture>
