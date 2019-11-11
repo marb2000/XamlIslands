@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include=".\Debug\Native_SwapChainPanel_Comp\Native_SwapChainPanel_Comp.dll">
+    <Content Include=".\$(PlatformName)\$(ConfigurationName)\Native_SwapChainPanel_Comp\Native_SwapChainPanel_Comp.dll">
       <Link>Native_SwapChainPanel_Comp.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
