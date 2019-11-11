@@ -23,6 +23,7 @@
                         ItemInvoked="NavView_ItemInvoked">
             <NavigationView.MenuItems>
                 <NavigationViewItem  Content="Welcome" Tag="WelcomePage" />
+                <NavigationViewItem  Content="New Page" Tag="NewPage" />
                 <NavigationViewItem  Content="Basic Input" Tag="BasicInputPage" />
                 <NavigationViewItem  Content="Collections" Tag="CollectionsPage" />
                 <NavigationViewItem  Content="Date and Time" Tag="DateAndTimePage" />

@@ -12,6 +12,9 @@ namespace Samples.ManagedWinRT
             contentFrame.Navigate(typeof(WelcomePage), null);
         }
 
+        public delegate void FormHandler();
+        public static FormHandler NewWinForm;
+
         private void NavView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             if (args.IsSettingsInvoked)
@@ -29,6 +32,9 @@ namespace Samples.ManagedWinRT
                 {
                     case "WelcomePage":
                         pageType = typeof(WelcomePage);
+                        break;
+                    case "NewPage":
+                        NewWinForm();
                         break;
                     case "BasicInputPage":
                         pageType = typeof(BasicInputPage);

@@ -18,5 +18,21 @@ namespace MyWinFormsApp
 
             this.windowsXamlHost1.InitialTypeName = "Samples.ManagedWinRT.MainPage";
         }
+
+        protected override void OnLayout(LayoutEventArgs levent)
+        {
+            base.OnLayout(levent);
+
+            if (global::Samples.ManagedWinRT.MainPage.NewWinForm == null)
+            {
+                global::Samples.ManagedWinRT.MainPage.NewWinForm = MainForm.NewWinForm;
+            }
+        }
+
+        static public void NewWinForm()
+        {
+            MainForm form = new MainForm();
+            form.Show();
+        }
     }
 }
